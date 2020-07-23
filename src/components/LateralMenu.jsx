@@ -39,19 +39,45 @@ export default function LateralMenu() {
       <Grid
         md={12}
         item
-        style={{ justifyContent: "center", textAlign: "center" }}
+        style={{
+          justifyContent: "center",
+          textAlign: "center",
+          alignSelf: "center"
+        }}
       >
-        <MainSvg />
+        <MainSvg height={340} />
       </Grid>
 
       <Grid item md={12} style={{ alignSelf: "flex-end" }}>
         <Typography variant={"h5"} style={{ color: "white" }}>
           Inspiration
         </Typography>
-        <Typography variant={"body2"} style={{ color: "white" }}>
-          Inspired by a lovely person called Joana, who is a great tester and
-          inspired me to construct this tool to her. Thank you Joana, without
-          you I cannot achive this by myself.
+        <Typography
+          variant={"body2"}
+          style={{ color: "rgba(255,255,255,0.5)" }}
+        >
+          Inspired by a lovely person called{" "}
+          <a
+            style={{ color: "white", textDecoration: "none" }}
+            href={"#"}
+            onClick={() => {
+              window.open("https://www.linkedin.com/in/joana-leite-82212a197/");
+            }}
+          >
+            Joana Leite
+          </a>
+          , who is a great tester and inspired me to construct this tool to her.
+          Thank you{" "}
+          <a
+            style={{ color: "white", textDecoration: "none" }}
+            href={"#"}
+            onClick={() => {
+              window.open("https://www.linkedin.com/in/joana-leite-82212a197/");
+            }}
+          >
+            Joana Leite
+          </a>
+          , without you I could not achieve this by myself.
         </Typography>
       </Grid>
     </Grid>
