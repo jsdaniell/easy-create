@@ -1,10 +1,14 @@
-import React from "react";
-import { Grid } from "@material-ui/core";
+import React, { useEffect } from "react";
+import { Grid, Typography } from "@material-ui/core";
 import TestCaseModal from "../../components/TestCaseModal";
 
 import LateralMenu from "../../components/LateralMenu";
 
-export default function Home() {
+export default function Home({
+  children: {
+    props: { component }
+  }
+}) {
   return (
     <Grid
       container
@@ -16,7 +20,28 @@ export default function Home() {
       }}
     >
       <Grid item container md={5} style={{ padding: 25 }}>
-        <LateralMenu />
+        <Grid item md={12}>
+          <Typography
+            variant={"subtitle2"}
+            style={{ color: "rgba(255,255,255,0.5)" }}
+          >
+            devdata.tools was created by{" "}
+            <a
+              style={{ color: "white", textDecoration: "none" }}
+              href={"#"}
+              onClick={() => {
+                window.open("https://github.com/jsdaniell");
+              }}
+            >
+              @jsdaniell
+            </a>
+          </Typography>
+          <Typography variant={"h5"} style={{ color: "white" }}>
+            Test Case
+          </Typography>
+
+        </Grid>
+        {component[0]()}
       </Grid>
       <Grid
         item
@@ -31,7 +56,7 @@ export default function Home() {
           maxWidth: 632
         }}
       >
-        <TestCaseModal />
+        {component[1]()}
       </Grid>
     </Grid>
   );
