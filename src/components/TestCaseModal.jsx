@@ -115,6 +115,7 @@ export default function TestCaseModal() {
         <Grid
           item
           xs={12}
+          md
           style={{
             textAlign: DevicesUtils.checkIfIsMobile() ? "center" : "end"
           }}
