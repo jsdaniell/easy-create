@@ -62,7 +62,11 @@ export default function TestCaseModal() {
   return (
     <Grid
       container
-      style={{ padding: "25px 50px", alignContent: "space-between" }}
+      style={{
+        padding: "25px 50px",
+        alignContent: "space-between",
+        minHeight: "100%"
+      }}
       spacing={2}
     >
       <Grid item md={12} container justify={"center"}>
@@ -207,7 +211,7 @@ export default function TestCaseModal() {
         </Grid>
       </Grid>
 
-      <Grid item container>
+      <Grid item container style={{ flexGrow: 1 }}>
         <ListPrePostCondition keyList={"preconditions"} />
       </Grid>
 
