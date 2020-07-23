@@ -13,7 +13,7 @@ export default function ListPrePostCondition({ keyList }) {
         border: "1px solid #CBCBCB",
         width: "100%",
         borderRadius: 5,
-        height: "15vh",
+        height: "12vh",
         overflowY: "scroll"
       }}
     >

@@ -8,7 +8,12 @@ export default function Home() {
   return (
     <Grid
       container
-      style={{ height: "100vh", backgroundColor: "#262A43", padding: 25 }}
+      justify={"space-around"}
+      style={{
+        alignItems: "center",
+        alignContent: "center",
+        minHeight: "100%"
+      }}
     >
       <Grid item container md={5}>
         <LateralMenu />
@@ -20,7 +25,10 @@ export default function Home() {
         style={{
           borderRadius: 12,
           backgroundColor: "white",
-          boxShadow: "0px 0px 15px 0px rgba(0,0,0,0.2)"
+          boxShadow: "0px 0px 15px 0px rgba(0,0,0,0.2)",
+
+          maxHeight: 1220,
+          maxWidth: 632
         }}
       >
         <TestCaseModal />
