@@ -1,5 +1,6 @@
 import React from "react";
 import { Grid, Typography, Button } from "@material-ui/core";
+import { ReactComponent as MainSvg } from "../assets/main.svg";
 
 export default function LateralMenu() {
   return (
@@ -11,8 +12,20 @@ export default function LateralMenu() {
       alignItems={"space-between"}
     >
       <Grid item md={12}>
-        <Typography variant={"h6"} style={{ color: "rgba(255,255,255,0.5)" }}>
-          Easy Creator
+        <Typography
+          variant={"subtitle2"}
+          style={{ color: "rgba(255,255,255,0.5)" }}
+        >
+          devdata.tools was created by{" "}
+          <a
+            style={{ color: "white", textDecoration: "none" }}
+            href={"#"}
+            onClick={() => {
+              window.open("https://github.com/jsdaniell");
+            }}
+          >
+            @jsdaniell
+          </a>
         </Typography>
         <Typography variant={"h5"} style={{ color: "white" }}>
           Test Case
@@ -23,14 +36,12 @@ export default function LateralMenu() {
         </Typography>
       </Grid>
 
-      <Grid item md={12} style={{ textAlign: "center" }}>
-        <Typography
-          variant={"body2"}
-          style={{ color: "rgba(255,255,255,0.5)", textAlign: "center" }}
-        >
-          Coming soon!
-        </Typography>
-        <Button color={"secondary"}>Login with Github</Button>
+      <Grid
+        md={12}
+        item
+        style={{ justifyContent: "center", textAlign: "center" }}
+      >
+        <MainSvg />
       </Grid>
 
       <Grid item md={12} style={{ alignSelf: "flex-end" }}>
