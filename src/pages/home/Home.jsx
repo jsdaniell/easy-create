@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { Grid, Typography, Button } from "@material-ui/core";
 import { useTranslation } from "react-i18next";
+import DevicesUtils from "../../utils/deviceUtils";
 
 export default function Home({
   children: {
@@ -28,7 +29,7 @@ export default function Home({
         borderRadius: 13
       }}
     >
-      <Grid item container md={5} style={{ padding: "25px 0px 25px 25px" }}>
+      <Grid item container md={5} style={{ padding: "25px" }}>
         <Grid item md={12}>
           <Grid container justify={"space-between"}>
             <Grid item>
@@ -48,7 +49,13 @@ export default function Home({
                 </a>
               </Typography>
             </Grid>
-            <Grid item style={{ textAlign: "end" }}>
+            <Grid
+              item
+              xs={12}
+              style={{
+                textAlign: DevicesUtils.checkIfIsMobile() ? "center" : "end"
+              }}
+            >
               <Button
                 size={"small"}
                 color={"secondary"}
