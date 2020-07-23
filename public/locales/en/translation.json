@@ -1,0 +1,17 @@
+{
+  "copyright": "devdata.tools was created by",
+  "testCaseTitle": "Test Case",
+  "testCaseDescription": "Create easily tests cases and send or export on PDF, sync your account to save your data.",
+  "inspirationTitle": "Inspiration",
+  "inspirationDescription1": "Inspired by a lovely person called ",
+  "inspirationDescription2": ", who is a great tester and inspired me to construct this tool to her. Thank you ",
+  "inspirationDescription3": ", without you I could not achieve this by myself.",
+  "nameLabel": "Name",
+  "environmentLabel": "Environemnt",
+  "actorLabel": "Actor",
+  "preConditionsLabel": "Preconditions",
+  "postConditionLabel": "Post-condition",
+  "proceduresLabel": "Procedures",
+  "writeTitleLabel": "Write the title",
+  "saveLabel": "Save"
+}

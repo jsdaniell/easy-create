@@ -1,45 +1,70 @@
 import React, { useEffect } from "react";
-import { Grid, Typography } from "@material-ui/core";
-import TestCaseModal from "../../components/TestCaseModal";
-
-import LateralMenu from "../../components/LateralMenu";
+import { Grid, Typography, Button } from "@material-ui/core";
+import { useTranslation } from "react-i18next";
 
 export default function Home({
   children: {
     props: { component }
   }
 }) {
+  const { t, i18n } = useTranslation();
+
+  useEffect(() => {
+    console.log(window.navigator.language);
+
+    if (window.navigator.language === "pt-BR") {
+      i18n.changeLanguage("pt");
+    }
+  }, []);
+
   return (
     <Grid
       container
       justify={"space-between"}
+      spacing={1}
       style={{
         minHeight: "100%",
         border: "1px solid white",
         borderRadius: 13
       }}
     >
-      <Grid item container md={5} style={{ padding: 25 }}>
+      <Grid item container md={5} style={{ padding: "25px 0px 25px 25px" }}>
         <Grid item md={12}>
-          <Typography
-            variant={"subtitle2"}
-            style={{ color: "rgba(255,255,255,0.5)" }}
-          >
-            devdata.tools was created by{" "}
-            <a
-              style={{ color: "white", textDecoration: "none" }}
-              href={"#"}
-              onClick={() => {
-                window.open("https://github.com/jsdaniell");
-              }}
-            >
-              @jsdaniell
-            </a>
-          </Typography>
+          <Grid container justify={"space-between"}>
+            <Grid item>
+              <Typography
+                variant={"subtitle2"}
+                style={{ color: "rgba(255,255,255,0.5)", lineHeight: "30px" }}
+              >
+                {t("copyright")}{" "}
+                <a
+                  style={{ color: "white", textDecoration: "none" }}
+                  href={"#"}
+                  onClick={() => {
+                    window.open("https://github.com/jsdaniell");
+                  }}
+                >
+                  @jsdaniell
+                </a>
+              </Typography>
+            </Grid>
+            <Grid item style={{ textAlign: "end" }}>
+              <Button
+                size={"small"}
+                color={"secondary"}
+                onClick={() => {
+                  i18n.changeLanguage(i18n.language === "pt" ? "en" : "pt");
+                }}
+              >
+                {i18n.language === "pt"
+                  ? "Change to English"
+                  : "Mudar para Português"}
+              </Button>
+            </Grid>
+          </Grid>
           <Typography variant={"h5"} style={{ color: "white" }}>
-            Test Case
+            {t("testCaseTitle")}
           </Typography>
-
         </Grid>
         {component[0]()}
       </Grid>

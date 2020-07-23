@@ -7,10 +7,12 @@ import { Provider } from "react-redux";
 import returnStoreAndPersistor from "./redux/index";
 import { BrowserRouter } from "react-router-dom";
 import HttpsRedirect from "react-https-redirect";
+import { useTranslation } from "react-i18next";
 
 const { store } = returnStoreAndPersistor();
 
 function App() {
+
   return (
     <HttpsRedirect>
       <BrowserRouter>

@@ -1,0 +1,17 @@
+{
+  "copyright": "devdata.tools foi criado por",
+  "testCaseTitle": "Caso de Teste",
+  "testCaseDescription": "Crie facilmente casos de testes e exporte em PDF, sincronize sua conta para salvar seus dados.",
+  "inspirationTitle": "Inspiração",
+  "inspirationDescription1": "Inspirado por uma pessoa adorável chamada  ",
+  "inspirationDescription2": ", que é uma grande tester e me inspirou a construír essa ferramenta. Obrigado ",
+  "inspirationDescription3": ", sem você eu não teria conseguido por mim mesmo.",
+  "nameLabel": "Nome",
+  "environmentLabel": "Ambiente",
+  "actorLabel": "Ator",
+  "preConditionsLabel": "Pré-condições",
+  "postConditionLabel": "Pós-condições",
+  "proceduresLabel": "Procedimentos",
+  "writeTitleLabel": "Digite o título",
+  "saveLabel": "Salvar"
+}
