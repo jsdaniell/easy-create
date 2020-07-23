@@ -13,6 +13,7 @@ import ListPrePostCondition from "./ListPrePostConditions";
 import { useSnackbar } from "notistack";
 import exportOnPdf from "../utils/exportOnPdf";
 import DevicesUtils from "../utils/deviceUtils";
+import { useTranslation } from "react-i18next";
 
 export default function TestCaseModal() {
   const testCaseData = useSelector(state => state.testCaseModalReducer);
@@ -20,6 +21,8 @@ export default function TestCaseModal() {
   const dispatch = useDispatch();
 
   const { enqueueSnackbar } = useSnackbar();
+
+  const { t } = useTranslation();
 
   useEffect(() => {
     dispatch({
@@ -72,7 +75,7 @@ export default function TestCaseModal() {
     >
       <Grid item md={12} container justify={"center"}>
         <TextField
-          placeholder={"Write the title"}
+          placeholder={t("writeTitleLabel")}
           value={testCaseData.title}
           inputProps={{ style: { textAlign: "center" } }}
           onChange={({ target: { value } }) => {
@@ -102,7 +105,7 @@ export default function TestCaseModal() {
           <TextField
             variant={"outlined"}
             fullWidth
-            label={"Environment"}
+            label={t("environmentLabel")}
             size={"small"}
             onChange={({ target: { value } }) => {
               dispatch({
@@ -150,7 +153,7 @@ export default function TestCaseModal() {
           <TextField
             variant={"outlined"}
             fullWidth
-            label={"Name"}
+            label={t("nameLabel")}
             size={"small"}
             onChange={({ target: { value } }) => {
               dispatch({
@@ -164,7 +167,7 @@ export default function TestCaseModal() {
           <TextField
             variant={"outlined"}
             fullWidth
-            label={"Actor"}
+            label={t("actorLabel")}
             size={"small"}
             onChange={({ target: { value } }) => {
               dispatch({
@@ -185,7 +188,7 @@ export default function TestCaseModal() {
         xs={12}
       >
         <Grid item>
-          <Typography color={"primary"}>Preconditions</Typography>
+          <Typography color={"primary"}>{t("preConditionsLabel")}</Typography>
         </Grid>
         <Grid item>
           <IconButton
@@ -233,7 +236,7 @@ export default function TestCaseModal() {
         xs={12}
       >
         <Grid item>
-          <Typography color={"primary"}>Procedures</Typography>
+          <Typography color={"primary"}>{t("proceduresLabel")}</Typography>
         </Grid>
         <Grid item>
           <IconButton
@@ -276,7 +279,7 @@ export default function TestCaseModal() {
         <TextField
           variant={"outlined"}
           fullWidth
-          label={"Post-condition"}
+          label={t("postConditionLabel")}
           size={"small"}
           onChange={({ target: { value } }) => {
             dispatch({
@@ -291,7 +294,7 @@ export default function TestCaseModal() {
         <Grid item>{/*<Button color={"primary"}>EXPORT</Button>*/}</Grid>
         <Grid item>
           <Button color={"primary"} onClick={() => handleSave()}>
-            SAVE
+            {t("saveLabel").toUpperCase()}
           </Button>
         </Grid>
       </Grid>

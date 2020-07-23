@@ -1,8 +1,11 @@
 import React from "react";
 import { Grid, Typography, Button } from "@material-ui/core";
 import { ReactComponent as MainSvg } from "../assets/main.svg";
+import { useTranslation } from "react-i18next";
 
 export default function LateralMenu() {
+  const { t } = useTranslation();
+
   return (
     <Grid
       item
@@ -12,8 +15,7 @@ export default function LateralMenu() {
       alignItems={"space-between"}
     >
       <Typography variant={"body2"} style={{ color: "white" }}>
-        Create easily tests cases and send or export to anyone, sync your
-        account to get syncronized and store your tests cases.
+        {t("testCaseDescription")}
       </Typography>
       <Grid
         md={12}
@@ -29,13 +31,13 @@ export default function LateralMenu() {
 
       <Grid item md={12} style={{ alignSelf: "flex-end" }}>
         <Typography variant={"h5"} style={{ color: "white" }}>
-          Inspiration
+          {t("inspirationTitle")}
         </Typography>
         <Typography
           variant={"body2"}
           style={{ color: "rgba(255,255,255,0.5)" }}
         >
-          Inspired by a lovely person called{" "}
+          {t("inspirationDescription1")}
           <a
             style={{ color: "white", textDecoration: "none" }}
             href={"#"}
@@ -45,8 +47,7 @@ export default function LateralMenu() {
           >
             Joana Leite
           </a>
-          , who is a great tester and inspired me to construct this tool to her.
-          Thank you{" "}
+          {t("inspirationDescription2")}
           <a
             style={{ color: "white", textDecoration: "none" }}
             href={"#"}
@@ -56,7 +57,7 @@ export default function LateralMenu() {
           >
             Joana Leite
           </a>
-          , without you I could not achieve this by myself.
+          {t("inspirationDescription3")}
         </Typography>
       </Grid>
     </Grid>
