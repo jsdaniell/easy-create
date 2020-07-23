@@ -12,6 +12,7 @@ import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 import ListPrePostCondition from "./ListPrePostConditions";
 import { useSnackbar } from "notistack";
 import exportOnPdf from "../utils/exportOnPdf";
+import DevicesUtils from "../utils/deviceUtils";
 
 export default function TestCaseModal() {
   const testCaseData = useSelector(state => state.testCaseModalReducer);
@@ -83,7 +84,7 @@ export default function TestCaseModal() {
         />
       </Grid>
       <Grid item container justify={"space-between"} spacing={2}>
-        <Grid item md>
+        <Grid item md xs={12}>
           <TextField
             variant={"outlined"}
             fullWidth
@@ -97,7 +98,7 @@ export default function TestCaseModal() {
             }}
           />
         </Grid>
-        <Grid item md>
+        <Grid item md xs={12}>
           <TextField
             variant={"outlined"}
             fullWidth
@@ -111,7 +112,13 @@ export default function TestCaseModal() {
             }}
           />
         </Grid>
-        <Grid item style={{ textAlign: "end" }}>
+        <Grid
+          item
+          xs={12}
+          style={{
+            textAlign: DevicesUtils.checkIfIsMobile() ? "center" : "end"
+          }}
+        >
           <ToggleButtonGroup
             value={testCaseData.priority}
             size={"small"}
@@ -138,7 +145,7 @@ export default function TestCaseModal() {
       </Grid>
 
       <Grid item container justify={"space-between"} spacing={2}>
-        <Grid item md={8}>
+        <Grid item md={8} xs={12}>
           <TextField
             variant={"outlined"}
             fullWidth
@@ -152,7 +159,7 @@ export default function TestCaseModal() {
             }}
           />
         </Grid>
-        <Grid item md={4}>
+        <Grid item md={4} xs={12}>
           <TextField
             variant={"outlined"}
             fullWidth
@@ -174,6 +181,7 @@ export default function TestCaseModal() {
         justify={"flex-start"}
         spacing={2}
         alignItems={"center"}
+        xs={12}
       >
         <Grid item>
           <Typography color={"primary"}>Preconditions</Typography>
@@ -211,7 +219,7 @@ export default function TestCaseModal() {
         </Grid>
       </Grid>
 
-      <Grid item container style={{ flexGrow: 1 }}>
+      <Grid item container style={{ flexGrow: 1 }} xs={12}>
         <ListPrePostCondition keyList={"preconditions"} />
       </Grid>
 
@@ -221,6 +229,7 @@ export default function TestCaseModal() {
         justify={"flex-start"}
         spacing={2}
         alignItems={"center"}
+        xs={12}
       >
         <Grid item>
           <Typography color={"primary"}>Procedures</Typography>
@@ -258,11 +267,11 @@ export default function TestCaseModal() {
         </Grid>
       </Grid>
 
-      <Grid item container>
+      <Grid item container xs={12}>
         <ListPrePostCondition keyList={"procedures"} />
       </Grid>
 
-      <Grid item container>
+      <Grid item container xs={12}>
         <TextField
           variant={"outlined"}
           fullWidth
