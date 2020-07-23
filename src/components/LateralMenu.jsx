@@ -11,31 +11,6 @@ export default function LateralMenu() {
       justify={"space-between"}
       alignItems={"space-between"}
     >
-      <Grid item md={12}>
-        <Typography
-          variant={"subtitle2"}
-          style={{ color: "rgba(255,255,255,0.5)" }}
-        >
-          devdata.tools was created by{" "}
-          <a
-            style={{ color: "white", textDecoration: "none" }}
-            href={"#"}
-            onClick={() => {
-              window.open("https://github.com/jsdaniell");
-            }}
-          >
-            @jsdaniell
-          </a>
-        </Typography>
-        <Typography variant={"h5"} style={{ color: "white" }}>
-          Test Case
-        </Typography>
-        <Typography variant={"body2"} style={{ color: "white" }}>
-          Create easily tests cases and send or export to anyone, sync your
-          account to get syncronized and store your tests cases.
-        </Typography>
-      </Grid>
-
       <Grid
         md={12}
         item
@@ -45,6 +20,10 @@ export default function LateralMenu() {
           alignSelf: "center"
         }}
       >
+        <Typography variant={"body2"} style={{ color: "white" }}>
+          Create easily tests cases and send or export to anyone, sync your
+          account to get syncronized and store your tests cases.
+        </Typography>
         <MainSvg height={340} />
       </Grid>
 
