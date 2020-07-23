@@ -1,21 +1,40 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Grid,
   TextField,
   Typography,
   Button,
-  IconButton,
-  ListItem,
-  ListItemText,
-  List,
-  ListItemSecondaryAction
+  IconButton
 } from "@material-ui/core";
 import { Add, RemoveCircle, FiberManualRecord } from "@material-ui/icons";
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
+import ListPrePostCondition from "./ListPrePostConditions";
+import { useSnackbar } from "notistack";
 
 export default function TestCaseModal() {
   const testCaseData = useSelector(state => state.testCaseModalReducer);
+
+  const dispatch = useDispatch();
+
+  const { enqueueSnackbar } = useSnackbar();
+
+  useEffect(() => {
+    dispatch({
+      type: "SET_TEST_CASE_MODAL_REDUCER",
+      payload: {
+        title: "",
+        id: "",
+        environment: "",
+        priority: "",
+        name: "",
+        actor: "",
+        preconditions: [],
+        procedures: [],
+        postcondition: ""
+      }
+    });
+  }, []);
 
   return (
     <Grid
@@ -26,7 +45,14 @@ export default function TestCaseModal() {
       <Grid item md={12} container justify={"center"}>
         <TextField
           placeholder={"Write the title"}
+          value={testCaseData.title}
           inputProps={{ style: { textAlign: "center" } }}
+          onChange={({ target: { value } }) => {
+            dispatch({
+              type: "SET_TEST_CASE_MODAL_REDUCER",
+              payload: { ...testCaseData, title: value }
+            });
+          }}
         />
       </Grid>
       <Grid item container justify={"space-between"} spacing={2}>
@@ -36,6 +62,12 @@ export default function TestCaseModal() {
             fullWidth
             label={"ID"}
             size={"small"}
+            onChange={({ target: { value } }) => {
+              dispatch({
+                type: "SET_TEST_CASE_MODAL_REDUCER",
+                payload: { ...testCaseData, id: value }
+              });
+            }}
           />
         </Grid>
         <Grid item md>
@@ -44,28 +76,35 @@ export default function TestCaseModal() {
             fullWidth
             label={"Environment"}
             size={"small"}
+            onChange={({ target: { value } }) => {
+              dispatch({
+                type: "SET_TEST_CASE_MODAL_REDUCER",
+                payload: { ...testCaseData, environment: value }
+              });
+            }}
           />
         </Grid>
         <Grid item style={{ textAlign: "end" }}>
           <ToggleButtonGroup
-            value={"center"}
+            value={testCaseData.priority}
             size={"small"}
             exclusive
-            onChange={() => {}}
+            onChange={(event, newValue) => {
+              dispatch({
+                type: "SET_TEST_CASE_MODAL_REDUCER",
+                payload: { ...testCaseData, priority: newValue }
+              });
+            }}
             aria-label="text alignment"
           >
-            <ToggleButton value="left" aria-label="left aligned">
-              <FiberManualRecord color={"#EBD877"} />
+            <ToggleButton value="1" aria-label="left aligned">
+              <FiberManualRecord style={{ color: "#7ABF6C" }} />
             </ToggleButton>
-            <ToggleButton value="center" aria-label="centered">
-              <FiberManualRecord color={"#7ABF6C"} />
+            <ToggleButton value="2" aria-label="centered">
+              <FiberManualRecord style={{ color: "#EBD877" }} />
             </ToggleButton>
-            <ToggleButton
-              value="right"
-              color={"#F17878"}
-              aria-label="right aligned"
-            >
-              <FiberManualRecord />
+            <ToggleButton value="3" aria-label="right aligned">
+              <FiberManualRecord style={{ color: "#F17878" }} />
             </ToggleButton>
           </ToggleButtonGroup>
         </Grid>
@@ -78,6 +117,12 @@ export default function TestCaseModal() {
             fullWidth
             label={"Name"}
             size={"small"}
+            onChange={({ target: { value } }) => {
+              dispatch({
+                type: "SET_TEST_CASE_MODAL_REDUCER",
+                payload: { ...testCaseData, name: value }
+              });
+            }}
           />
         </Grid>
         <Grid item md={4}>
@@ -86,6 +131,12 @@ export default function TestCaseModal() {
             fullWidth
             label={"Actor"}
             size={"small"}
+            onChange={({ target: { value } }) => {
+              dispatch({
+                type: "SET_TEST_CASE_MODAL_REDUCER",
+                payload: { ...testCaseData, actor: value }
+              });
+            }}
           />
         </Grid>
       </Grid>
@@ -105,7 +156,28 @@ export default function TestCaseModal() {
             size={"small"}
             style={{ backgroundColor: "#262A43" }}
             color={"secondary"}
-            onClick={() => console.log("Click")}
+            onClick={() => {
+              let newArray = testCaseData.preconditions;
+
+              if (newArray.length && !newArray[newArray.length - 1]) {
+                return enqueueSnackbar(
+                  "Fill the last option to add one more!",
+                  {
+                    variant: "warning"
+                  }
+                );
+              }
+
+              newArray.push("");
+
+              dispatch({
+                type: "SET_TEST_CASE_MODAL_REDUCER",
+                payload: {
+                  ...testCaseData,
+                  preconditions: newArray
+                }
+              });
+            }}
           >
             <Add fontSize={"small"} />
           </IconButton>
@@ -113,24 +185,7 @@ export default function TestCaseModal() {
       </Grid>
 
       <Grid item container>
-        <List
-          style={{
-            border: "1px solid #CBCBCB",
-            width: "100%",
-            borderRadius: 5,
-            height: "15vh",
-            overflowY: "scroll"
-          }}
-        >
-          <ListItem dense button>
-            <ListItemText primary={`Line item 1`} />
-            <ListItemSecondaryAction>
-              <IconButton size={"small"} edge="end" aria-label="comments">
-                <RemoveCircle fontSize={"small"} />
-              </IconButton>
-            </ListItemSecondaryAction>
-          </ListItem>
-        </List>
+        <ListPrePostCondition keyList={"preconditions"} />
       </Grid>
 
       <Grid
@@ -148,7 +203,28 @@ export default function TestCaseModal() {
             size={"small"}
             style={{ backgroundColor: "#262A43" }}
             color={"secondary"}
-            onClick={() => console.log("Click")}
+            onClick={() => {
+              let newArray = testCaseData.procedures;
+
+              if (newArray.length && !newArray[newArray.length - 1]) {
+                return enqueueSnackbar(
+                  "Fill the last option to add one more!",
+                  {
+                    variant: "warning"
+                  }
+                );
+              }
+
+              newArray.push("");
+
+              dispatch({
+                type: "SET_TEST_CASE_MODAL_REDUCER",
+                payload: {
+                  ...testCaseData,
+                  procedures: newArray
+                }
+              });
+            }}
           >
             <Add fontSize={"small"} />
           </IconButton>
@@ -156,24 +232,7 @@ export default function TestCaseModal() {
       </Grid>
 
       <Grid item container>
-        <List
-          style={{
-            border: "1px solid #CBCBCB",
-            width: "100%",
-            borderRadius: 5,
-            height: "18vh",
-            overflowY: "scroll"
-          }}
-        >
-          <ListItem dense button>
-            <ListItemText primary={`Line item 1`} />
-            <ListItemSecondaryAction>
-              <IconButton size={"small"} edge="end" aria-label="comments">
-                <RemoveCircle fontSize={"small"} />
-              </IconButton>
-            </ListItemSecondaryAction>
-          </ListItem>
-        </List>
+        <ListPrePostCondition keyList={"procedures"} />
       </Grid>
 
       <Grid item container>
@@ -182,6 +241,12 @@ export default function TestCaseModal() {
           fullWidth
           label={"Post-condition"}
           size={"small"}
+          onChange={({ target: { value } }) => {
+            dispatch({
+              type: "SET_TEST_CASE_MODAL_REDUCER",
+              payload: { ...testCaseData, postcondition: value }
+            });
+          }}
         />
       </Grid>
 
