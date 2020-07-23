@@ -2,6 +2,7 @@ import React from "react";
 import { Grid, Typography, Button } from "@material-ui/core";
 import { ReactComponent as MainSvg } from "../assets/main.svg";
 import { useTranslation } from "react-i18next";
+import DevicesUtils from "../utils/deviceUtils";
 
 export default function LateralMenu() {
   const { t } = useTranslation();
@@ -20,13 +21,14 @@ export default function LateralMenu() {
       <Grid
         md={12}
         item
+        xs={12}
         style={{
           justifyContent: "center",
           textAlign: "center",
           alignSelf: "center"
         }}
       >
-        <MainSvg height={340} />
+        <MainSvg height={DevicesUtils.checkIfIsMobile() ? 300 : 340} />
       </Grid>
 
       <Grid item md={12} style={{ alignSelf: "flex-end" }}>
