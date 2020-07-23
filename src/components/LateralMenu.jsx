@@ -7,10 +7,14 @@ export default function LateralMenu() {
     <Grid
       item
       container
-      style={{ padding: "0px 15px 20px 12px" }}
+      style={{ padding: "0px 0px 20px 0px" }}
       justify={"space-between"}
       alignItems={"space-between"}
     >
+      <Typography variant={"body2"} style={{ color: "white" }}>
+        Create easily tests cases and send or export to anyone, sync your
+        account to get syncronized and store your tests cases.
+      </Typography>
       <Grid
         md={12}
         item
@@ -20,10 +24,6 @@ export default function LateralMenu() {
           alignSelf: "center"
         }}
       >
-        <Typography variant={"body2"} style={{ color: "white" }}>
-          Create easily tests cases and send or export to anyone, sync your
-          account to get syncronized and store your tests cases.
-        </Typography>
         <MainSvg height={340} />
       </Grid>
 
