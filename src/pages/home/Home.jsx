@@ -8,14 +8,14 @@ export default function Home() {
   return (
     <Grid
       container
-      justify={"space-around"}
+      justify={"space-between"}
       style={{
-        alignItems: "center",
-        alignContent: "center",
-        minHeight: "100%"
+        minHeight: "100%",
+        border: "1px solid white",
+        borderRadius: 13
       }}
     >
-      <Grid item container md={5}>
+      <Grid item container md={5} style={{ padding: 25 }}>
         <LateralMenu />
       </Grid>
       <Grid
