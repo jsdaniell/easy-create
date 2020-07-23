@@ -11,6 +11,7 @@ import { Add, RemoveCircle, FiberManualRecord } from "@material-ui/icons";
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 import ListPrePostCondition from "./ListPrePostConditions";
 import { useSnackbar } from "notistack";
+import exportOnPdf from "../utils/exportOnPdf";
 
 export default function TestCaseModal() {
   const testCaseData = useSelector(state => state.testCaseModalReducer);
@@ -35,6 +36,28 @@ export default function TestCaseModal() {
       }
     });
   }, []);
+
+  function handleSave() {
+    if (!testCaseData.title) {
+      return enqueueSnackbar("Title is mandatory!", {
+        variant: "warning"
+      });
+    }
+
+    if (!testCaseData.preconditions.length) {
+      return enqueueSnackbar("Add some preconditions!", {
+        variant: "warning"
+      });
+    }
+
+    if (!testCaseData.procedures.length) {
+      return enqueueSnackbar("Add some procedures!", {
+        variant: "warning"
+      });
+    }
+
+    exportOnPdf(testCaseData);
+  }
 
   return (
     <Grid
@@ -251,11 +274,11 @@ export default function TestCaseModal() {
       </Grid>
 
       <Grid item container justify={"flex-end"} spacing={2}>
+        <Grid item>{/*<Button color={"primary"}>EXPORT</Button>*/}</Grid>
         <Grid item>
-          <Button color={"primary"}>EXPORT</Button>
-        </Grid>
-        <Grid item>
-          <Button color={"primary"}>SAVE</Button>
+          <Button color={"primary"} onClick={() => handleSave()}>
+            SAVE
+          </Button>
         </Grid>
       </Grid>
     </Grid>

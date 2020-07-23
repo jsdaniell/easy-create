@@ -8,7 +8,7 @@ export default function Home() {
   return (
     <Grid
       container
-      style={{ height: "100vh", backgroundColor: "#262A43", padding: 10 }}
+      style={{ height: "100vh", backgroundColor: "#262A43", padding: 25 }}
     >
       <Grid item container md={5}>
         <LateralMenu />

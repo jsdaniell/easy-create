@@ -6,19 +6,13 @@ export default function LateralMenu() {
     <Grid
       item
       container
-      style={{ padding: "10px 10px 20px 10px" }}
+      style={{ padding: "0px 15px 20px 12px" }}
       justify={"space-between"}
       alignItems={"space-between"}
     >
       <Grid item md={12}>
         <Typography variant={"h6"} style={{ color: "rgba(255,255,255,0.5)" }}>
           Easy Creator
-        </Typography>
-        <Typography
-          variant={"body2"}
-          style={{ color: "rgba(255,255,255,0.5)" }}
-        >
-          English
         </Typography>
         <Typography variant={"h5"} style={{ color: "white" }}>
           Test Case
