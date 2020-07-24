@@ -13,5 +13,6 @@
   "postConditionLabel": "Pós-condições",
   "proceduresLabel": "Procedimentos",
   "writeTitleLabel": "Digite o título",
-  "saveLabel": "Salvar"
+  "saveLabel": "Salvar",
+  "resetLabel": "Resetar"
 }

@@ -291,7 +291,27 @@ export default function TestCaseModal() {
       </Grid>
 
       <Grid item container justify={"flex-end"} spacing={2}>
-        <Grid item>{/*<Button color={"primary"}>EXPORT</Button>*/}</Grid>
+        <Grid
+          item
+          onClick={() => {
+            dispatch({
+              type: "SET_TEST_CASE_MODAL_REDUCER",
+              payload: {
+                title: "",
+                id: "",
+                environment: "",
+                priority: "",
+                name: "",
+                actor: "",
+                preconditions: [],
+                procedures: [],
+                postcondition: ""
+              }
+            });
+          }}
+        >
+          <Button color={"primary"}>{t("resetLabel")}</Button>
+        </Grid>
         <Grid item>
           <Button color={"primary"} onClick={() => handleSave()}>
             {t("saveLabel").toUpperCase()}
