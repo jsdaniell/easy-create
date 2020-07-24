@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { Grid, Typography, Button } from "@material-ui/core";
 import { useTranslation } from "react-i18next";
 import DevicesUtils from "../../utils/deviceUtils";
+import { signInWithGoogle } from "../../firebase";
 
 export default function Home({
   children: {
@@ -65,6 +66,16 @@ export default function Home({
                 }}
               >
                 {i18n.language === "pt" ? "English" : "Português"}
+              </Button>
+            </Grid>
+            <Grid item md={12} xs={12}>
+              <Button
+                size={"small"}
+                color={"primary"}
+                style={{ backgroundColor: "white", marginBottom: 5 }}
+                onClick={() => signInWithGoogle()}
+              >
+                Sign With Google
               </Button>
             </Grid>
           </Grid>
