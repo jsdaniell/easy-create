@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Grid, Typography, Button } from "@material-ui/core";
 import { useTranslation } from "react-i18next";
 import DevicesUtils from "../../utils/deviceUtils";
-import { signInWithGoogle } from "../../firebase";
+import { signInWithGoogle } from "../../service/integratedLogin";
 
 export default function Home({
   children: {
@@ -12,8 +12,6 @@ export default function Home({
   const { t, i18n } = useTranslation();
 
   useEffect(() => {
-    console.log(window.navigator.language);
-
     if (window.navigator.language === "pt-BR") {
       i18n.changeLanguage("pt");
     }

@@ -13,13 +13,10 @@ const firebaseConfig = {
   measurementId: "G-KMZYVLK213"
 };
 
-const provider = new firebase.auth.GoogleAuthProvider();
+
 
 firebase.initializeApp(firebaseConfig);
 export const auth = firebase.auth();
 export const firestore = firebase.firestore();
-export const signInWithGoogle = () => {
-  auth.signInWithPopup(provider).then(data => {
-    localStorage.setItem("logged", JSON.stringify(data));
-  });
-};
+
+
