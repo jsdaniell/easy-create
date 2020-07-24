@@ -30,6 +30,11 @@ const theme = createMuiTheme({
           borderBottom: "0px solid white"
         }
       }
+    },
+    MuiListItem: {
+      gutters: {
+        paddingLeft: 5
+      }
     }
   },
   palette: {
