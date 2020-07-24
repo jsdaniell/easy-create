@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   IconButton,
   InputAdornment,
@@ -6,7 +6,7 @@ import {
   ListItemSecondaryAction,
   TextField
 } from "@material-ui/core";
-import { RemoveCircle } from "@material-ui/icons";
+import { RemoveCircle, DragIndicator } from "@material-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function ListItemListCondition({
@@ -22,6 +22,9 @@ export default function ListItemListCondition({
 
   return (
     <ListItem dense key={`${precondition}-${index}`}>
+      <DragIndicator
+        style={{ paddingRight: 3, color: "rgba(000,000,000, 0.5)" }}
+      />
       <TextField
         fullWidth
         variant={"outlined"}
