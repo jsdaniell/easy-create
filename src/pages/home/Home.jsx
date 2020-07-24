@@ -32,10 +32,10 @@ export default function Home({
       <Grid item container md={5} style={{ padding: "25px" }}>
         <Grid item md={12}>
           <Grid container justify={"space-between"}>
-            <Grid item>
+            <Grid item md={10}>
               <Typography
                 variant={"subtitle2"}
-                style={{ color: "rgba(255,255,255,0.5)", lineHeight: "30px" }}
+                style={{ color: "rgba(255,255,255,0.5)" }}
               >
                 {t("copyright")}{" "}
                 <a
@@ -51,6 +51,7 @@ export default function Home({
             </Grid>
             <Grid
               item
+              md={2}
               xs={12}
               style={{
                 textAlign: DevicesUtils.checkIfIsMobile() ? "center" : "end"
@@ -63,9 +64,7 @@ export default function Home({
                   i18n.changeLanguage(i18n.language === "pt" ? "en" : "pt");
                 }}
               >
-                {i18n.language === "pt"
-                  ? "Change to English"
-                  : "Mudar para Português"}
+                {i18n.language === "pt" ? "English" : "Português"}
               </Button>
             </Grid>
           </Grid>
