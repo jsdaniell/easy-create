@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import {
   Grid,
   TextField,
-  FormControl,
-  Select,
-  MenuItem
+  IconButton,
+  MenuItem,
+  Typography
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import { useTranslation } from "react-i18next";
@@ -13,6 +13,7 @@ import { getTestsGroups } from "../../database/testCaseQueries/getTestsGroups";
 import { useDispatch, useSelector } from "react-redux";
 import { getDocumentsFromTestsGroup } from "../../database/testCaseQueries/getDocumentsFromTestsGroup";
 import TestListItem from "./TestListItem";
+import { NavigateNext, NavigateBefore } from "@material-ui/icons";
 
 export default function LateralMenuLogged() {
   const { t } = useTranslation();
@@ -52,36 +53,73 @@ export default function LateralMenuLogged() {
     });
   }, []);
 
+  function navigate(nextOrBefore) {
+    getDocumentsFromTestsGroup({
+      user: userLogged,
+      testGroupId: testsGroups.selected,
+      setState: data => {
+        dispatch({
+          type: "SET_LIST_DOCS",
+          payload: data
+        });
+      },
+      paginate: nextOrBefore,
+      lastItem: testList[testList.length - 1].title
+    });
+  }
+
   return (
     <Grid
       item
       container
-      style={{ padding: "0px 20px 20px" }}
+      style={{
+        padding: "0px 20px 20px",
+        height: "92%",
+        alignContent: "space-between"
+      }}
       justify={"space-between"}
       spacing={2}
     >
-      <Grid item md={12} xs={12}>
-        <TextField
-          id="standard-select-currency"
-          select
-          variant={"outlined"}
-          fullWidth
-          color={"secondary"}
-          size={"small"}
-          label={t("groupsLabel")}
-          defaultValue={`default`}
-        >
-          {testsGroups.list.map(option => (
-            <MenuItem key={option.itemId} value={option.itemId}>
-              {option.itemLabel}
-            </MenuItem>
+      <Grid container spacing={1} style={{ padding: 8 }} md={12} xs={12}>
+        <Grid item md={4}>
+          <TextField
+            id="standard-select-currency"
+            select
+            variant={"outlined"}
+            fullWidth
+            color={"secondary"}
+            size={"small"}
+            label={t("groupsLabel")}
+            defaultValue={`default`}
+          >
+            {testsGroups.list.map(option => (
+              <MenuItem key={option.itemId} value={option.itemId}>
+                {option.itemLabel}
+              </MenuItem>
+            ))}
+          </TextField>
+        </Grid>
+        <Grid item container md={12} xs={12}>
+          {testList.map((doc, index) => (
+            <TestListItem test={doc} />
           ))}
-        </TextField>
+        </Grid>
       </Grid>
-      <Grid item container md={12} xs={12}>
-        {testList.map((doc, index) => (
-          <TestListItem test={doc} />
-        ))}
+
+      <Grid item md={12}>
+        <Grid container justify={"flex-end"}>
+          <Grid item>
+            <IconButton size={"small"} onClick={() => navigate("before")}>
+              <NavigateBefore color={"secondary"}></NavigateBefore>
+            </IconButton>
+          </Grid>
+          <Typography style={{ color: "white" }}>...</Typography>
+          <Grid item>
+            <IconButton size={"small"} onClick={() => navigate("next")}>
+              <NavigateNext color={"secondary"}></NavigateNext>
+            </IconButton>
+          </Grid>
+        </Grid>
       </Grid>
     </Grid>
   );
