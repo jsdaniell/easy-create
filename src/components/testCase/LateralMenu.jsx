@@ -39,27 +39,7 @@ export default function LateralMenu() {
           variant={"body2"}
           style={{ color: "rgba(255,255,255,0.5)" }}
         >
-          {t("inspirationDescription1")}
-          <a
-            style={{ color: "white", textDecoration: "none" }}
-            href={"#"}
-            onClick={() => {
-              window.open("https://www.linkedin.com/in/joana-leite-82212a197/");
-            }}
-          >
-            Joana Leite
-          </a>
-          {t("inspirationDescription2")}
-          <a
-            style={{ color: "white", textDecoration: "none" }}
-            href={"#"}
-            onClick={() => {
-              window.open("https://www.linkedin.com/in/joana-leite-82212a197/");
-            }}
-          >
-            Joana Leite
-          </a>
-          {t("inspirationDescription3")}
+          {t("inspirationDescription")}
         </Typography>
       </Grid>
     </Grid>
