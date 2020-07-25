@@ -10,24 +10,44 @@ import { Autocomplete } from "@material-ui/lab";
 import { useTranslation } from "react-i18next";
 import DevicesUtils from "../../utils/deviceUtils";
 import { getTestsGroups } from "../../database/testCaseQueries/getTestsGroups";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { getDocumentsFromTestsGroup } from "../../database/testCaseQueries/getDocumentsFromTestsGroup";
+import TestListItem from "./TestListItem";
 
 export default function LateralMenuLogged() {
   const { t } = useTranslation();
 
-  const [groups, setGroups] = useState([]);
+  const dispatch = useDispatch();
 
   const [selectedGroup, setSelectedGroup] = useState();
 
   const userLogged = useSelector(state => state.userUidReducer);
 
+  const testList = useSelector(state => state.testListDocsReducer);
+  const testsGroups = useSelector(state => state.testGroupsReducer);
+
   useEffect(() => {
     getTestsGroups({
       user: userLogged,
       setState: data => {
-        setGroups(data);
+        dispatch({
+          type: "SET_TEST_GROUPS_STATE",
+          payload: {
+            list: data,
+            selected: data[0].itemId
+          }
+        });
 
-        setSelectedGroup(data[0].itemId);
+        getDocumentsFromTestsGroup({
+          user: userLogged,
+          testGroupId: data[0].itemId,
+          setState: data => {
+            dispatch({
+              type: "SET_LIST_DOCS",
+              payload: data
+            });
+          }
+        });
       }
     });
   }, []);
@@ -38,6 +58,7 @@ export default function LateralMenuLogged() {
       container
       style={{ padding: "0px 20px 20px" }}
       justify={"space-between"}
+      spacing={2}
     >
       <Grid item md={12} xs={12}>
         <TextField
@@ -50,14 +71,18 @@ export default function LateralMenuLogged() {
           label={t("groupsLabel")}
           defaultValue={`default`}
         >
-          {groups.map(option => (
+          {testsGroups.list.map(option => (
             <MenuItem key={option.itemId} value={option.itemId}>
               {option.itemLabel}
             </MenuItem>
           ))}
         </TextField>
       </Grid>
-      <Grid item md={12} xs={12} style={{ height: "100%" }}></Grid>
+      <Grid item container md={12} xs={12} style={{ height: "100%" }}>
+        {testList.map((doc, index) => (
+          <TestListItem test={doc} />
+        ))}
+      </Grid>
     </Grid>
   );
 }
