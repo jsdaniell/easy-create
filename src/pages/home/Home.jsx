@@ -43,14 +43,19 @@ export default function Home({
         alignContent: "flex-start"
       }}
     >
-      <Grid item md={5} style={{ padding: "25px", alignContent: "flex-start" }}>
+      <Grid
+        item
+        md={5}
+        xs={12}
+        style={{ padding: "25px", alignContent: "flex-start" }}
+      >
         <Grid
           container
           style={{ height: "100%", alignContent: "flex-start" }}
           spacing={5}
         >
-          <Grid item md={12}>
-            <Grid container justify={"space-between"}>
+          <Grid item md={12} xs={12}>
+            <Grid container spacing={1} justify={"space-between"}>
               <Grid item md={8} style={{ alignSelf: "center" }}>
                 <Typography
                   variant={"subtitle2"}
@@ -71,9 +76,9 @@ export default function Home({
               <Grid
                 item
                 md={3}
-                xs={12}
+                xs={6}
                 style={{
-                  textAlign: DevicesUtils.checkIfIsMobile() ? "right" : "end"
+                  textAlign: DevicesUtils.checkIfIsMobile() ? "start" : "end"
                 }}
               >
                 <Button
@@ -92,7 +97,7 @@ export default function Home({
                   md={1}
                   xs={6}
                   style={{
-                    textAlign: DevicesUtils.checkIfIsMobile() ? "left" : "end",
+                    textAlign: DevicesUtils.checkIfIsMobile() ? "end" : "end",
                     alignSelf: "center"
                   }}
                 >
@@ -142,7 +147,7 @@ export default function Home({
                   md={1}
                   xs={6}
                   style={{
-                    textAlign: DevicesUtils.checkIfIsMobile() ? "left" : "end",
+                    textAlign: DevicesUtils.checkIfIsMobile() ? "end" : "end",
                     alignSelf: "center"
                   }}
                 >
@@ -161,9 +166,11 @@ export default function Home({
                 </Grid>
               )}
             </Grid>
-            <Typography variant={"h5"} style={{ color: "white" }}>
-              {t("testCaseTitle")}
-            </Typography>
+            <Grid item xs={12} md={12}>
+              <Typography variant={"h5"} style={{ color: "white" }}>
+                {t("testCaseTitle")}
+              </Typography>
+            </Grid>
           </Grid>
           {component[0]()}
         </Grid>

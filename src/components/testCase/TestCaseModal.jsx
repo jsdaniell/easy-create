@@ -320,9 +320,15 @@ export default function TestCaseModal() {
         />
       </Grid>
 
-      <Grid item container justify={"flex-end"} spacing={2}>
+      <Grid
+        item
+        container
+        justify={DevicesUtils.checkIfIsMobile() ? "center" : "flex-end"}
+        spacing={2}
+      >
         <Grid
           item
+          xs={4}
           onClick={() => {
             dispatch({
               type: "SET_TEST_CASE_MODAL_REDUCER",
@@ -342,14 +348,14 @@ export default function TestCaseModal() {
         >
           <Button color={"primary"}>{t("resetLabel")}</Button>
         </Grid>
-        <Grid item>
+        <Grid item xs={4}>
           <Button color={"primary"} onClick={() => handleExport()}>
             {t("exportLabel").toUpperCase()}
           </Button>
         </Grid>
 
         {userLogged && (
-          <Grid item>
+          <Grid item xs={4}>
             <Button color={"primary"} onClick={() => handleSaveOnFirebase()}>
               {t("saveLabel").toUpperCase()}
             </Button>
