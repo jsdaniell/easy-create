@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import exportOnPdf from "../../utils/exportOnPdf";
 import { deletingOneTest } from "../../database/testCaseQueries/deletingOne";
 import { getDocumentsFromTestsGroup } from "../../database/testCaseQueries/getDocumentsFromTestsGroup";
+import DevicesUtils from "../../utils/deviceUtils";
 
 export default function TestListItem({ test }) {
   function getColor(priority) {
@@ -53,6 +54,7 @@ export default function TestListItem({ test }) {
   return (
     <Grid
       md={12}
+      xs={12}
       item
       style={{
         height: 50,
@@ -69,30 +71,32 @@ export default function TestListItem({ test }) {
         style={{ height: 45, padding: "0px 8px" }}
         justify={"space-between"}
       >
-        <Grid item md={1} xs={4}>
+        <Grid item md={1} xs={1}>
           <DeveloperBoard
             style={{ verticalAlign: "middle" }}
             color={"primary"}
           />
         </Grid>
-        <Grid item md={8} xs={4}>
+        <Grid item md={8} xs={8}>
           <Typography>{test.title}</Typography>
         </Grid>
-        <Grid item md={1} xs={4}>
-          <IconButton
-            size={"small"}
-            onClick={() => {
-              exportOnPdf(test);
-            }}
-          >
-            <PictureAsPdfRounded
-              style={{ verticalAlign: "middle" }}
-              color={"primary"}
-            />
-          </IconButton>
-        </Grid>
+        {!DevicesUtils.checkIfIsMobile() && (
+          <Grid item md={1} xs={1}>
+            <IconButton
+              size={"small"}
+              onClick={() => {
+                exportOnPdf(test);
+              }}
+            >
+              <PictureAsPdfRounded
+                style={{ verticalAlign: "middle" }}
+                color={"primary"}
+              />
+            </IconButton>
+          </Grid>
+        )}
 
-        <Grid item md={1} xs={4}>
+        <Grid item md={1} xs={1}>
           <IconButton
             size={"small"}
             onClick={() => {
@@ -105,7 +109,7 @@ export default function TestListItem({ test }) {
             <Visibility style={{ verticalAlign: "middle" }} color={"primary"} />
           </IconButton>
         </Grid>
-        <Grid item md={1} xs={4}>
+        <Grid item md={1} xs={1}>
           <IconButton
             size={"small"}
             onClick={() => {
