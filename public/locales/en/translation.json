@@ -32,5 +32,6 @@
   "addSomeProceduresErrorMessage":"Add one procedures!",
   "fillLastOptionErrorMessage": "Fill the last option to add one more!",
   "groupsLabel": "Groups",
-  "alreadyExists": "Already Exists a Test with this Title!"
+  "alreadyExists": "Already Exists a Test with this Title!",
+  "deleteLabel": "Delete"
 }

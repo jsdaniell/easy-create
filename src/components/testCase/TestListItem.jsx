@@ -3,10 +3,13 @@ import { Grid, Typography, IconButton } from "@material-ui/core";
 import {
   DeveloperBoard,
   Visibility,
-  PictureAsPdfRounded
+  PictureAsPdfRounded,
+  HighlightOffRounded
 } from "@material-ui/icons";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import exportOnPdf from "../../utils/exportOnPdf";
+import { deletingOneTest } from "../../database/testCaseQueries/deletingOne";
+import { getDocumentsFromTestsGroup } from "../../database/testCaseQueries/getDocumentsFromTestsGroup";
 
 export default function TestListItem({ test }) {
   function getColor(priority) {
@@ -23,6 +26,29 @@ export default function TestListItem({ test }) {
   }
 
   const dispatch = useDispatch();
+
+  const userLogged = useSelector(state => state.userUidReducer);
+  const testsGroups = useSelector(state => state.testGroupsReducer);
+
+  function deleting() {
+    deletingOneTest({
+      group: testsGroups.selected,
+      user: userLogged,
+      test,
+      success: () => {
+        getDocumentsFromTestsGroup({
+          user: userLogged,
+          testGroupId: testsGroups.selected,
+          setState: data => {
+            dispatch({
+              type: "SET_LIST_DOCS",
+              payload: data
+            });
+          }
+        });
+      }
+    });
+  }
 
   return (
     <Grid
@@ -50,7 +76,7 @@ export default function TestListItem({ test }) {
             color={"primary"}
           />
         </Grid>
-        <Grid item md={9} xs={4}>
+        <Grid item md={8} xs={4}>
           <Typography>{test.title}</Typography>
         </Grid>
         <Grid item md={1} xs={4}>
@@ -78,6 +104,19 @@ export default function TestListItem({ test }) {
             }}
           >
             <Visibility style={{ verticalAlign: "middle" }} color={"primary"} />
+          </IconButton>
+        </Grid>
+        <Grid item md={1} xs={4}>
+          <IconButton
+            size={"small"}
+            onClick={() => {
+              deleting();
+            }}
+          >
+            <HighlightOffRounded
+              style={{ verticalAlign: "middle" }}
+              color={"primary"}
+            />
           </IconButton>
         </Grid>
       </Grid>
