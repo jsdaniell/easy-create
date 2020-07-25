@@ -1,8 +1,8 @@
 import React from "react";
 import { Grid, Typography, Button } from "@material-ui/core";
-import { ReactComponent as MainSvg } from "../assets/main.svg";
+import { ReactComponent as MainSvg } from "../../assets/main.svg";
 import { useTranslation } from "react-i18next";
-import DevicesUtils from "../utils/deviceUtils";
+import DevicesUtils from "../../utils/deviceUtils";
 
 export default function LateralMenu() {
   const { t } = useTranslation();
