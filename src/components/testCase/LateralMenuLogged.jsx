@@ -54,18 +54,20 @@ export default function LateralMenuLogged() {
   }, []);
 
   function navigate(nextOrBefore) {
-    getDocumentsFromTestsGroup({
-      user: userLogged,
-      testGroupId: testsGroups.selected,
-      setState: data => {
-        dispatch({
-          type: "SET_LIST_DOCS",
-          payload: data
-        });
-      },
-      paginate: nextOrBefore,
-      lastItem: testList[testList.length - 1].title
-    });
+    if (testList.length) {
+      getDocumentsFromTestsGroup({
+        user: userLogged,
+        testGroupId: testsGroups.selected,
+        setState: data => {
+          dispatch({
+            type: "SET_LIST_DOCS",
+            payload: data
+          });
+        },
+        paginate: nextOrBefore,
+        lastItem: testList[testList.length - 1].title
+      });
+    }
   }
 
   return (
