@@ -14,6 +14,8 @@ import { useSnackbar } from "notistack";
 import exportOnPdf from "../../utils/exportOnPdf";
 import DevicesUtils from "../../utils/deviceUtils";
 import { useTranslation } from "react-i18next";
+import { savingNewTest } from "../../database/testCaseQueries/savingNew";
+import { getDocumentsFromTestsGroup } from "../../database/testCaseQueries/getDocumentsFromTestsGroup";
 
 export default function TestCaseModal() {
   const testCaseData = useSelector(state => state.testCaseModalReducer);
@@ -23,6 +25,9 @@ export default function TestCaseModal() {
   const { enqueueSnackbar } = useSnackbar();
 
   const { t } = useTranslation();
+
+  const userLogged = useSelector(state => state.userUidReducer);
+  const testsGroups = useSelector(state => state.testGroupsReducer);
 
   useEffect(() => {
     dispatch({
@@ -41,7 +46,7 @@ export default function TestCaseModal() {
     });
   }, []);
 
-  function handleSave() {
+  function handleExport() {
     if (!testCaseData.title) {
       return enqueueSnackbar(t("mandatoryTitleErrorMessage"), {
         variant: "warning"
@@ -61,6 +66,31 @@ export default function TestCaseModal() {
     }
 
     exportOnPdf(testCaseData);
+  }
+
+  function handleSaveOnFirebase() {
+    savingNewTest({
+      group: testsGroups.selected,
+      test: testCaseData,
+      user: userLogged,
+      errorAlreadyExists: () => {
+        return enqueueSnackbar(t("alreadyExists"), {
+          variant: "warning"
+        });
+      },
+      success: () => {
+        getDocumentsFromTestsGroup({
+          user: userLogged,
+          testGroupId: testsGroups.selected,
+          setState: data => {
+            dispatch({
+              type: "SET_LIST_DOCS",
+              payload: data
+            });
+          }
+        });
+      }
+    });
   }
 
   return (
@@ -138,13 +168,13 @@ export default function TestCaseModal() {
             aria-label="text alignment"
           >
             <ToggleButton value="1" aria-label="left aligned">
-              <FiberManualRecord style={{ color: "#7ABF6C" }} />
+              <FiberManualRecord style={{ color: "#74CC00" }} />
             </ToggleButton>
             <ToggleButton value="2" aria-label="centered">
-              <FiberManualRecord style={{ color: "#EBD877" }} />
+              <FiberManualRecord style={{ color: "#FFD400" }} />
             </ToggleButton>
             <ToggleButton value="3" aria-label="right aligned">
-              <FiberManualRecord style={{ color: "#F17878" }} />
+              <FiberManualRecord style={{ color: "#FF7102" }} />
             </ToggleButton>
           </ToggleButtonGroup>
         </Grid>
@@ -203,12 +233,9 @@ export default function TestCaseModal() {
               let newArray = testCaseData.preconditions;
 
               if (newArray.length && !newArray[newArray.length - 1]) {
-                return enqueueSnackbar(
-                  t('fillLastOptionErrorMessage'),
-                  {
-                    variant: "warning"
-                  }
-                );
+                return enqueueSnackbar(t("fillLastOptionErrorMessage"), {
+                  variant: "warning"
+                });
               }
 
               newArray.push("");
@@ -251,12 +278,9 @@ export default function TestCaseModal() {
               let newArray = testCaseData.procedures;
 
               if (newArray.length && !newArray[newArray.length - 1]) {
-                return enqueueSnackbar(
-                    t('fillLastOptionErrorMessage'),
-                  {
-                    variant: "warning"
-                  }
-                );
+                return enqueueSnackbar(t("fillLastOptionErrorMessage"), {
+                  variant: "warning"
+                });
               }
 
               newArray.push("");
@@ -318,10 +342,17 @@ export default function TestCaseModal() {
           <Button color={"primary"}>{t("resetLabel")}</Button>
         </Grid>
         <Grid item>
-          <Button color={"primary"} onClick={() => handleSave()}>
+          <Button color={"primary"} onClick={() => handleExport()}>
             {t("exportLabel").toUpperCase()}
           </Button>
         </Grid>
+        {userLogged && (
+          <Grid item>
+            <Button color={"primary"} onClick={() => handleSaveOnFirebase()}>
+              {t("saveLabel").toUpperCase()}
+            </Button>
+          </Grid>
+        )}
       </Grid>
     </Grid>
   );

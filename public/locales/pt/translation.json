@@ -31,5 +31,7 @@
   "addPreconditionsErrorMessage": "Adicione pelo menos uma pré-condição!",
   "addSomeProceduresErrorMessage": "Adicione pelo menos um procedimento!",
   "fillLastOptionErrorMessage": "Preencha a última opção pra adicionar outra",
-  "groupsLabel": "Grupos"
+  "groupsLabel": "Grupos",
+  "alreadyExists": "Já existe um teste registrado com esse título nesse grupo!"
+
 }
