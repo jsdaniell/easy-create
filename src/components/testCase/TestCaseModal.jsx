@@ -16,6 +16,7 @@ import DevicesUtils from "../../utils/deviceUtils";
 import { useTranslation } from "react-i18next";
 import { savingNewTest } from "../../database/testCaseQueries/savingNew";
 import { getDocumentsFromTestsGroup } from "../../database/testCaseQueries/getDocumentsFromTestsGroup";
+import { deletingOneTest } from "../../database/testCaseQueries/deletingOne";
 
 export default function TestCaseModal() {
   const testCaseData = useSelector(state => state.testCaseModalReducer);
@@ -346,6 +347,7 @@ export default function TestCaseModal() {
             {t("exportLabel").toUpperCase()}
           </Button>
         </Grid>
+
         {userLogged && (
           <Grid item>
             <Button color={"primary"} onClick={() => handleSaveOnFirebase()}>
