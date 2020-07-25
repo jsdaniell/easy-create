@@ -110,10 +110,7 @@ export default function Home({
 
                         signInWithGoogle({
                           success: uid => {
-                            dispatch({
-                              type: "SET_USER_UID",
-                              payload: uid
-                            });
+                            window.location.reload();
                           },
                           newUserInsert: data => {
                             dispatch({
@@ -148,10 +145,8 @@ export default function Home({
                       size={"small"}
                       color={"primary"}
                       onClick={() => {
-                        dispatch({
-                          type: "SET_USER_UID",
-                          payload: null
-                        });
+                        localStorage.clear();
+                        window.location.reload();
                       }}
                     >
                       <ExitToAppIcon color={"secondary"} fontSize={"small"} />
