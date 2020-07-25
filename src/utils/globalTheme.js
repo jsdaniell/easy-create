@@ -35,6 +35,41 @@ const theme = createMuiTheme({
       gutters: {
         paddingLeft: 5
       }
+    },
+    MuiSelect: {
+      outlined: {
+        color: "white"
+      },
+      iconOutlined: {
+        color: "#EDEDED"
+      }
+    },
+    MuiOutlinedInput: {
+      root: {
+        position: "relative",
+        "& $notchedOutline": {
+          borderColor: "#EDEDED"
+        },
+        "&:hover:not($disabled):not($focused):not($error) $notchedOutline": {
+          borderColor: "#EDEDED",
+          // Reset on touch devices, it doesn't add specificity
+          "@media (hover: none)": {
+            borderColor: "#EDEDED"
+          }
+        },
+        "&$focused $notchedOutline": {
+          borderColor: "#EDEDED",
+          borderWidth: 1
+        }
+      },
+      notchedOutline: {
+        borderColor: "#EDEDED"
+      }
+    },
+    MuiInputLabel: {
+      shrink: {
+        color: "#EDEDED"
+      }
     }
   },
   palette: {
