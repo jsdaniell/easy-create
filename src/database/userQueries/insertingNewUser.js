@@ -9,8 +9,6 @@ export async function insertingNewUserOnDatabase(user) {
   if (!snapshot.exists) {
     const { displayName, uid, apiKey, email, photoURL } = user;
 
-    console.log("user: ", user);
-
     try {
       await userRef.set({
         displayName,
