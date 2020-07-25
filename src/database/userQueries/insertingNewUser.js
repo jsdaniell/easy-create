@@ -1,6 +1,6 @@
 import { firestore } from "../../firebase";
 
-export async function insertingNewUserOnDatabase(user) {
+export async function insertingNewUserOnDatabase(user, newUserInsert, newDataModel) {
   if (!user) return;
   const userRef = firestore.doc(`users/${user.uid}`);
 
@@ -17,6 +17,21 @@ export async function insertingNewUserOnDatabase(user) {
         email,
         photoURL
       });
+
+      userRef.collection("testsGroups").doc("default");
+
+      const defaultRef = userRef.collection("testsGroups").doc("default");
+
+      await defaultRef.set({ title: "Default" });
+
+
+
+      defaultRef
+        .collection("tests")
+        .doc("Welcome")
+        .set({ ...newDataModel });
+
+      newUserInsert(newDataModel);
     } catch (error) {
       console.error("Error creating user document", error);
     }

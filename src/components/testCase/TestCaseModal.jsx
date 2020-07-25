@@ -43,19 +43,19 @@ export default function TestCaseModal() {
 
   function handleSave() {
     if (!testCaseData.title) {
-      return enqueueSnackbar("Title is mandatory!", {
+      return enqueueSnackbar(t("mandatoryTitleErrorMessage"), {
         variant: "warning"
       });
     }
 
     if (!testCaseData.preconditions.length) {
-      return enqueueSnackbar("Add some preconditions!", {
+      return enqueueSnackbar(t("addPreconditionsErrorMessage"), {
         variant: "warning"
       });
     }
 
     if (!testCaseData.procedures.length) {
-      return enqueueSnackbar("Add some procedures!", {
+      return enqueueSnackbar(t("addSomeProceduresErrorMessage"), {
         variant: "warning"
       });
     }
@@ -91,6 +91,7 @@ export default function TestCaseModal() {
           <TextField
             variant={"outlined"}
             fullWidth
+            value={testCaseData.id}
             label={"ID"}
             size={"small"}
             onChange={({ target: { value } }) => {
@@ -105,6 +106,7 @@ export default function TestCaseModal() {
           <TextField
             variant={"outlined"}
             fullWidth
+            value={testCaseData.environment}
             label={t("environmentLabel")}
             size={"small"}
             onChange={({ target: { value } }) => {
@@ -153,6 +155,7 @@ export default function TestCaseModal() {
           <TextField
             variant={"outlined"}
             fullWidth
+            value={testCaseData.name}
             label={t("nameLabel")}
             size={"small"}
             onChange={({ target: { value } }) => {
@@ -167,6 +170,7 @@ export default function TestCaseModal() {
           <TextField
             variant={"outlined"}
             fullWidth
+            value={testCaseData.actor}
             label={t("actorLabel")}
             size={"small"}
             onChange={({ target: { value } }) => {
@@ -200,7 +204,7 @@ export default function TestCaseModal() {
 
               if (newArray.length && !newArray[newArray.length - 1]) {
                 return enqueueSnackbar(
-                  "Fill the last option to add one more!",
+                  t('fillLastOptionErrorMessage'),
                   {
                     variant: "warning"
                   }
@@ -248,7 +252,7 @@ export default function TestCaseModal() {
 
               if (newArray.length && !newArray[newArray.length - 1]) {
                 return enqueueSnackbar(
-                  "Fill the last option to add one more!",
+                    t('fillLastOptionErrorMessage'),
                   {
                     variant: "warning"
                   }
@@ -279,6 +283,7 @@ export default function TestCaseModal() {
         <TextField
           variant={"outlined"}
           fullWidth
+          value={testCaseData.postcondition}
           label={t("postConditionLabel")}
           size={"small"}
           onChange={({ target: { value } }) => {
