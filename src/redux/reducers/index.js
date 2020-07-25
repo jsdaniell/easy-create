@@ -3,6 +3,7 @@ import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
 import testCaseModalReducer from "./testCaseModalReducer";
+import userUidReducer from "./userUidReducer";
 
 const rootPersistConfig = {
   key: "root",
@@ -10,7 +11,8 @@ const rootPersistConfig = {
 };
 
 const rootReducer = combineReducers({
-  testCaseModalReducer
+  testCaseModalReducer,
+  userUidReducer
 });
 
 export default persistReducer(rootPersistConfig, rootReducer);

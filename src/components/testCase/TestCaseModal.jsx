@@ -11,8 +11,8 @@ import { Add, RemoveCircle, FiberManualRecord } from "@material-ui/icons";
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 import ListPrePostCondition from "./ListPrePostConditions";
 import { useSnackbar } from "notistack";
-import exportOnPdf from "../utils/exportOnPdf";
-import DevicesUtils from "../utils/deviceUtils";
+import exportOnPdf from "../../utils/exportOnPdf";
+import DevicesUtils from "../../utils/deviceUtils";
 import { useTranslation } from "react-i18next";
 
 export default function TestCaseModal() {
@@ -314,7 +314,7 @@ export default function TestCaseModal() {
         </Grid>
         <Grid item>
           <Button color={"primary"} onClick={() => handleSave()}>
-            {t("saveLabel").toUpperCase()}
+            {t("exportLabel").toUpperCase()}
           </Button>
         </Grid>
       </Grid>
