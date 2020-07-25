@@ -52,14 +52,13 @@ export default function TestListItem({ test }) {
 
   return (
     <Grid
-      item
-      container
-      alignItems={"space-between"}
       md={12}
+      item
       style={{
         height: 50,
         backgroundColor: "white",
-        borderRadius: 5
+        borderRadius: 5,
+        marginTop: 8
       }}
     >
       <Grid

@@ -1,6 +1,10 @@
 import { firestore } from "../../firebase";
 
-export async function insertingNewUserOnDatabase(user, newUserInsert, newDataModel) {
+export async function insertingNewUserOnDatabase(
+  user,
+  newUserInsert,
+  newDataModel
+) {
   if (!user) return;
   const userRef = firestore.doc(`users/${user.uid}`);
 
@@ -24,11 +28,9 @@ export async function insertingNewUserOnDatabase(user, newUserInsert, newDataMod
 
       await defaultRef.set({ title: "Default" });
 
-
-
       defaultRef
         .collection("tests")
-        .doc("Welcome")
+        .doc(newDataModel.title)
         .set({ ...newDataModel });
 
       newUserInsert(newDataModel);

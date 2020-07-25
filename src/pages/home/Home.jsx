@@ -38,11 +38,17 @@ export default function Home({
       style={{
         minHeight: "100%",
         border: "1px solid white",
-        borderRadius: 13
+        borderRadius: 13,
+        height: "100%",
+        alignContent: "flex-start"
       }}
     >
-      <Grid item md={5} style={{ padding: "25px" }}>
-        <Grid container spacing={5}>
+      <Grid item md={5} style={{ padding: "25px", alignContent: "flex-start" }}>
+        <Grid
+          container
+          style={{ height: "100%", alignContent: "flex-start" }}
+          spacing={5}
+        >
           <Grid item md={12}>
             <Grid container justify={"space-between"}>
               <Grid item md={8} style={{ alignSelf: "center" }}>
