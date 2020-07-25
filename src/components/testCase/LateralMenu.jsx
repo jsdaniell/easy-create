@@ -11,7 +11,7 @@ export default function LateralMenu() {
     <Grid
       item
       container
-      style={{ padding: "0px 0px 20px 0px" }}
+      style={{ padding: "0px 20px 20px" }}
       justify={"space-between"}
       alignItems={"space-between"}
     >
