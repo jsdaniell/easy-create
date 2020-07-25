@@ -4,7 +4,11 @@ import { insertingNewUserOnDatabase } from "../database/userQueries/insertingNew
 import returnStoreAndPersistor from "../redux";
 const provider = new firebase.auth.GoogleAuthProvider();
 
-export async function signInWithGoogle({ success, newUserInsert, newDataModel }) {
+export async function signInWithGoogle({
+  success,
+  newUserInsert,
+  newDataModel
+}) {
   const { store } = returnStoreAndPersistor();
 
   auth.signInWithPopup(provider).then(data => {
@@ -15,6 +19,11 @@ export async function signInWithGoogle({ success, newUserInsert, newDataModel })
     insertingNewUserOnDatabase(userLogged, newUserInsert, newDataModel);
 
     localStorage.removeItem("logged");
-    if (success) success(userLogged.uid);
+
+    store.dispatch({
+      type: "SET_USER_UID",
+      payload: userLogged.uid
+    });
+    if (success) success();
   });
 }
