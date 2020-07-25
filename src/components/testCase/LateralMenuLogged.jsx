@@ -78,7 +78,7 @@ export default function LateralMenuLogged() {
           ))}
         </TextField>
       </Grid>
-      <Grid item container md={12} xs={12} style={{ height: "100%" }}>
+      <Grid item container md={12} xs={12}>
         {testList.map((doc, index) => (
           <TestListItem test={doc} />
         ))}
