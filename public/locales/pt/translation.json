@@ -14,5 +14,8 @@
   "proceduresLabel": "Procedimentos",
   "writeTitleLabel": "Digite o título",
   "saveLabel": "Salvar",
-  "resetLabel": "Resetar"
+  "resetLabel": "Resetar",
+  "signWithGoogle": "Entrar com o Google",
+  "exitFromApp": "Sair",
+  "exportLabel": "Exportar"
 }
