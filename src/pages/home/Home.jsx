@@ -86,7 +86,7 @@ export default function Home({
         item
         md={5}
         xs={12}
-        style={{ padding: "25px", alignContent: "flex-start" }}
+        style={{ padding: "25px", alignContent: "space-between" }}
       >
         <Grid
           container
