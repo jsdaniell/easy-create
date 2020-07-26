@@ -1,18 +1,23 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Grid,
   Typography,
   Button,
   IconButton,
   Tooltip,
-  Avatar
+  MenuItem,
+  MenuList,
+  ClickAwayListener,
+  Popper,
+  Grow,
+  Paper
 } from "@material-ui/core";
 import { useTranslation } from "react-i18next";
 import DevicesUtils from "../../utils/deviceUtils";
 import { signInWithGoogle } from "../../service/integratedLogin";
 import googleIcon from "../../assets/google.png";
 import { useDispatch, useSelector } from "react-redux";
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import { ExitToApp, ExpandMoreRounded } from "@material-ui/icons";
 
 export default function Home({
   children: {
@@ -23,6 +28,33 @@ export default function Home({
 
   const userLogged = useSelector(state => state.userUidReducer);
 
+  const [anchorMenu, setAnchorMenu] = useState(null);
+
+  const [open, setOpen] = useState(false);
+
+  const anchorRef = React.useRef(null);
+
+  function toggleMenu() {
+    setOpen(!open);
+  }
+
+  function handleClose(event) {
+    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+      return;
+    }
+
+    setOpen(false);
+  }
+
+  const prevOpen = React.useRef(open);
+  useEffect(() => {
+    if (prevOpen.current === true && open === false) {
+      anchorRef.current.focus();
+    }
+
+    prevOpen.current = open;
+  }, [open]);
+
   useEffect(() => {
     if (window.navigator.language === "pt-BR") {
       i18n.changeLanguage("pt");
@@ -30,6 +62,13 @@ export default function Home({
   }, []);
 
   const dispatch = useDispatch();
+
+  function handleListKeyDown(event) {
+    if (event.key === "Tab") {
+      event.preventDefault();
+      setOpen(false);
+    }
+  }
 
   return (
     <Grid
@@ -160,7 +199,7 @@ export default function Home({
                         window.location.reload();
                       }}
                     >
-                      <ExitToAppIcon color={"secondary"} fontSize={"small"} />
+                      <ExitToApp color={"secondary"} fontSize={"small"} />
                     </IconButton>
                   </Tooltip>
                 </Grid>
@@ -168,7 +207,54 @@ export default function Home({
             </Grid>
             <Grid item xs={12} md={12}>
               <Typography variant={"h5"} style={{ color: "white" }}>
-                {t("testCaseTitle")}
+                {t("testCaseTitle")}{" "}
+                <IconButton
+                  ref={anchorRef}
+                  size={"small"}
+                  onClick={e => toggleMenu()}
+                >
+                  <ExpandMoreRounded fontSize={"small"} color={"secondary"} />
+                </IconButton>
+                <Popper
+                  open={open}
+                  anchorEl={anchorRef.current}
+                  role={undefined}
+                  transition
+                  disablePortal
+                  style={{ zIndex: 1000 }}
+                >
+                  {({ TransitionProps, placement }) => (
+                    <Grow
+                      {...TransitionProps}
+                      style={{
+                        transformOrigin:
+                          placement === "bottom"
+                            ? "center top"
+                            : "center bottom"
+                      }}
+                    >
+                      <Paper>
+                        <ClickAwayListener onClickAway={handleClose}>
+                          <MenuList
+                            id="simple-menu"
+                            anchorEl={anchorMenu}
+                            keepMounted
+                            open={Boolean(anchorMenu)}
+                            onClose={() => setAnchorMenu(null)}
+                          >
+                            <MenuItem onClick={handleClose}>
+                              {t("testCaseTitle")}
+                            </MenuItem>
+                            <MenuItem disabled>{t("useCaseTitle")}</MenuItem>
+                            <MenuItem disabled>
+                              {t("codeSnippetTitle")}
+                            </MenuItem>
+                          </MenuList>
+                        </ClickAwayListener>
+                      </Paper>
+                    </Grow>
+                  )}
+                </Popper>
               </Typography>
             </Grid>
           </Grid>
