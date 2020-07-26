@@ -9,6 +9,8 @@ export async function getDocumentsFromTestsGroup({
 }) {
   let docsOfGroupRef;
 
+  console.log(testGroupId);
+
   if (paginate && paginate === "next") {
     docsOfGroupRef = firestore
       .collection(`users/${user}/testsGroups/${testGroupId}/tests`)
