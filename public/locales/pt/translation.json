@@ -34,5 +34,10 @@
   "fillLastOptionErrorMessage": "Preencha a última opção pra adicionar outra",
   "groupsLabel": "Grupos",
   "alreadyExists": "Já existe um teste registrado com esse título nesse grupo!",
-  "deleteLabel": "Excluir"
+  "deleteLabel": "Excluir",
+  "toolTipAddGroup": "Adicionar novo grupo",
+  "tooltipExportGroup": "Exportar grupo em PDF (Em breve)",
+  "alreadyExistsGroup": "Já existe um grupo com esse nome",
+  "successRemovedGroup": "Grupo removido com sucesso!",
+  "tooltipDeleteAGroup": "Deletar Grupo"
 }
