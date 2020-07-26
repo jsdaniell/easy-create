@@ -233,7 +233,7 @@ export default function Home({
                             : "center bottom"
                       }}
                     >
-                      <Paper>
+                      <Paper style={{ padding: "0px 5px" }}>
                         <ClickAwayListener onClickAway={handleClose}>
                           <MenuList
                             id="simple-menu"
