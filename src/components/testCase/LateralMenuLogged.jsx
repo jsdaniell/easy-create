@@ -68,7 +68,7 @@ export default function LateralMenuLogged() {
   }, []);
 
   function navigate(nextOrBefore) {
-    if (testList.length) {
+    if (testList.length === 7) {
       getDocumentsFromTestsGroup({
         user: userLogged,
         testGroupId: testsGroups.selected,

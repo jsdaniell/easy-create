@@ -1,6 +1,6 @@
 {
   "copyright": "devdata.tools was created by",
-  "testCaseTitle": "Test Case",
+  "testCaseTitle": "Create Test Case",
   "testCaseDescription": "Create easily tests cases and send or export on PDF, sync your account to save your data.",
   "inspirationTitle": "Inspiration",
   "inspirationDescription1": "Inspired by a lovely person called ",
@@ -39,5 +39,7 @@
   "tooltipExportGroup": "Export Group On Pdf (Soon)",
   "alreadyExistsGroup": "Already have a group with this name",
   "successRemovedGroup": "Success on remove group!",
-  "tooltipDeleteAGroup": "Delete Group"
+  "tooltipDeleteAGroup": "Delete Group",
+  "useCaseTitle": "Create Use Case (Soon)",
+  "codeSnippetTitle": "Create Code Snippet (Soon)"
 }
