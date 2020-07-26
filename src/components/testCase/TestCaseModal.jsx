@@ -328,6 +328,7 @@ export default function TestCaseModal() {
       >
         <Grid
           item
+          md={2}
           xs={4}
           onClick={() => {
             dispatch({
@@ -348,14 +349,14 @@ export default function TestCaseModal() {
         >
           <Button color={"primary"}>{t("resetLabel")}</Button>
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={4} md={2}>
           <Button color={"primary"} onClick={() => handleExport()}>
             {t("exportLabel").toUpperCase()}
           </Button>
         </Grid>
 
         {userLogged && (
-          <Grid item xs={4}>
+          <Grid item xs={4} md={2}>
             <Button color={"primary"} onClick={() => handleSaveOnFirebase()}>
               {t("saveLabel").toUpperCase()}
             </Button>
