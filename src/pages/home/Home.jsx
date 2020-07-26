@@ -86,7 +86,7 @@ export default function Home({
         item
         md={5}
         xs={12}
-        style={{ padding: "25px", alignContent: "flex-start" }}
+        style={{ padding: "25px", alignContent: "space-between" }}
       >
         <Grid
           container
@@ -233,7 +233,7 @@ export default function Home({
                             : "center bottom"
                       }}
                     >
-                      <Paper>
+                      <Paper style={{ padding: "0px 5px" }}>
                         <ClickAwayListener onClickAway={handleClose}>
                           <MenuList
                             id="simple-menu"
