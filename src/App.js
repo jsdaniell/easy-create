@@ -6,29 +6,25 @@ import { SnackbarProvider } from "notistack";
 import { Provider } from "react-redux";
 import returnStoreAndPersistor from "./redux/index";
 import { BrowserRouter } from "react-router-dom";
-import HttpsRedirect from "react-https-redirect";
 
 const { store } = returnStoreAndPersistor();
 
 function App() {
-
   return (
-    <HttpsRedirect>
-      <BrowserRouter>
-        <Provider store={store}>
-          <SnackbarProvider
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "center"
-            }}
-          >
-            <MuiThemeProvider theme={theme}>
-              <Routes />
-            </MuiThemeProvider>
-          </SnackbarProvider>
-        </Provider>
-      </BrowserRouter>
-    </HttpsRedirect>
+    <BrowserRouter>
+      <Provider store={store}>
+        <SnackbarProvider
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "center"
+          }}
+        >
+          <MuiThemeProvider theme={theme}>
+            <Routes />
+          </MuiThemeProvider>
+        </SnackbarProvider>
+      </Provider>
+    </BrowserRouter>
   );
 }
 
