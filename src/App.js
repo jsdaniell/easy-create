@@ -6,10 +6,16 @@ import { SnackbarProvider } from "notistack";
 import { Provider } from "react-redux";
 import returnStoreAndPersistor from "./redux/index";
 import { BrowserRouter } from "react-router-dom";
+import DevicesUtils from "./utils/deviceUtils";
 
 const { store } = returnStoreAndPersistor();
 
 function App() {
+  useEffect(() => {
+    if (!DevicesUtils.checkIfIsMobile()) {
+      document.documentElement.style.display = "flex";
+    }
+  }, []);
   return (
     <BrowserRouter>
       <Provider store={store}>
