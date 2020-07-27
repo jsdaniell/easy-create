@@ -206,7 +206,10 @@ export default function Home({
               )}
             </Grid>
             <Grid item xs={12} md={12}>
-              <Typography variant={"h5"} style={{ color: "white" }}>
+              <Typography
+                variant={DevicesUtils.checkIfIsMobile() ? "h6" : "h5"}
+                style={{ color: "white" }}
+              >
                 {t("testCaseTitle")}{" "}
                 <IconButton
                   ref={anchorRef}
