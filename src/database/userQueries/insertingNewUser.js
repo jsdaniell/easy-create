@@ -6,6 +6,9 @@ export async function insertingNewUserOnDatabase(
   newDataModel
 ) {
   if (!user) return;
+
+  console.log("User: ", user);
+
   const userRef = firestore.doc(`users/${user.uid}`);
 
   const snapshot = await userRef.get();
@@ -26,7 +29,7 @@ export async function insertingNewUserOnDatabase(
 
       const defaultRef = userRef.collection("testsGroups").doc("default");
 
-      await defaultRef.set({ title: "Default" });
+      await defaultRef.set({ title: "Default", sharedWith: [] });
 
       defaultRef
         .collection("tests")

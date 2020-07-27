@@ -30,6 +30,15 @@ export default function TestCaseModal() {
   const userLogged = useSelector(state => state.userUidReducer);
   const testsGroups = useSelector(state => state.testGroupsReducer);
 
+  function checkPermissionOfEditGroup() {
+    return (
+      testsGroups &&
+      testsGroups.list.length &&
+      testsGroups.list.find(item => item.itemId === testsGroups.selected)
+        .permission === "edit"
+    );
+  }
+
   useEffect(() => {
     dispatch({
       type: "SET_TEST_CASE_MODAL_REDUCER",
@@ -71,6 +80,7 @@ export default function TestCaseModal() {
 
   function handleSaveOnFirebase() {
     savingNewTest({
+      listGroups: testsGroups.list,
       group: testsGroups.selected,
       test: testCaseData,
       user: userLogged,
@@ -82,6 +92,7 @@ export default function TestCaseModal() {
       success: () => {
         getDocumentsFromTestsGroup({
           user: userLogged,
+          groups: testsGroups.list,
           testGroupId: testsGroups.selected,
           setState: data => {
             dispatch({
@@ -355,7 +366,7 @@ export default function TestCaseModal() {
           </Button>
         </Grid>
 
-        {userLogged && (
+        {userLogged && checkPermissionOfEditGroup() && (
           <Grid item xs={4} md={2}>
             <Button color={"primary"} onClick={() => handleSaveOnFirebase()}>
               {t("saveLabel").toUpperCase()}

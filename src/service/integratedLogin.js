@@ -22,6 +22,7 @@ export async function signInWithGoogle({
       type: "SET_USER_UID",
       payload: userLogged.uid
     });
+
     localStorage.removeItem("logged");
     if (success) success();
   });
