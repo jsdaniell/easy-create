@@ -190,7 +190,9 @@ export default function LateralMenuLogged() {
       style={{
         padding: "0px 20px 20px",
         height: DevicesUtils.checkIfIsMobile() ? "82%" : "92%",
-        alignContent: "space-between"
+        alignContent: DevicesUtils.checkIfIsMobile()
+          ? "normal"
+          : "space-between"
       }}
       justify={"space-between"}
       spacing={2}
