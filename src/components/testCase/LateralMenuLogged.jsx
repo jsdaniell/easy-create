@@ -20,7 +20,8 @@ import {
   NavigateBefore,
   AddCircleOutline,
   PictureAsPdfRounded,
-  Delete
+  Delete,
+  PersonAdd
 } from "@material-ui/icons";
 import { addNewTestGroup } from "../../database/testCaseQueries/addNewTestGroup";
 import { useSnackbar } from "notistack";
@@ -40,8 +41,12 @@ export default function LateralMenuLogged() {
   const { enqueueSnackbar } = useSnackbar();
 
   const [anchorAddGroup, setAnchorAddGroup] = useState(null);
-
   const [newGroupName, setNewGroupName] = useState("");
+
+  const [invitePersonEmail, setInvitePersonEmail] = useState("");
+
+  const [personEditPermission, setPersonEditPermission] = useState(false);
+  const [anchorPersonInvite, setAnchorPersonInvite] = useState(null);
 
   useEffect(() => {
     getTestsGroups({
@@ -185,6 +190,11 @@ export default function LateralMenuLogged() {
     });
   }
 
+  function inviteSomeoneToTestGroup() {
+    if (invitePersonEmail) {
+    }
+  }
+
   return (
     <Grid
       item
@@ -203,6 +213,19 @@ export default function LateralMenuLogged() {
         addFunction={addNewGroupOnList}
         setAnchor={setAnchorAddGroup}
         setValue={setNewGroupName}
+      />
+
+      <PopoverAddSome
+        anchor={anchorPersonInvite}
+        value={invitePersonEmail}
+        addFunction={inviteSomeoneToTestGroup}
+        setAnchor={setAnchorPersonInvite}
+        setValue={setInvitePersonEmail}
+        label={"Email"}
+        permission={personEditPermission}
+        permissionLabel={t("editPermissionLabel")}
+        setPermission={() => setPersonEditPermission(!personEditPermission)}
+        permissible={true}
       />
 
       <Grid container spacing={1} style={{ padding: 8 }} md={12} xs={12}>
@@ -228,7 +251,7 @@ export default function LateralMenuLogged() {
         <Grid
           item
           md={1}
-          xs={4}
+          xs={3}
           style={{ alignSelf: "center", textAlign: "center" }}
         >
           <WhiteIconButtonWithTooltip
@@ -240,7 +263,7 @@ export default function LateralMenuLogged() {
         <Grid
           item
           md={1}
-          xs={4}
+          xs={3}
           style={{ alignSelf: "center", textAlign: "center" }}
         >
           <WhiteIconButtonWithTooltip
@@ -258,13 +281,25 @@ export default function LateralMenuLogged() {
         <Grid
           item
           md={1}
-          xs={4}
+          xs={3}
           style={{ alignSelf: "center", textAlign: "center" }}
         >
           <WhiteIconButtonWithTooltip
             titleTooltip={t("tooltipDeleteAGroup")}
             icon={<Delete color={"secondary"} />}
             onClick={deleteSelectedGroup}
+          />
+        </Grid>
+        <Grid
+          item
+          md={1}
+          xs={3}
+          style={{ alignSelf: "center", textAlign: "center" }}
+        >
+          <WhiteIconButtonWithTooltip
+            titleTooltip={t("tooltipAddPersonOnGroup")}
+            icon={<PersonAdd color={"secondary"} />}
+            onClick={event => setAnchorPersonInvite(event.currentTarget)}
           />
         </Grid>
         <Grid item container md={12} xs={12}>

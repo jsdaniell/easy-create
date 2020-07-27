@@ -11,19 +11,19 @@ export async function signInWithGoogle({
 }) {
   const { store } = returnStoreAndPersistor();
 
-  auth.signInWithPopup(provider).then(data => {
+  auth.signInWithPopup(provider).then(async data => {
     localStorage.setItem("logged", JSON.stringify(data));
 
     const userLogged = JSON.parse(localStorage.getItem("logged")).user;
 
-    insertingNewUserOnDatabase(userLogged, newUserInsert, newDataModel);
-
-    localStorage.removeItem("logged");
+    await insertingNewUserOnDatabase(userLogged, newUserInsert, newDataModel);
 
     store.dispatch({
       type: "SET_USER_UID",
       payload: userLogged.uid
     });
+
+    localStorage.removeItem("logged");
     if (success) success();
   });
 }

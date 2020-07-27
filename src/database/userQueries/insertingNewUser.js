@@ -6,6 +6,10 @@ export async function insertingNewUserOnDatabase(
   newDataModel
 ) {
   if (!user) return;
+
+
+  console.log('User: ', user)
+
   const userRef = firestore.doc(`users/${user.uid}`);
 
   const snapshot = await userRef.get();
