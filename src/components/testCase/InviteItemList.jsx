@@ -20,10 +20,7 @@ export default function InviteItemList({ item, cancelInvite }) {
         <Typography style={{ color: "white" }}>{item.toEmail}</Typography>
       </Grid>
       <Grid item style={{ alignItems: "center" }}>
-        <Typography
-          variant={"subtitle2"}
-          style={{ color: "white", paddingTop: 4 }}
-        >
+        <Typography variant={"subtitle2"} style={{ color: "white" }}>
           {item.status}
         </Typography>
       </Grid>
