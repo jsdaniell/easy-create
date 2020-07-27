@@ -6,7 +6,8 @@ import {
   MenuItem,
   Typography,
   Tooltip,
-  Popover
+  Popover,
+  Badge
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import { useTranslation } from "react-i18next";
@@ -20,11 +21,25 @@ import {
   NavigateBefore,
   AddCircleOutline,
   PictureAsPdfRounded,
-  Delete
+  Delete,
+  PersonAdd,
+  SupervisedUserCircle,
+  Notifications
 } from "@material-ui/icons";
 import { addNewTestGroup } from "../../database/testCaseQueries/addNewTestGroup";
 import { useSnackbar } from "notistack";
 import { deleteOneGroup } from "../../database/testCaseQueries/deleteOneGroup";
+import PopoverAddSome from "../shared/PopoverAddSome";
+import WhiteIconButtonWithTooltip from "../shared/WhiteIconButtonWithTooltip";
+import { inviteSomeoneToTestGroup } from "../../database/testCaseQueries/inviteSomeoneToTestGroup";
+import { getInvitesTestsGroupsFromMe } from "../../database/testCaseQueries/getInvitesTestGroupsFromMe";
+import InviteItemList from "./InviteItemList";
+import { deletingAnInvite } from "../../database/testCaseQueries/deletingAnInvite";
+import { verifyInvitesOfTestsGroupsToMe } from "../../database/testCaseQueries/verifyInvitesOfTestsGroupsToMe";
+import PopoverNotificationList from "../shared/PopoverNotificationsList";
+import { getUsersOfThisGroup } from "../../database/testCaseQueries/gettingUsersOfThisGroup";
+import SharedUserListItem from "./SharedUserListItem";
+import { changingUserPermission } from "../../database/testCaseQueries/changingUserPermission";
 
 export default function LateralMenuLogged() {
   const { t } = useTranslation();
@@ -38,8 +53,20 @@ export default function LateralMenuLogged() {
   const { enqueueSnackbar } = useSnackbar();
 
   const [anchorAddGroup, setAnchorAddGroup] = useState(null);
-
   const [newGroupName, setNewGroupName] = useState("");
+
+  const [invitePersonEmail, setInvitePersonEmail] = useState("");
+
+  const [personEditPermission, setPersonEditPermission] = useState(false);
+  const [anchorPersonInvite, setAnchorPersonInvite] = useState(null);
+
+  const [showInvites, setShowInvites] = useState(false);
+  const [invitesList, setInvitesList] = useState([]);
+
+  const [invitesToMeList, setInvitesToMeList] = useState([]);
+  const [anchorNotifications, setAnchorNotifications] = useState(false);
+
+  const [usersFromGroup, setUsersFromGroup] = useState([]);
 
   useEffect(() => {
     getTestsGroups({
@@ -54,6 +81,7 @@ export default function LateralMenuLogged() {
         });
 
         getDocumentsFromTestsGroup({
+          groups: testsGroups.list,
           user: userLogged,
           testGroupId: data[data.length - 1].itemId,
           setState: data => {
@@ -63,13 +91,35 @@ export default function LateralMenuLogged() {
             });
           }
         });
+        getInvitesTestsGroupsFromMe({
+          user: userLogged,
+          collectionName: data[data.length - 1].itemId,
+          setState: inv => {
+            setInvitesList(inv);
+          }
+        });
+
+        getUsersOfThisGroup({
+          user: userLogged,
+          groups: testsGroups.list,
+          testGroupId: data[data.length - 1].itemId,
+          setState: users => {
+            setUsersFromGroup(users);
+          }
+        });
       }
+    });
+
+    verifyInvitesOfTestsGroupsToMe({
+      user: userLogged,
+      setState: data => setInvitesToMeList(data)
     });
   }, []);
 
   function navigate(nextOrBefore) {
     if (testList.length === 7) {
       getDocumentsFromTestsGroup({
+        groups: testsGroups.list,
         user: userLogged,
         testGroupId: testsGroups.selected,
         setState: data => {
@@ -107,6 +157,7 @@ export default function LateralMenuLogged() {
               });
 
               getDocumentsFromTestsGroup({
+                groups: testsGroups.list,
                 user: userLogged,
                 testGroupId: data[0].itemId,
                 setState: data => {
@@ -114,6 +165,21 @@ export default function LateralMenuLogged() {
                     type: "SET_LIST_DOCS",
                     payload: data
                   });
+                }
+              });
+              getInvitesTestsGroupsFromMe({
+                user: userLogged,
+                collectionName: data[0].itemId,
+                setState: inv => {
+                  setInvitesList(inv);
+                }
+              });
+              getUsersOfThisGroup({
+                user: userLogged,
+                groups: testsGroups.list,
+                testGroupId: data[0].itemId,
+                setState: users => {
+                  setUsersFromGroup(users);
                 }
               });
             }
@@ -128,6 +194,7 @@ export default function LateralMenuLogged() {
 
   function switchTestGroup(id) {
     getDocumentsFromTestsGroup({
+      groups: testsGroups.list,
       user: userLogged,
       testGroupId: id,
       setState: data => {
@@ -141,6 +208,22 @@ export default function LateralMenuLogged() {
           payload: {
             list: testsGroups.list,
             selected: id
+          }
+        });
+
+        getInvitesTestsGroupsFromMe({
+          user: userLogged,
+          collectionName: id,
+          setState: inv => {
+            setInvitesList(inv);
+          }
+        });
+        getUsersOfThisGroup({
+          user: userLogged,
+          groups: testsGroups.list,
+          testGroupId: id,
+          setState: users => {
+            setUsersFromGroup(users);
           }
         });
       }
@@ -164,6 +247,7 @@ export default function LateralMenuLogged() {
             });
 
             getDocumentsFromTestsGroup({
+              groups: testsGroups.list,
               user: userLogged,
               testGroupId: data[0].itemId,
               setState: data => {
@@ -183,6 +267,106 @@ export default function LateralMenuLogged() {
     });
   }
 
+  function checkPermissionOfEditGroup() {
+    return (
+      testsGroups &&
+      testsGroups.list.length &&
+      testsGroups.list.find(item => item.itemId === testsGroups.selected)
+        .permission === "edit"
+    );
+  }
+
+  function checkIfIsOwner() {
+    return (
+      testsGroups &&
+      testsGroups.list.length &&
+      testsGroups.list.find(item => item.itemId === testsGroups.selected).owner
+    );
+  }
+
+  function inviteSomeoneToGroup() {
+    if (invitePersonEmail) {
+      inviteSomeoneToTestGroup({
+        user: userLogged,
+        collectionName: testsGroups.selected,
+        userInvited: {
+          email: invitePersonEmail,
+          permission: personEditPermission
+        },
+        setState: () => {
+          getInvitesTestsGroupsFromMe({
+            user: userLogged,
+            collectionName: testsGroups.selected,
+            setState: inv => {
+              setInvitesList(inv);
+            }
+          });
+
+          getUsersOfThisGroup({
+            user: userLogged,
+            groups: testsGroups.list,
+            testGroupId: testsGroups.selected,
+            setState: users => {
+              setUsersFromGroup(users);
+            }
+          });
+          setAnchorPersonInvite(null);
+        },
+        userNotExistError: () => {}
+      });
+    }
+  }
+
+  function cancelInvite(invite) {
+    deletingAnInvite({
+      invite,
+      setState: () => {
+        getInvitesTestsGroupsFromMe({
+          user: userLogged,
+          collectionName: testsGroups.selected,
+          setState: inv => {
+            setInvitesList(inv);
+          }
+        });
+
+        getUsersOfThisGroup({
+          user: userLogged,
+          groups: testsGroups.list,
+          testGroupId: testsGroups.selected,
+          setState: users => {
+            setUsersFromGroup(users);
+          }
+        });
+      }
+    });
+  }
+
+  function changeUserPermission(user) {
+    changingUserPermission({
+      user: userLogged,
+      userToChangePermission: user,
+      testGroupId: testsGroups.selected,
+      setState: () => {
+        getInvitesTestsGroupsFromMe({
+          user: userLogged,
+          collectionName: testsGroups.selected,
+          setState: inv => {
+            setInvitesList(inv);
+          }
+        });
+
+        getUsersOfThisGroup({
+          user: userLogged,
+          groups: testsGroups.list,
+          testGroupId: testsGroups.selected,
+          setState: users => {
+            setUsersFromGroup(users);
+          }
+        });
+      }
+    });
+  }
+
   return (
     <Grid
       item
@@ -197,40 +381,26 @@ export default function LateralMenuLogged() {
       justify={"space-between"}
       spacing={2}
     >
-      <Popover
-        open={Boolean(anchorAddGroup)}
-        anchorEl={anchorAddGroup}
-        onClose={() => setAnchorAddGroup(null)}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "center"
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "center"
-        }}
-      >
-        <Grid
-          container
-          alignItems={"center"}
-          style={{ padding: 8 }}
-          justify={"space-between"}
-        >
-          <Grid item md>
-            <TextField
-              value={newGroupName}
-              onChange={e => setNewGroupName(e.target.value)}
-              size={"small"}
-              variant={"outlined"}
-            ></TextField>
-          </Grid>
-          <Grid item md={2} style={{ textAlign: "end" }}>
-            <IconButton size={"small"} onClick={() => addNewGroupOnList()}>
-              <AddCircleOutline color={"primary"}></AddCircleOutline>
-            </IconButton>
-          </Grid>
-        </Grid>
-      </Popover>
+      <PopoverAddSome
+        anchor={anchorAddGroup}
+        value={newGroupName}
+        addFunction={addNewGroupOnList}
+        setAnchor={setAnchorAddGroup}
+        setValue={setNewGroupName}
+      />
+
+      <PopoverAddSome
+        anchor={anchorPersonInvite}
+        value={invitePersonEmail}
+        addFunction={inviteSomeoneToGroup}
+        setAnchor={setAnchorPersonInvite}
+        setValue={setInvitePersonEmail}
+        label={"Email"}
+        permission={personEditPermission}
+        permissionLabel={t("editPermissionLabel")}
+        setPermission={() => setPersonEditPermission(!personEditPermission)}
+        permissible={true}
+      />
 
       <Grid container spacing={1} style={{ padding: 8 }} md={12} xs={12}>
         <Grid item md={4} xs={12}>
@@ -252,76 +422,176 @@ export default function LateralMenuLogged() {
             ))}
           </TextField>
         </Grid>
-        <Grid
-          item
-          md={1}
-          xs={4}
-          style={{ alignSelf: "center", textAlign: "center" }}
-        >
-          <Tooltip title={t("toolTipAddGroup")}>
-            <IconButton
-              size={"small"}
+        {checkPermissionOfEditGroup() && (
+          <Grid
+            item
+            md={1}
+            xs={3}
+            style={{ alignSelf: "center", textAlign: "center" }}
+          >
+            <WhiteIconButtonWithTooltip
               onClick={event => setAnchorAddGroup(event.currentTarget)}
-            >
-              <AddCircleOutline color={"secondary"} />
-            </IconButton>
-          </Tooltip>
-        </Grid>
+              icon={<AddCircleOutline color={"secondary"} />}
+              titleTooltip={t("toolTipAddGroup")}
+            />
+          </Grid>
+        )}
         <Grid
           item
           md={1}
-          xs={4}
+          xs={3}
           style={{ alignSelf: "center", textAlign: "center" }}
         >
-          <Tooltip title={t("tooltipExportGroup")}>
-            <IconButton size={"small"} onClick={event => {}}>
+          <WhiteIconButtonWithTooltip
+            onClick={() => {}}
+            icon={
               <PictureAsPdfRounded
                 style={{ color: "rgba(255, 255, 255, 0.5)" }}
                 color={"secondary"}
               />
-            </IconButton>
-          </Tooltip>
+            }
+            titleTooltip={t("tooltipExportGroup")}
+          />
         </Grid>
 
+        {checkPermissionOfEditGroup() && checkIfIsOwner() && (
+          <Grid
+            item
+            md={1}
+            xs={3}
+            style={{ alignSelf: "center", textAlign: "center" }}
+          >
+            <WhiteIconButtonWithTooltip
+              titleTooltip={t("tooltipDeleteAGroup")}
+              icon={<Delete color={"secondary"} />}
+              onClick={deleteSelectedGroup}
+            />
+          </Grid>
+        )}
         <Grid
           item
           md={1}
-          xs={4}
+          xs={3}
           style={{ alignSelf: "center", textAlign: "center" }}
         >
-          <Tooltip title={t("tooltipDeleteAGroup")}>
-            <IconButton
-              size={"small"}
-              onClick={event => {
-                deleteSelectedGroup();
-              }}
-            >
-              <Delete color={"secondary"} />
-            </IconButton>
-          </Tooltip>
+          <WhiteIconButtonWithTooltip
+            titleTooltip={t("tooltipAddPersonOnGroup")}
+            icon={<PersonAdd color={"secondary"} />}
+            onClick={event => setAnchorPersonInvite(event.currentTarget)}
+          />
         </Grid>
-        <Grid item container md={12} xs={12}>
-          {testList.map((doc, index) => (
-            <TestListItem test={doc} />
-          ))}
+        <Grid
+          item
+          md={1}
+          xs={3}
+          style={{ alignSelf: "center", textAlign: "center" }}
+        >
+          <WhiteIconButtonWithTooltip
+            titleTooltip={"Edit Permissioned Users"}
+            icon={<SupervisedUserCircle color={"secondary"} />}
+            onClick={event => {
+              setShowInvites(!showInvites);
+            }}
+          />
         </Grid>
+        <Grid
+          item
+          md={1}
+          xs={3}
+          style={{ alignSelf: "center", textAlign: "center" }}
+        >
+          <WhiteIconButtonWithTooltip
+            titleTooltip={"Notifications"}
+            icon={
+              <Badge badgeContent={invitesToMeList.length} color={"primary"}>
+                <Notifications color={"secondary"} />
+              </Badge>
+            }
+            onClick={event => {
+              if (invitesToMeList.length) {
+                setAnchorNotifications(event.currentTarget);
+              } else {
+                console.log('You don"t have invites');
+              }
+            }}
+          />
+          <PopoverNotificationList
+            anchor={anchorNotifications}
+            setAnchor={setAnchorNotifications}
+            invites={invitesToMeList}
+            userLogged={userLogged}
+            setState={() => {
+              getTestsGroups({
+                user: userLogged,
+                setState: data => {
+                  dispatch({
+                    type: "SET_TEST_GROUPS_STATE",
+                    payload: {
+                      list: data,
+                      selected: data[0].itemId
+                    }
+                  });
+
+                  getDocumentsFromTestsGroup({
+                    groups: testsGroups.list,
+                    user: userLogged,
+                    testGroupId: data[0].itemId,
+                    setState: data => {
+                      dispatch({
+                        type: "SET_LIST_DOCS",
+                        payload: data
+                      });
+                    }
+                  });
+                }
+              });
+
+              verifyInvitesOfTestsGroupsToMe({
+                user: userLogged,
+                setState: data => setInvitesToMeList(data)
+              });
+              setAnchorNotifications(null);
+            }}
+          />
+        </Grid>
+        {!showInvites ? (
+          <Grid item container md={12} xs={12}>
+            {testList.map((doc, index) => (
+              <TestListItem test={doc} />
+            ))}
+          </Grid>
+        ) : (
+          <Grid item container md={12} xs={12} style={{ paddingTop: 20 }}>
+            {invitesList.map((item, inde) => (
+              <InviteItemList item={item} cancelInvite={cancelInvite} />
+            ))}
+            {usersFromGroup.map((doc, index) => (
+              <SharedUserListItem
+                user={doc}
+                changeUserPermission={changeUserPermission}
+              />
+            ))}
+          </Grid>
+        )}
       </Grid>
 
-      <Grid item md={12}>
-        <Grid container justify={"flex-end"}>
-          <Grid item>
-            <IconButton size={"small"} onClick={() => navigate("before")}>
-              <NavigateBefore color={"secondary"} />
-            </IconButton>
-          </Grid>
-          <Typography style={{ color: "white" }}>...</Typography>
-          <Grid item>
-            <IconButton size={"small"} onClick={() => navigate("next")}>
-              <NavigateNext color={"secondary"} />
-            </IconButton>
+      {!showInvites ? (
+        <Grid item md={12}>
+          <Grid container justify={"flex-end"}>
+            <Grid item>
+              <IconButton size={"small"} onClick={() => navigate("before")}>
+                <NavigateBefore color={"secondary"} />
+              </IconButton>
+            </Grid>
+            <Typography style={{ color: "white" }}>...</Typography>
+            <Grid item>
+              <IconButton size={"small"} onClick={() => navigate("next")}>
+                <NavigateNext color={"secondary"} />
+              </IconButton>
+            </Grid>
           </Grid>
         </Grid>
-      </Grid>
+      ) : null}
     </Grid>
   );
 }

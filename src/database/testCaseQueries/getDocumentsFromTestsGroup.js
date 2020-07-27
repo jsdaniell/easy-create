@@ -5,27 +5,38 @@ export async function getDocumentsFromTestsGroup({
   user,
   testGroupId,
   lastItem,
-  paginate
+  paginate,
+  groups
 }) {
   let docsOfGroupRef;
 
-  console.log(testGroupId);
+  let ref;
+
+  if (
+    groups.find(item => item.itemId === testGroupId) &&
+    groups.find(item => item.itemId === testGroupId).shared === true &&
+    !groups.find(item => item.itemId === testGroupId).owner
+  ) {
+    ref = groups.find(item => item.itemId === testGroupId).from;
+  } else {
+    ref = `users/${user}/testsGroups/${testGroupId}`;
+  }
 
   if (paginate && paginate === "next") {
     docsOfGroupRef = firestore
-      .collection(`users/${user}/testsGroups/${testGroupId}/tests`)
+      .collection(`${ref}/tests`)
       .orderBy("title")
       .startAfter(lastItem)
       .limit(7);
   } else if (paginate && paginate === "back") {
     docsOfGroupRef = firestore
-      .collection(`users/${user}/testsGroups/${testGroupId}/tests`)
+      .collection(`${ref}/tests`)
       .orderBy("title")
       .endBefore(lastItem)
       .limitToLast(7);
   } else {
     docsOfGroupRef = firestore
-      .collection(`users/${user}/testsGroups/${testGroupId}/tests`)
+      .collection(`${ref}/tests`)
       .orderBy("title")
       .startAfter(0)
       .limit(7);
