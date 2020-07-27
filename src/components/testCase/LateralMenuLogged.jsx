@@ -25,6 +25,8 @@ import {
 import { addNewTestGroup } from "../../database/testCaseQueries/addNewTestGroup";
 import { useSnackbar } from "notistack";
 import { deleteOneGroup } from "../../database/testCaseQueries/deleteOneGroup";
+import PopoverAddSome from "../shared/PopoverAddSome";
+import WhiteIconButtonWithTooltip from "../shared/WhiteIconButtonWithTooltip";
 
 export default function LateralMenuLogged() {
   const { t } = useTranslation();
@@ -195,40 +197,13 @@ export default function LateralMenuLogged() {
       justify={"space-between"}
       spacing={2}
     >
-      <Popover
-        open={Boolean(anchorAddGroup)}
-        anchorEl={anchorAddGroup}
-        onClose={() => setAnchorAddGroup(null)}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "center"
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "center"
-        }}
-      >
-        <Grid
-          container
-          alignItems={"center"}
-          style={{ padding: 8 }}
-          justify={"space-between"}
-        >
-          <Grid item md>
-            <TextField
-              value={newGroupName}
-              onChange={e => setNewGroupName(e.target.value)}
-              size={"small"}
-              variant={"outlined"}
-            ></TextField>
-          </Grid>
-          <Grid item md={2} style={{ textAlign: "end" }}>
-            <IconButton size={"small"} onClick={() => addNewGroupOnList()}>
-              <AddCircleOutline color={"primary"}></AddCircleOutline>
-            </IconButton>
-          </Grid>
-        </Grid>
-      </Popover>
+      <PopoverAddSome
+        anchor={anchorAddGroup}
+        value={newGroupName}
+        addFunction={addNewGroupOnList}
+        setAnchor={setAnchorAddGroup}
+        setValue={setNewGroupName}
+      />
 
       <Grid container spacing={1} style={{ padding: 8 }} md={12} xs={12}>
         <Grid item md={4} xs={12}>
@@ -256,14 +231,11 @@ export default function LateralMenuLogged() {
           xs={4}
           style={{ alignSelf: "center", textAlign: "center" }}
         >
-          <Tooltip title={t("toolTipAddGroup")}>
-            <IconButton
-              size={"small"}
-              onClick={event => setAnchorAddGroup(event.currentTarget)}
-            >
-              <AddCircleOutline color={"secondary"} />
-            </IconButton>
-          </Tooltip>
+          <WhiteIconButtonWithTooltip
+            onClick={event => setAnchorAddGroup(event.currentTarget)}
+            icon={<AddCircleOutline color={"secondary"} />}
+            titleTooltip={t("toolTipAddGroup")}
+          />
         </Grid>
         <Grid
           item
@@ -271,14 +243,16 @@ export default function LateralMenuLogged() {
           xs={4}
           style={{ alignSelf: "center", textAlign: "center" }}
         >
-          <Tooltip title={t("tooltipExportGroup")}>
-            <IconButton size={"small"} onClick={event => {}}>
+          <WhiteIconButtonWithTooltip
+            onClick={() => {}}
+            icon={
               <PictureAsPdfRounded
                 style={{ color: "rgba(255, 255, 255, 0.5)" }}
                 color={"secondary"}
               />
-            </IconButton>
-          </Tooltip>
+            }
+            titleTooltip={t("tooltipExportGroup")}
+          />
         </Grid>
 
         <Grid
@@ -287,16 +261,11 @@ export default function LateralMenuLogged() {
           xs={4}
           style={{ alignSelf: "center", textAlign: "center" }}
         >
-          <Tooltip title={t("tooltipDeleteAGroup")}>
-            <IconButton
-              size={"small"}
-              onClick={event => {
-                deleteSelectedGroup();
-              }}
-            >
-              <Delete color={"secondary"} />
-            </IconButton>
-          </Tooltip>
+          <WhiteIconButtonWithTooltip
+            titleTooltip={t("tooltipDeleteAGroup")}
+            icon={<Delete color={"secondary"} />}
+            onClick={deleteSelectedGroup}
+          />
         </Grid>
         <Grid item container md={12} xs={12}>
           {testList.map((doc, index) => (
