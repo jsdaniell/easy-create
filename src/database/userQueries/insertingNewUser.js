@@ -7,8 +7,7 @@ export async function insertingNewUserOnDatabase(
 ) {
   if (!user) return;
 
-
-  console.log('User: ', user)
+  console.log("User: ", user);
 
   const userRef = firestore.doc(`users/${user.uid}`);
 
@@ -30,7 +29,7 @@ export async function insertingNewUserOnDatabase(
 
       const defaultRef = userRef.collection("testsGroups").doc("default");
 
-      await defaultRef.set({ title: "Default" });
+      await defaultRef.set({ title: "Default", sharedWith: [] });
 
       defaultRef
         .collection("tests")

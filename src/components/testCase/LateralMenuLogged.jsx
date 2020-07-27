@@ -6,7 +6,8 @@ import {
   MenuItem,
   Typography,
   Tooltip,
-  Popover
+  Popover,
+  Badge
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import { useTranslation } from "react-i18next";
@@ -22,7 +23,8 @@ import {
   PictureAsPdfRounded,
   Delete,
   PersonAdd,
-  SupervisedUserCircle
+  SupervisedUserCircle,
+  Notifications
 } from "@material-ui/icons";
 import { addNewTestGroup } from "../../database/testCaseQueries/addNewTestGroup";
 import { useSnackbar } from "notistack";
@@ -33,6 +35,8 @@ import { inviteSomeoneToTestGroup } from "../../database/testCaseQueries/inviteS
 import { getInvitesTestsGroupsFromMe } from "../../database/testCaseQueries/getInvitesTestGroupsFromMe";
 import InviteItemList from "./InviteItemList";
 import { deletingAnInvite } from "../../database/testCaseQueries/deletingAnInvite";
+import { verifyInvitesOfTestsGroupsToMe } from "../../database/testCaseQueries/verifyInvitesOfTestsGroupsToMe";
+import PopoverNotificationList from "../shared/PopoverNotificationsList";
 
 export default function LateralMenuLogged() {
   const { t } = useTranslation();
@@ -56,6 +60,9 @@ export default function LateralMenuLogged() {
   const [showInvites, setShowInvites] = useState(false);
   const [invitesList, setInvitesList] = useState([]);
 
+  const [invitesToMeList, setInvitesToMeList] = useState([]);
+  const [anchorNotifications, setAnchorNotifications] = useState(false);
+
   useEffect(() => {
     getTestsGroups({
       user: userLogged,
@@ -69,6 +76,7 @@ export default function LateralMenuLogged() {
         });
 
         getDocumentsFromTestsGroup({
+          groups: testsGroups.list,
           user: userLogged,
           testGroupId: data[data.length - 1].itemId,
           setState: data => {
@@ -87,11 +95,17 @@ export default function LateralMenuLogged() {
         });
       }
     });
+
+    verifyInvitesOfTestsGroupsToMe({
+      user: userLogged,
+      setState: data => setInvitesToMeList(data)
+    });
   }, []);
 
   function navigate(nextOrBefore) {
     if (testList.length === 7) {
       getDocumentsFromTestsGroup({
+        groups: testsGroups.list,
         user: userLogged,
         testGroupId: testsGroups.selected,
         setState: data => {
@@ -129,6 +143,7 @@ export default function LateralMenuLogged() {
               });
 
               getDocumentsFromTestsGroup({
+                groups: testsGroups.list,
                 user: userLogged,
                 testGroupId: data[0].itemId,
                 setState: data => {
@@ -157,6 +172,7 @@ export default function LateralMenuLogged() {
 
   function switchTestGroup(id) {
     getDocumentsFromTestsGroup({
+      groups: testsGroups.list,
       user: userLogged,
       testGroupId: id,
       setState: data => {
@@ -201,6 +217,7 @@ export default function LateralMenuLogged() {
             });
 
             getDocumentsFromTestsGroup({
+              groups: testsGroups.list,
               user: userLogged,
               testGroupId: data[0].itemId,
               setState: data => {
@@ -377,6 +394,66 @@ export default function LateralMenuLogged() {
             icon={<SupervisedUserCircle color={"secondary"} />}
             onClick={event => {
               setShowInvites(!showInvites);
+            }}
+          />
+        </Grid>
+        <Grid
+          item
+          md={1}
+          xs={3}
+          style={{ alignSelf: "center", textAlign: "center" }}
+        >
+          <WhiteIconButtonWithTooltip
+            titleTooltip={"Notifications"}
+            icon={
+              <Badge badgeContent={invitesToMeList.length} color={"primary"}>
+                <Notifications color={"secondary"} />
+              </Badge>
+            }
+            onClick={event => {
+              if (invitesToMeList.length) {
+                setAnchorNotifications(event.currentTarget);
+              } else {
+                console.log('You don"t have invites');
+              }
+            }}
+          />
+          <PopoverNotificationList
+            anchor={anchorNotifications}
+            setAnchor={setAnchorNotifications}
+            invites={invitesToMeList}
+            userLogged={userLogged}
+            setState={() => {
+              getTestsGroups({
+                user: userLogged,
+                setState: data => {
+                  dispatch({
+                    type: "SET_TEST_GROUPS_STATE",
+                    payload: {
+                      list: data,
+                      selected: data[0].itemId
+                    }
+                  });
+
+                  getDocumentsFromTestsGroup({
+                    groups: testsGroups.list,
+                    user: userLogged,
+                    testGroupId: data[0].itemId,
+                    setState: data => {
+                      dispatch({
+                        type: "SET_LIST_DOCS",
+                        payload: data
+                      });
+                    }
+                  });
+                }
+              });
+
+              verifyInvitesOfTestsGroupsToMe({
+                user: userLogged,
+                setState: data => setInvitesToMeList(data)
+              });
+              setAnchorNotifications(null);
             }}
           />
         </Grid>
