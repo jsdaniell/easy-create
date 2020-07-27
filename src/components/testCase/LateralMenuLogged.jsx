@@ -6,7 +6,7 @@ import {
   MenuItem,
   Typography,
   Tooltip,
-  Popover,
+  CircularProgress,
   Badge
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
@@ -68,6 +68,8 @@ export default function LateralMenuLogged() {
 
   const [usersFromGroup, setUsersFromGroup] = useState([]);
 
+  const [loading, setLoading] = useState(false);
+
   async function getDocInvitesAndUsersOfAGroup(testGroupId, groupsList) {
     dispatch({
       type: "SET_TEST_GROUPS_STATE",
@@ -107,10 +109,14 @@ export default function LateralMenuLogged() {
   }
 
   useEffect(() => {
+    setLoading(true);
+
     getTestsGroups({
       user: userLogged,
       setState: data => {
-        getDocInvitesAndUsersOfAGroup(data[data.length - 1].itemId, data);
+        getDocInvitesAndUsersOfAGroup(data[data.length - 1].itemId, data).then(
+          () => setLoading(false)
+        );
       }
     });
 
@@ -122,6 +128,7 @@ export default function LateralMenuLogged() {
 
   function navigate(nextOrBefore) {
     if (testList.length === 7) {
+      setLoading(true);
       getDocumentsFromTestsGroup({
         groups: testsGroups.list,
         user: userLogged,
@@ -134,12 +141,13 @@ export default function LateralMenuLogged() {
         },
         paginate: nextOrBefore,
         lastItem: testList[testList.length - 1].title
-      });
+      }).then(() => setLoading(false));
     }
   }
 
   function addNewGroupOnList() {
     if (newGroupName) {
+      setLoading(true);
       addNewTestGroup({
         user: userLogged,
         newCollectionName: newGroupName,
@@ -159,17 +167,20 @@ export default function LateralMenuLogged() {
           setAnchorAddGroup(null);
           setNewGroupName("");
         }
-      });
+      }).then(() => setLoading(false));
     }
   }
 
   async function switchTestGroup(id) {
-    await getDocInvitesAndUsersOfAGroup(id, testsGroups.list);
+    setLoading(true);
+    await getDocInvitesAndUsersOfAGroup(id, testsGroups.list).then(() =>
+      setLoading(false)
+    );
   }
 
   function deleteSelectedGroup() {
     if (!testsGroups.length) return;
-
+    setLoading(true);
     deleteOneGroup({
       collectionName: testsGroups.selected,
       user: userLogged,
@@ -185,7 +196,7 @@ export default function LateralMenuLogged() {
           variant: "success"
         });
       }
-    });
+    }).then(() => setLoading(false));
   }
 
   function checkPermissionOfEditGroup() {
@@ -207,6 +218,7 @@ export default function LateralMenuLogged() {
 
   function inviteSomeoneToGroup() {
     if (invitePersonEmail) {
+      setLoading(true);
       inviteSomeoneToTestGroup({
         user: userLogged,
         collectionName: testsGroups.selected,
@@ -234,11 +246,12 @@ export default function LateralMenuLogged() {
           setAnchorPersonInvite(null);
         },
         userNotExistError: () => {}
-      });
+      }).then(() => setLoading(false));
     }
   }
 
   function cancelInvite(invite) {
+    setLoading(true);
     deletingAnInvite({
       invite,
       setState: () => {
@@ -259,10 +272,11 @@ export default function LateralMenuLogged() {
           }
         });
       }
-    });
+    }).then(() => setLoading(false));
   }
 
   function changeUserPermission(user) {
+    setLoading(true);
     changingUserPermission({
       user: userLogged,
       userToChangePermission: user,
@@ -285,7 +299,7 @@ export default function LateralMenuLogged() {
           }
         });
       }
-    });
+    }).then(() => setLoading(false));
   }
 
   return (
@@ -475,26 +489,40 @@ export default function LateralMenuLogged() {
             }}
           />
         </Grid>
-        {!showInvites ? (
+        {!showInvites && !loading ? (
           <Grid item container md={12} xs={12}>
             {testList.map((doc, index) => (
-              <TestListItem test={doc} />
+              <TestListItem setLoading={setLoading} test={doc} />
             ))}
           </Grid>
         ) : (
-          <Grid item container md={12} xs={12} style={{ paddingTop: 20 }}>
-            {invitesList.map((item, inde) => (
-              <InviteItemList item={item} cancelInvite={cancelInvite} />
-            ))}
-            {usersFromGroup.map((doc, index) => (
-              <SharedUserListItem
-                user={doc}
-                changeUserPermission={changeUserPermission}
-              />
-            ))}
-          </Grid>
+          !loading && (
+            <Grid item container md={12} xs={12} style={{ paddingTop: 20 }}>
+              {invitesList.map((item, inde) => (
+                <InviteItemList item={item} cancelInvite={cancelInvite} />
+              ))}
+              {usersFromGroup.map((doc, index) => (
+                <SharedUserListItem
+                  user={doc}
+                  changeUserPermission={changeUserPermission}
+                />
+              ))}
+            </Grid>
+          )
         )}
       </Grid>
+
+      {loading && (
+        <Grid
+          item
+          container
+          md={12}
+          xs={12}
+          style={{ alignContent: "center", justifyContent: "center" }}
+        >
+          <CircularProgress color={"secondary"} />
+        </Grid>
+      )}
 
       {!showInvites ? (
         <Grid item md={12}>
