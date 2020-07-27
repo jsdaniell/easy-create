@@ -9,7 +9,7 @@ import testGroupsReducer from "./testGroupsReducer";
 
 const rootPersistConfig = {
   key: "root",
-  storage: storage
+  storage: storage,
 };
 
 const rootReducer = combineReducers({

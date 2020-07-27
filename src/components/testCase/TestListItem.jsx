@@ -12,7 +12,7 @@ import { deletingOneTest } from "../../database/testCaseQueries/deletingOne";
 import { getDocumentsFromTestsGroup } from "../../database/testCaseQueries/getDocumentsFromTestsGroup";
 import DevicesUtils from "../../utils/deviceUtils";
 
-export default function TestListItem({ test }) {
+export default function TestListItem({ test, setLoading }) {
   function getColor(priority) {
     switch (priority) {
       case "1":
@@ -33,12 +33,15 @@ export default function TestListItem({ test }) {
 
   function checkPermissionOfEditGroup() {
     return (
+        testsGroups &&
+        testsGroups.list.length &&
       testsGroups.list.find(item => item.itemId === testsGroups.selected)
         .permission === "edit"
     );
   }
 
   function deleting() {
+    setLoading(true)
     deletingOneTest({
       group: testsGroups.selected,
       listGroups: testsGroups.list,
@@ -55,7 +58,7 @@ export default function TestListItem({ test }) {
               payload: data
             });
           }
-        });
+        }).then(()=>setLoading(false));
       }
     });
   }
