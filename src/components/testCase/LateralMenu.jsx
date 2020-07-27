@@ -31,7 +31,10 @@ export default function LateralMenu() {
           alignSelf: "center"
         }}
       >
-        <MainSvg height={DevicesUtils.checkIfIsMobile() ? 200 : 340} />
+        <MainSvg
+          width={DevicesUtils.checkIfIsMobile() ? "200px" : 340}
+          height={DevicesUtils.checkIfIsMobile() ? "200px" : 340}
+        />
       </Grid>
 
       <Grid item md={12} style={{ alignSelf: "flex-end" }}>
