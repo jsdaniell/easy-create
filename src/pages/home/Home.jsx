@@ -163,10 +163,10 @@ export default function Home({
                             window.location.reload();
                           },
                           newUserInsert: data => {
-                            dispatch({
-                              type: "SET_TEST_CASE_MODAL_REDUCER",
-                              payload: data
-                            });
+                            // dispatch({
+                            //   type: "SET_TEST_CASE_MODAL_REDUCER",
+                            //   payload: data
+                            // });
                           },
                           newDataModel
                         });
