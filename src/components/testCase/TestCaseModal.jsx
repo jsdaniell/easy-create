@@ -80,6 +80,7 @@ export default function TestCaseModal() {
 
   function handleSaveOnFirebase() {
     savingNewTest({
+      listGroups: testsGroups.list,
       group: testsGroups.selected,
       test: testCaseData,
       user: userLogged,
@@ -91,6 +92,7 @@ export default function TestCaseModal() {
       success: () => {
         getDocumentsFromTestsGroup({
           user: userLogged,
+          groups: testsGroups.list,
           testGroupId: testsGroups.selected,
           setState: data => {
             dispatch({

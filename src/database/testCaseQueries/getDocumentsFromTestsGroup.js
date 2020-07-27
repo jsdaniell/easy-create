@@ -13,6 +13,7 @@ export async function getDocumentsFromTestsGroup({
   let ref;
 
   if (
+    groups.find(item => item.itemId === testGroupId) &&
     groups.find(item => item.itemId === testGroupId).shared === true &&
     !groups.find(item => item.itemId === testGroupId).owner
   ) {

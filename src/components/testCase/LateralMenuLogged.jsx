@@ -39,7 +39,7 @@ import { verifyInvitesOfTestsGroupsToMe } from "../../database/testCaseQueries/v
 import PopoverNotificationList from "../shared/PopoverNotificationsList";
 import { getUsersOfThisGroup } from "../../database/testCaseQueries/gettingUsersOfThisGroup";
 import SharedUserListItem from "./SharedUserListItem";
-import {changingUserPermission} from "../../database/testCaseQueries/changingUserPermission";
+import { changingUserPermission } from "../../database/testCaseQueries/changingUserPermission";
 
 export default function LateralMenuLogged() {
   const { t } = useTranslation();
@@ -276,6 +276,14 @@ export default function LateralMenuLogged() {
     );
   }
 
+  function checkIfIsOwner() {
+    return (
+      testsGroups &&
+      testsGroups.list.length &&
+      testsGroups.list.find(item => item.itemId === testsGroups.selected).owner
+    );
+  }
+
   function inviteSomeoneToGroup() {
     if (invitePersonEmail) {
       inviteSomeoneToTestGroup({
@@ -333,12 +341,12 @@ export default function LateralMenuLogged() {
     });
   }
 
-  function changeUserPermission(user){
+  function changeUserPermission(user) {
     changingUserPermission({
-      user:userLogged,
+      user: userLogged,
       userToChangePermission: user,
       testGroupId: testsGroups.selected,
-      setState:()=>{
+      setState: () => {
         getInvitesTestsGroupsFromMe({
           user: userLogged,
           collectionName: testsGroups.selected,
@@ -356,7 +364,7 @@ export default function LateralMenuLogged() {
           }
         });
       }
-    })
+    });
   }
 
   return (
@@ -444,7 +452,7 @@ export default function LateralMenuLogged() {
           />
         </Grid>
 
-        {checkPermissionOfEditGroup() && (
+        {checkPermissionOfEditGroup() && checkIfIsOwner() && (
           <Grid
             item
             md={1}
@@ -556,7 +564,10 @@ export default function LateralMenuLogged() {
               <InviteItemList item={item} cancelInvite={cancelInvite} />
             ))}
             {usersFromGroup.map((doc, index) => (
-              <SharedUserListItem user={doc} changeUserPermission={changeUserPermission} />
+              <SharedUserListItem
+                user={doc}
+                changeUserPermission={changeUserPermission}
+              />
             ))}
           </Grid>
         )}
