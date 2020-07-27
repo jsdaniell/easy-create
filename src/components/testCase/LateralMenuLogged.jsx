@@ -21,13 +21,18 @@ import {
   AddCircleOutline,
   PictureAsPdfRounded,
   Delete,
-  PersonAdd
+  PersonAdd,
+  SupervisedUserCircle
 } from "@material-ui/icons";
 import { addNewTestGroup } from "../../database/testCaseQueries/addNewTestGroup";
 import { useSnackbar } from "notistack";
 import { deleteOneGroup } from "../../database/testCaseQueries/deleteOneGroup";
 import PopoverAddSome from "../shared/PopoverAddSome";
 import WhiteIconButtonWithTooltip from "../shared/WhiteIconButtonWithTooltip";
+import { inviteSomeoneToTestGroup } from "../../database/testCaseQueries/inviteSomeoneToTestGroup";
+import { getInvitesTestsGroupsFromMe } from "../../database/testCaseQueries/getInvitesTestGroupsFromMe";
+import InviteItemList from "./InviteItemList";
+import { deletingAnInvite } from "../../database/testCaseQueries/deletingAnInvite";
 
 export default function LateralMenuLogged() {
   const { t } = useTranslation();
@@ -47,6 +52,9 @@ export default function LateralMenuLogged() {
 
   const [personEditPermission, setPersonEditPermission] = useState(false);
   const [anchorPersonInvite, setAnchorPersonInvite] = useState(null);
+
+  const [showInvites, setShowInvites] = useState(false);
+  const [invitesList, setInvitesList] = useState([]);
 
   useEffect(() => {
     getTestsGroups({
@@ -68,6 +76,13 @@ export default function LateralMenuLogged() {
               type: "SET_LIST_DOCS",
               payload: data
             });
+          }
+        });
+        getInvitesTestsGroupsFromMe({
+          user: userLogged,
+          collectionName: data[data.length - 1].itemId,
+          setState: inv => {
+            setInvitesList(inv);
           }
         });
       }
@@ -123,6 +138,13 @@ export default function LateralMenuLogged() {
                   });
                 }
               });
+              getInvitesTestsGroupsFromMe({
+                user: userLogged,
+                collectionName: data[0].itemId,
+                setState: inv => {
+                  setInvitesList(inv);
+                }
+              });
             }
           });
 
@@ -148,6 +170,14 @@ export default function LateralMenuLogged() {
           payload: {
             list: testsGroups.list,
             selected: id
+          }
+        });
+
+        getInvitesTestsGroupsFromMe({
+          user: userLogged,
+          collectionName: id,
+          setState: inv => {
+            setInvitesList(inv);
           }
         });
       }
@@ -190,9 +220,43 @@ export default function LateralMenuLogged() {
     });
   }
 
-  function inviteSomeoneToTestGroup() {
+  function inviteSomeoneToGroup() {
     if (invitePersonEmail) {
+      inviteSomeoneToTestGroup({
+        user: userLogged,
+        collectionName: testsGroups.selected,
+        userInvited: {
+          email: invitePersonEmail,
+          permission: personEditPermission
+        },
+        setState: () => {
+          getInvitesTestsGroupsFromMe({
+            user: userLogged,
+            collectionName: testsGroups.selected,
+            setState: inv => {
+              setInvitesList(inv);
+            }
+          });
+          setAnchorPersonInvite(null);
+        },
+        userNotExistError: () => {}
+      });
     }
+  }
+
+  function cancelInvite(invite) {
+    deletingAnInvite({
+      invite,
+      setState: () => {
+        getInvitesTestsGroupsFromMe({
+          user: userLogged,
+          collectionName: testsGroups.selected,
+          setState: inv => {
+            setInvitesList(inv);
+          }
+        });
+      }
+    });
   }
 
   return (
@@ -218,7 +282,7 @@ export default function LateralMenuLogged() {
       <PopoverAddSome
         anchor={anchorPersonInvite}
         value={invitePersonEmail}
-        addFunction={inviteSomeoneToTestGroup}
+        addFunction={inviteSomeoneToGroup}
         setAnchor={setAnchorPersonInvite}
         setValue={setInvitePersonEmail}
         label={"Email"}
@@ -302,28 +366,52 @@ export default function LateralMenuLogged() {
             onClick={event => setAnchorPersonInvite(event.currentTarget)}
           />
         </Grid>
-        <Grid item container md={12} xs={12}>
-          {testList.map((doc, index) => (
-            <TestListItem test={doc} />
-          ))}
+        <Grid
+          item
+          md={1}
+          xs={3}
+          style={{ alignSelf: "center", textAlign: "center" }}
+        >
+          <WhiteIconButtonWithTooltip
+            titleTooltip={"Edit Permissioned Users"}
+            icon={<SupervisedUserCircle color={"secondary"} />}
+            onClick={event => {
+              setShowInvites(!showInvites);
+            }}
+          />
         </Grid>
+        {!showInvites ? (
+          <Grid item container md={12} xs={12}>
+            {testList.map((doc, index) => (
+              <TestListItem test={doc} />
+            ))}
+          </Grid>
+        ) : (
+          <Grid item container md={12} xs={12} style={{ paddingTop: 20 }}>
+            {invitesList.map((item, inde) => (
+              <InviteItemList item={item} cancelInvite={cancelInvite} />
+            ))}
+          </Grid>
+        )}
       </Grid>
 
-      <Grid item md={12}>
-        <Grid container justify={"flex-end"}>
-          <Grid item>
-            <IconButton size={"small"} onClick={() => navigate("before")}>
-              <NavigateBefore color={"secondary"} />
-            </IconButton>
-          </Grid>
-          <Typography style={{ color: "white" }}>...</Typography>
-          <Grid item>
-            <IconButton size={"small"} onClick={() => navigate("next")}>
-              <NavigateNext color={"secondary"} />
-            </IconButton>
+      {!showInvites ? (
+        <Grid item md={12}>
+          <Grid container justify={"flex-end"}>
+            <Grid item>
+              <IconButton size={"small"} onClick={() => navigate("before")}>
+                <NavigateBefore color={"secondary"} />
+              </IconButton>
+            </Grid>
+            <Typography style={{ color: "white" }}>...</Typography>
+            <Grid item>
+              <IconButton size={"small"} onClick={() => navigate("next")}>
+                <NavigateNext color={"secondary"} />
+              </IconButton>
+            </Grid>
           </Grid>
         </Grid>
-      </Grid>
+      ) : null}
     </Grid>
   );
 }
