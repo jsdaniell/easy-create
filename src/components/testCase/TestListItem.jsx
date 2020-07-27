@@ -41,11 +41,13 @@ export default function TestListItem({ test }) {
   function deleting() {
     deletingOneTest({
       group: testsGroups.selected,
+      listGroups: testsGroups.list,
       user: userLogged,
       test,
       success: () => {
         getDocumentsFromTestsGroup({
           user: userLogged,
+          groups: testsGroups.list,
           testGroupId: testsGroups.selected,
           setState: data => {
             dispatch({

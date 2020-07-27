@@ -68,45 +68,49 @@ export default function LateralMenuLogged() {
 
   const [usersFromGroup, setUsersFromGroup] = useState([]);
 
+  async function getDocInvitesAndUsersOfAGroup(testGroupId, groupsList) {
+    dispatch({
+      type: "SET_TEST_GROUPS_STATE",
+      payload: {
+        list: groupsList,
+        selected: testGroupId
+      }
+    });
+
+    getDocumentsFromTestsGroup({
+      groups: groupsList,
+      user: userLogged,
+      testGroupId: testGroupId,
+      setState: data => {
+        dispatch({
+          type: "SET_LIST_DOCS",
+          payload: data
+        });
+      }
+    });
+    getInvitesTestsGroupsFromMe({
+      user: userLogged,
+      collectionName: testGroupId,
+      setState: inv => {
+        setInvitesList(inv);
+      }
+    });
+
+    getUsersOfThisGroup({
+      user: userLogged,
+      groups: groupsList,
+      testGroupId: testGroupId,
+      setState: users => {
+        setUsersFromGroup(users);
+      }
+    });
+  }
+
   useEffect(() => {
     getTestsGroups({
       user: userLogged,
       setState: data => {
-        dispatch({
-          type: "SET_TEST_GROUPS_STATE",
-          payload: {
-            list: data,
-            selected: data[data.length - 1].itemId
-          }
-        });
-
-        getDocumentsFromTestsGroup({
-          groups: testsGroups.list,
-          user: userLogged,
-          testGroupId: data[data.length - 1].itemId,
-          setState: data => {
-            dispatch({
-              type: "SET_LIST_DOCS",
-              payload: data
-            });
-          }
-        });
-        getInvitesTestsGroupsFromMe({
-          user: userLogged,
-          collectionName: data[data.length - 1].itemId,
-          setState: inv => {
-            setInvitesList(inv);
-          }
-        });
-
-        getUsersOfThisGroup({
-          user: userLogged,
-          groups: testsGroups.list,
-          testGroupId: data[data.length - 1].itemId,
-          setState: users => {
-            setUsersFromGroup(users);
-          }
-        });
+        getDocInvitesAndUsersOfAGroup(data[data.length - 1].itemId, data);
       }
     });
 
@@ -148,40 +152,7 @@ export default function LateralMenuLogged() {
           getTestsGroups({
             user: userLogged,
             setState: data => {
-              dispatch({
-                type: "SET_TEST_GROUPS_STATE",
-                payload: {
-                  list: data,
-                  selected: data[0].itemId
-                }
-              });
-
-              getDocumentsFromTestsGroup({
-                groups: testsGroups.list,
-                user: userLogged,
-                testGroupId: data[0].itemId,
-                setState: data => {
-                  dispatch({
-                    type: "SET_LIST_DOCS",
-                    payload: data
-                  });
-                }
-              });
-              getInvitesTestsGroupsFromMe({
-                user: userLogged,
-                collectionName: data[0].itemId,
-                setState: inv => {
-                  setInvitesList(inv);
-                }
-              });
-              getUsersOfThisGroup({
-                user: userLogged,
-                groups: testsGroups.list,
-                testGroupId: data[0].itemId,
-                setState: users => {
-                  setUsersFromGroup(users);
-                }
-              });
+              getDocInvitesAndUsersOfAGroup(data[0].itemId, data);
             }
           });
 
@@ -192,45 +163,13 @@ export default function LateralMenuLogged() {
     }
   }
 
-  function switchTestGroup(id) {
-    getDocumentsFromTestsGroup({
-      groups: testsGroups.list,
-      user: userLogged,
-      testGroupId: id,
-      setState: data => {
-        dispatch({
-          type: "SET_LIST_DOCS",
-          payload: data
-        });
-
-        dispatch({
-          type: "SET_TEST_GROUPS_STATE",
-          payload: {
-            list: testsGroups.list,
-            selected: id
-          }
-        });
-
-        getInvitesTestsGroupsFromMe({
-          user: userLogged,
-          collectionName: id,
-          setState: inv => {
-            setInvitesList(inv);
-          }
-        });
-        getUsersOfThisGroup({
-          user: userLogged,
-          groups: testsGroups.list,
-          testGroupId: id,
-          setState: users => {
-            setUsersFromGroup(users);
-          }
-        });
-      }
-    });
+  async function switchTestGroup(id) {
+    await getDocInvitesAndUsersOfAGroup(id, testsGroups.list);
   }
 
   function deleteSelectedGroup() {
+    if (!testsGroups.length) return;
+
     deleteOneGroup({
       collectionName: testsGroups.selected,
       user: userLogged,
@@ -238,25 +177,7 @@ export default function LateralMenuLogged() {
         getTestsGroups({
           user: userLogged,
           setState: data => {
-            dispatch({
-              type: "SET_TEST_GROUPS_STATE",
-              payload: {
-                list: data,
-                selected: data[0].itemId
-              }
-            });
-
-            getDocumentsFromTestsGroup({
-              groups: testsGroups.list,
-              user: userLogged,
-              testGroupId: data[0].itemId,
-              setState: data => {
-                dispatch({
-                  type: "SET_LIST_DOCS",
-                  payload: data
-                });
-              }
-            });
+            getDocInvitesAndUsersOfAGroup(data[0].itemId, data);
           }
         });
 
