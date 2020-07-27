@@ -1,5 +1,12 @@
 import React from "react";
-import { Grid, IconButton, Popover, TextField } from "@material-ui/core";
+import {
+  Grid,
+  IconButton,
+  Popover,
+  TextField,
+  Switch,
+  Typography
+} from "@material-ui/core";
 import { AddCircleOutline } from "@material-ui/icons";
 
 export default function PopoverAddSome({
@@ -7,7 +14,12 @@ export default function PopoverAddSome({
   setAnchor,
   value,
   setValue,
-  addFunction
+  addFunction,
+  label,
+  permissible,
+  permission,
+  setPermission,
+  permissionLabel
 }) {
   return (
     <Popover
@@ -26,7 +38,7 @@ export default function PopoverAddSome({
       <Grid
         container
         alignItems={"center"}
-        style={{ padding: 8 }}
+        style={{ padding: 8, maxWidth: 250 }}
         justify={"space-between"}
       >
         <Grid item md>
@@ -34,14 +46,36 @@ export default function PopoverAddSome({
             value={value}
             onChange={e => setValue(e.target.value)}
             size={"small"}
+            label={label || false}
             variant={"outlined"}
-          ></TextField>
+          />
         </Grid>
         <Grid item md={2} style={{ textAlign: "end" }}>
           <IconButton size={"small"} onClick={() => addFunction()}>
             <AddCircleOutline color={"primary"}></AddCircleOutline>
           </IconButton>
         </Grid>
+        {permissible && (
+          <Grid
+            item
+            container
+            md={12}
+            xs={12}
+            style={{ textAlign: "start", alignItems: "center" }}
+          >
+            <Grid item md style={{ paddingLeft: 4 }}>
+              <Typography>{permissionLabel}</Typography>
+            </Grid>
+            <Grid item>
+              <Switch
+                checked={permission}
+                onChange={setPermission}
+                color={"primary"}
+                name="checkedA"
+              />
+            </Grid>
+          </Grid>
+        )}
       </Grid>
     </Popover>
   );

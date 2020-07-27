@@ -5,13 +5,14 @@ export async function getTestsGroups({ setState, user }) {
 
   let arrayOfGroups = [];
 
-  let arrayGroupsAndTests = [];
-
   await groupsRef.get().then(response => {
     response.forEach(item =>
-      arrayOfGroups.push({ itemId: item.id, itemLabel: item.data().title })
+      arrayOfGroups.push({
+        itemId: item.id,
+        itemLabel: item.data().title
+      })
     );
   });
 
-  setState(arrayOfGroups)
+  setState(arrayOfGroups);
 }
