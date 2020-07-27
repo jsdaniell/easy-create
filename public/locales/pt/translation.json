@@ -41,5 +41,7 @@
   "successRemovedGroup": "Grupo removido com sucesso!",
   "tooltipDeleteAGroup": "Deletar Grupo",
   "useCaseTitle": "Criar Caso de Uso",
-  "codeSnippetTitle": "Criar Snippet de Código"
+  "codeSnippetTitle": "Criar Snippet de Código",
+  "tooltipAddPersonOnGroup": "Convide alguém para esse grupo",
+  "editPermissionLabel": "Permissão de Edição"
 }
