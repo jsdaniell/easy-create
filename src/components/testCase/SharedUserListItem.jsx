@@ -36,10 +36,7 @@ export default function SharedUserListItem({
       </Grid>
       {checkPermissionOfEditGroup() && (
         <Grid item style={{ alignItems: "center" }}>
-          <Typography
-            variant={"subtitle2"}
-            style={{ color: "white", paddingTop: 4 }}
-          >
+          <Typography variant={"subtitle2"} style={{ color: "white" }}>
             Editor{" "}
             <Switch
               checked={user.userPermission === "edit"}
