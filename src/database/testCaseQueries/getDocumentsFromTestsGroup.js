@@ -12,8 +12,11 @@ export async function getDocumentsFromTestsGroup({
 
   let ref;
 
-  if (groups.find(item => item.itemId === testGroupId).shared === true) {
-    ref = groups.find(item => item.itemId === testGroupId).from
+  if (
+    groups.find(item => item.itemId === testGroupId).shared === true &&
+    !groups.find(item => item.itemId === testGroupId).owner
+  ) {
+    ref = groups.find(item => item.itemId === testGroupId).from;
   } else {
     ref = `users/${user}/testsGroups/${testGroupId}`;
   }
