@@ -37,7 +37,13 @@ export default function LateralMenu() {
         />
       </Grid>
 
-      <Grid item md={12} style={{ alignSelf: "flex-end" }}>
+      <Grid
+        item
+        md={12}
+        style={{
+          alignSelf: DevicesUtils.checkIfIsMobile() ? "flex-start" : "flex-end"
+        }}
+      >
         <Typography variant={"h5"} style={{ color: "white" }}>
           {t("inspirationTitle")}
         </Typography>
