@@ -32,6 +32,8 @@ export default function TestCaseModal() {
 
   function checkPermissionOfEditGroup() {
     return (
+      testsGroups &&
+      testsGroups.list.length &&
       testsGroups.list.find(item => item.itemId === testsGroups.selected)
         .permission === "edit"
     );

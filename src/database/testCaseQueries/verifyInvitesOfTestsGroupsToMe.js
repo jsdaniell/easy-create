@@ -16,7 +16,7 @@ export async function verifyInvitesOfTestsGroupsToMe({
         invitesToMe.push(doc.data());
       });
 
-      console.log(invitesToMe);
+
 
       setState(invitesToMe);
     });

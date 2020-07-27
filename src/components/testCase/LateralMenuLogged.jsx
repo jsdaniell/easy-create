@@ -37,6 +37,9 @@ import InviteItemList from "./InviteItemList";
 import { deletingAnInvite } from "../../database/testCaseQueries/deletingAnInvite";
 import { verifyInvitesOfTestsGroupsToMe } from "../../database/testCaseQueries/verifyInvitesOfTestsGroupsToMe";
 import PopoverNotificationList from "../shared/PopoverNotificationsList";
+import { getUsersOfThisGroup } from "../../database/testCaseQueries/gettingUsersOfThisGroup";
+import SharedUserListItem from "./SharedUserListItem";
+import {changingUserPermission} from "../../database/testCaseQueries/changingUserPermission";
 
 export default function LateralMenuLogged() {
   const { t } = useTranslation();
@@ -62,6 +65,8 @@ export default function LateralMenuLogged() {
 
   const [invitesToMeList, setInvitesToMeList] = useState([]);
   const [anchorNotifications, setAnchorNotifications] = useState(false);
+
+  const [usersFromGroup, setUsersFromGroup] = useState([]);
 
   useEffect(() => {
     getTestsGroups({
@@ -91,6 +96,15 @@ export default function LateralMenuLogged() {
           collectionName: data[data.length - 1].itemId,
           setState: inv => {
             setInvitesList(inv);
+          }
+        });
+
+        getUsersOfThisGroup({
+          user: userLogged,
+          groups: testsGroups.list,
+          testGroupId: data[data.length - 1].itemId,
+          setState: users => {
+            setUsersFromGroup(users);
           }
         });
       }
@@ -160,6 +174,14 @@ export default function LateralMenuLogged() {
                   setInvitesList(inv);
                 }
               });
+              getUsersOfThisGroup({
+                user: userLogged,
+                groups: testsGroups.list,
+                testGroupId: data[0].itemId,
+                setState: users => {
+                  setUsersFromGroup(users);
+                }
+              });
             }
           });
 
@@ -194,6 +216,14 @@ export default function LateralMenuLogged() {
           collectionName: id,
           setState: inv => {
             setInvitesList(inv);
+          }
+        });
+        getUsersOfThisGroup({
+          user: userLogged,
+          groups: testsGroups.list,
+          testGroupId: id,
+          setState: users => {
+            setUsersFromGroup(users);
           }
         });
       }
@@ -237,6 +267,15 @@ export default function LateralMenuLogged() {
     });
   }
 
+  function checkPermissionOfEditGroup() {
+    return (
+      testsGroups &&
+      testsGroups.list.length &&
+      testsGroups.list.find(item => item.itemId === testsGroups.selected)
+        .permission === "edit"
+    );
+  }
+
   function inviteSomeoneToGroup() {
     if (invitePersonEmail) {
       inviteSomeoneToTestGroup({
@@ -252,6 +291,15 @@ export default function LateralMenuLogged() {
             collectionName: testsGroups.selected,
             setState: inv => {
               setInvitesList(inv);
+            }
+          });
+
+          getUsersOfThisGroup({
+            user: userLogged,
+            groups: testsGroups.list,
+            testGroupId: testsGroups.selected,
+            setState: users => {
+              setUsersFromGroup(users);
             }
           });
           setAnchorPersonInvite(null);
@@ -272,8 +320,43 @@ export default function LateralMenuLogged() {
             setInvitesList(inv);
           }
         });
+
+        getUsersOfThisGroup({
+          user: userLogged,
+          groups: testsGroups.list,
+          testGroupId: testsGroups.selected,
+          setState: users => {
+            setUsersFromGroup(users);
+          }
+        });
       }
     });
+  }
+
+  function changeUserPermission(user){
+    changingUserPermission({
+      user:userLogged,
+      userToChangePermission: user,
+      testGroupId: testsGroups.selected,
+      setState:()=>{
+        getInvitesTestsGroupsFromMe({
+          user: userLogged,
+          collectionName: testsGroups.selected,
+          setState: inv => {
+            setInvitesList(inv);
+          }
+        });
+
+        getUsersOfThisGroup({
+          user: userLogged,
+          groups: testsGroups.list,
+          testGroupId: testsGroups.selected,
+          setState: users => {
+            setUsersFromGroup(users);
+          }
+        });
+      }
+    })
   }
 
   return (
@@ -329,18 +412,20 @@ export default function LateralMenuLogged() {
             ))}
           </TextField>
         </Grid>
-        <Grid
-          item
-          md={1}
-          xs={3}
-          style={{ alignSelf: "center", textAlign: "center" }}
-        >
-          <WhiteIconButtonWithTooltip
-            onClick={event => setAnchorAddGroup(event.currentTarget)}
-            icon={<AddCircleOutline color={"secondary"} />}
-            titleTooltip={t("toolTipAddGroup")}
-          />
-        </Grid>
+        {checkPermissionOfEditGroup() && (
+          <Grid
+            item
+            md={1}
+            xs={3}
+            style={{ alignSelf: "center", textAlign: "center" }}
+          >
+            <WhiteIconButtonWithTooltip
+              onClick={event => setAnchorAddGroup(event.currentTarget)}
+              icon={<AddCircleOutline color={"secondary"} />}
+              titleTooltip={t("toolTipAddGroup")}
+            />
+          </Grid>
+        )}
         <Grid
           item
           md={1}
@@ -359,18 +444,20 @@ export default function LateralMenuLogged() {
           />
         </Grid>
 
-        <Grid
-          item
-          md={1}
-          xs={3}
-          style={{ alignSelf: "center", textAlign: "center" }}
-        >
-          <WhiteIconButtonWithTooltip
-            titleTooltip={t("tooltipDeleteAGroup")}
-            icon={<Delete color={"secondary"} />}
-            onClick={deleteSelectedGroup}
-          />
-        </Grid>
+        {checkPermissionOfEditGroup() && (
+          <Grid
+            item
+            md={1}
+            xs={3}
+            style={{ alignSelf: "center", textAlign: "center" }}
+          >
+            <WhiteIconButtonWithTooltip
+              titleTooltip={t("tooltipDeleteAGroup")}
+              icon={<Delete color={"secondary"} />}
+              onClick={deleteSelectedGroup}
+            />
+          </Grid>
+        )}
         <Grid
           item
           md={1}
@@ -467,6 +554,9 @@ export default function LateralMenuLogged() {
           <Grid item container md={12} xs={12} style={{ paddingTop: 20 }}>
             {invitesList.map((item, inde) => (
               <InviteItemList item={item} cancelInvite={cancelInvite} />
+            ))}
+            {usersFromGroup.map((doc, index) => (
+              <SharedUserListItem user={doc} changeUserPermission={changeUserPermission} />
             ))}
           </Grid>
         )}

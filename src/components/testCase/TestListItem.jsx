@@ -31,6 +31,13 @@ export default function TestListItem({ test }) {
   const userLogged = useSelector(state => state.userUidReducer);
   const testsGroups = useSelector(state => state.testGroupsReducer);
 
+  function checkPermissionOfEditGroup() {
+    return (
+      testsGroups.list.find(item => item.itemId === testsGroups.selected)
+        .permission === "edit"
+    );
+  }
+
   function deleting() {
     deletingOneTest({
       group: testsGroups.selected,
@@ -109,19 +116,21 @@ export default function TestListItem({ test }) {
             <Visibility style={{ verticalAlign: "middle" }} color={"primary"} />
           </IconButton>
         </Grid>
-        <Grid item md={1} xs={1}>
-          <IconButton
-            size={"small"}
-            onClick={() => {
-              deleting();
-            }}
-          >
-            <HighlightOffRounded
-              style={{ verticalAlign: "middle" }}
-              color={"primary"}
-            />
-          </IconButton>
-        </Grid>
+        {checkPermissionOfEditGroup() && (
+          <Grid item md={1} xs={1}>
+            <IconButton
+              size={"small"}
+              onClick={() => {
+                deleting();
+              }}
+            >
+              <HighlightOffRounded
+                style={{ verticalAlign: "middle" }}
+                color={"primary"}
+              />
+            </IconButton>
+          </Grid>
+        )}
       </Grid>
       <Grid
         item

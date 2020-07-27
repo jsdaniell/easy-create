@@ -15,7 +15,8 @@ export async function getTestsGroups({ setState, user }) {
         itemId: item.id,
         itemLabel: item.data().title,
         permission: "edit",
-        shared: Boolean(item.data().sharedWith.length)
+        shared: Boolean(item.data().sharedWith.length),
+        owner: true
       })
     );
   });
