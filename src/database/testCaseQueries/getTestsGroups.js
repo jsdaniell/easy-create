@@ -25,20 +25,24 @@ export async function getTestsGroups({ setState, user }) {
     response.forEach(async item => {
       let groupDocRef = await firestore.doc(item.data().ref);
 
+      console.log("refShared: ", item.data().ref);
+
       groupDocRef.get().then(dt => {
         if (dt.data().sharedWith.find(item => item.user === user)) {
           arrayOfGroups.push({
             itemId: dt.id,
             itemLabel: dt.data().title,
-            permission: dt.data().permission,
+            permission: dt.data().sharedWith.find(item => item.user === user)
+              .permission,
             shared: true,
-              from: item.data().ref
+            from: item.data().ref
           });
         }
       });
     });
   });
 
+  console.log("arrays: ", arrayOfGroups);
 
   setState(arrayOfGroups);
 }

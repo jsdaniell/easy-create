@@ -11,6 +11,7 @@ export async function getUsersOfThisGroup({
   let ref;
 
   if (
+    groups.find(item => item.itemId === testGroupId) &&
     groups.find(item => item.itemId === testGroupId).shared === true &&
     !groups.find(item => item.itemId === testGroupId).owner
   ) {
