@@ -83,7 +83,7 @@ export default function Home({ Left, Right }) {
         borderRadius: 13,
         height: "100%",
         alignContent: "flex-start",
-        minWidth: "1158px"
+        minWidth: DevicesUtils.checkIfIsMobile() ? "0px" : "1158px"
       }}
     >
       <Grid

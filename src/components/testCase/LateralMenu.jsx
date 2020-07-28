@@ -41,7 +41,8 @@ export default function LateralMenu() {
         item
         md={12}
         style={{
-          alignSelf: DevicesUtils.checkIfIsMobile() ? "flex-start" : "flex-end"
+          alignSelf: DevicesUtils.checkIfIsMobile() ? "flex-start" : "flex-end",
+          paddingBottom: DevicesUtils.checkIfIsMobile() ? 10 : 0
         }}
       >
         <Typography variant={"h5"} style={{ color: "white" }}>

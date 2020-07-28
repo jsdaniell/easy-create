@@ -115,7 +115,7 @@ export default function TestCaseModal() {
     <Grid
       container
       style={{
-        padding: "25px 50px",
+        padding:DevicesUtils.checkIfIsMobile() ? "25px 25px": "25px 50px",
         alignContent: "space-between",
         minHeight: "100%"
       }}
