@@ -7,37 +7,46 @@ import LateralMenu from "./components/testCase/LateralMenu";
 import { useSelector, useDispatch } from "react-redux";
 import LateralMenuLogged from "./components/testCase/LateralMenuLogged";
 import { useHistory } from "react-router";
+import GeneratorControl from "./components/generator/GeneratorControl";
+import GeneratorView from "./components/generator/GeneratorView";
+
+const RenderHomeTests = () => {
+  const userLogged = useSelector(state => state.userUidReducer);
+
+  return (
+    <Home
+      Left={userLogged ? LateralMenuLogged : LateralMenu}
+      Right={TestCaseModal}
+    />
+  );
+};
+
+const RenderHomeGenerator = () => {
+  return <Home Left={GeneratorControl} Right={GeneratorView} />;
+};
 
 function Routes() {
-  const userLogged = useSelector(state => state.userUidReducer);
-    const testsGroups = useSelector(state => state.testGroupsReducer);
+  const testsGroups = useSelector(state => state.testGroupsReducer);
 
-    const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
-
-    useEffect(()=>{
-      if(testsGroups){
-          dispatch({
-              type: "SET_TEST_GROUPS_STATE",
-              payload: {
-                  list: [],
-                  selected: null
-              }
-          });
-      }
-  }, [])
+  useEffect(() => {
+    if (testsGroups) {
+      dispatch({
+        type: "SET_TEST_GROUPS_STATE",
+        payload: {
+          list: [],
+          selected: null
+        }
+      });
+    }
+  }, []);
   return (
     <HashRouter>
       <Switch>
-        <Home>
-          <Route
-            path={"/"}
-            component={[
-              userLogged ? LateralMenuLogged : LateralMenu,
-              TestCaseModal
-            ]}
-          />
-        </Home>
+        <Route exact path={"/"} component={RenderHomeTests} />
+
+        <Route exact path={"/generator"} component={RenderHomeGenerator} />
       </Switch>
     </HashRouter>
   );
