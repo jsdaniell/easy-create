@@ -48,5 +48,6 @@
   "peopleInThisGroup": "Pessoas neste grupo",
   "userAlreadyInvited": "Esse usuário já foi convidado!",
   "userNotExists": "Esse usuário não está registrado!",
-  "noUsersInvited": "Sem usuários no grupo!"
+  "noUsersInvited": "Sem usuários no grupo!",
+  "generatorTitle": "Gerador de Dados"
 }
