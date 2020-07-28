@@ -4,7 +4,7 @@ import "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAPBexuJktp2lD3kinXzyT-7TOxL4eaaIg",
-  authDomain: "devdatatools.firebaseapp.com",
+  authDomain: "devdatatools.tools",
   databaseURL: "https://devdatatools.firebaseio.com",
   projectId: "devdatatools",
   storageBucket: "devdatatools.appspot.com",
@@ -13,10 +13,6 @@ const firebaseConfig = {
   measurementId: "G-KMZYVLK213"
 };
 
-
-
 firebase.initializeApp(firebaseConfig);
 export const auth = firebase.auth();
 export const firestore = firebase.firestore();
-
-
