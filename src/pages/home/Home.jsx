@@ -289,8 +289,8 @@ export default function Home({ Left, Right }) {
           borderRadius: 12,
           backgroundColor: "white",
           boxShadow: "0px 0px 15px 0px rgba(0,0,0,0.2)",
-          minHeight: DevicesUtils.checkIfIsMobile() ? "100%" : "632.188px",
-          maxHeight: 1220
+          minHeight: DevicesUtils.checkIfIsMobile() ? "100%" : "699.406px",
+          maxHeight: DevicesUtils.checkIfIsMobile() ? "100%" : "699.406px",
         }}
       >
         {React.createElement(Right)}
