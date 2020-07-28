@@ -44,7 +44,7 @@ function Routes() {
   return (
     <HashRouter>
       <Switch>
-        <Route exact path={"/generator"} component={RenderHomeTests} />
+        <Route exact path={"/create-test-case"} component={RenderHomeTests} />
 
         <Route exact path={"/"} component={RenderHomeGenerator} />
       </Switch>

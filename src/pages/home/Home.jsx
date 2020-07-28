@@ -66,7 +66,7 @@ export default function Home({ Left, Right }) {
     switch (location) {
       case "#/":
         return t("generatorTitle");
-      case "#/generator":
+      case "#/create-test-case":
         return t("testCaseTitle");
 
       default:
@@ -252,7 +252,7 @@ export default function Home({ Left, Right }) {
                           >
                             <MenuItem
                               onClick={e => {
-                                history.push("generator");
+                                history.push("create-test-case");
                                 handleClose(e);
                               }}
                             >
