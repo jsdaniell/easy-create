@@ -73,7 +73,7 @@ export default function GeneratorView() {
         container
         md={12}
         spacing={1}
-        style={{ maxHeight: "71vh", overflowY: "scroll" }}
+        style={{ maxHeight: "57vh", overflowY: "scroll" }}
       >
         {dataGenerator
           .filter(i => i.status)
