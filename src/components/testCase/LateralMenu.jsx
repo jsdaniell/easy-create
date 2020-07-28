@@ -1,6 +1,6 @@
 import React from "react";
 import { Grid, Typography, Button } from "@material-ui/core";
-import { ReactComponent as MainSvg } from "../../assets/main.svg";
+import { ReactComponent as MainSvg } from "../../assets/tests.svg";
 import { useTranslation } from "react-i18next";
 import DevicesUtils from "../../utils/deviceUtils";
 
