@@ -1,7 +1,7 @@
 import { firestore } from "../../firebase";
 
 export async function acceptingAnInvite({ setState, user, invite }) {
-  console.log(invite);
+
 
   await firestore
     .collection("invites")

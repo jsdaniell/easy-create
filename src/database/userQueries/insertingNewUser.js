@@ -7,7 +7,7 @@ export async function insertingNewUserOnDatabase(
 ) {
   if (!user) return;
 
-  console.log("User: ", user);
+
 
   const userRef = firestore.doc(`users/${user.uid}`);
 
