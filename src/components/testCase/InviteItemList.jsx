@@ -19,7 +19,7 @@ export default function InviteItemList({ item, cancelInvite }) {
         <AccountCircle color={"secondary"} style={{ paddingRight: 10 }} />
         <Typography style={{ color: "white" }}>{item.toEmail}</Typography>
       </Grid>
-      <Grid item style={{ alignItems: "center" }}>
+      <Grid item style={{ alignItems: "center", alignSelf: "center" }}>
         <Typography variant={"subtitle2"} style={{ color: "white" }}>
           {item.status}
         </Typography>

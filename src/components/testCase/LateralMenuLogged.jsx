@@ -40,7 +40,7 @@ import PopoverNotificationList from "../shared/PopoverNotificationsList";
 import { getUsersOfThisGroup } from "../../database/testCaseQueries/gettingUsersOfThisGroup";
 import SharedUserListItem from "./SharedUserListItem";
 import { changingUserPermission } from "../../database/testCaseQueries/changingUserPermission";
-import {removingUserOfAGroup} from "../../database/testCaseQueries/removingUserOfAGroup";
+import { removingUserOfAGroup } from "../../database/testCaseQueries/removingUserOfAGroup";
 
 export default function LateralMenuLogged() {
   const { t } = useTranslation();
@@ -174,9 +174,10 @@ export default function LateralMenuLogged() {
 
   async function switchTestGroup(id) {
     setLoading(true);
-    await getDocInvitesAndUsersOfAGroup(id, testsGroups.list).then(() =>
-      setLoading(false)
-    );
+    await getDocInvitesAndUsersOfAGroup(id, testsGroups.list).then(() => {
+      setLoading(false);
+      setShowInvites(false);
+    });
   }
 
   function deleteSelectedGroup() {
@@ -246,7 +247,16 @@ export default function LateralMenuLogged() {
           });
           setAnchorPersonInvite(null);
         },
-        userNotExistError: () => {}
+        userInvitedError: () => {
+          enqueueSnackbar(t("userAlreadyInvited"), {
+            variant: "warning"
+          });
+        },
+        userNotExistError: () => {
+          enqueueSnackbar(t("userNotExists"), {
+            variant: "warning"
+          });
+        }
       }).then(() => setLoading(false));
     }
   }
@@ -276,13 +286,13 @@ export default function LateralMenuLogged() {
     }).then(() => setLoading(false));
   }
 
-  function removeUserOfGroup(userToRemove){
-    setLoading(true)
+  function removeUserOfGroup(userToRemove) {
+    setLoading(true);
     removingUserOfAGroup({
       user: userLogged,
       userToRemove,
-      group:testsGroups.selected,
-      setState:()=>{
+      group: testsGroups.selected,
+      setState: () => {
         getUsersOfThisGroup({
           user: userLogged,
           groups: testsGroups.list,
@@ -292,7 +302,7 @@ export default function LateralMenuLogged() {
           }
         });
       }
-    }).then(()=> setLoading(false))
+    }).then(() => setLoading(false));
   }
 
   function changeUserPermission(user) {
@@ -309,12 +319,8 @@ export default function LateralMenuLogged() {
             setInvitesList(inv);
           }
         });
-
-
       }
     }).then(() => {
-
-
       getUsersOfThisGroup({
         user: userLogged,
         groups: testsGroups.list,
@@ -323,7 +329,8 @@ export default function LateralMenuLogged() {
           setUsersFromGroup(users);
         }
       });
-      setLoading(false)});
+      setLoading(false);
+    });
   }
 
   return (
@@ -446,7 +453,7 @@ export default function LateralMenuLogged() {
           style={{ alignSelf: "center", textAlign: "center" }}
         >
           <WhiteIconButtonWithTooltip
-            titleTooltip={"Edit Permissioned Users"}
+            titleTooltip={t("peopleInThisGroup")}
             icon={<SupervisedUserCircle color={"secondary"} />}
             onClick={event => {
               setShowInvites(!showInvites);
@@ -460,7 +467,7 @@ export default function LateralMenuLogged() {
           style={{ alignSelf: "center", textAlign: "center" }}
         >
           <WhiteIconButtonWithTooltip
-            titleTooltip={"Notifications"}
+            titleTooltip={t("notificationsLabel")}
             icon={
               <Badge badgeContent={invitesToMeList.length} color={"primary"}>
                 <Notifications color={"secondary"} />
@@ -519,21 +526,38 @@ export default function LateralMenuLogged() {
               <TestListItem setLoading={setLoading} test={doc} />
             ))}
           </Grid>
+        ) : !loading && (invitesList.length || usersFromGroup.length) ? (
+          <Grid item container md={12} xs={12} style={{ paddingTop: 20 }}>
+            {invitesList.map((item, inde) => (
+              <InviteItemList item={item} cancelInvite={cancelInvite} />
+            ))}
+            {usersFromGroup.map((doc, index) => (
+              <SharedUserListItem
+                user={doc}
+                changeUserPermission={changeUserPermission}
+                removeUserOfGroup={removeUserOfGroup}
+              />
+            ))}
+          </Grid>
         ) : (
-          !loading && (
-            <Grid item container md={12} xs={12} style={{ paddingTop: 20 }}>
-              {invitesList.map((item, inde) => (
-                <InviteItemList item={item} cancelInvite={cancelInvite} />
-              ))}
-              {usersFromGroup.map((doc, index) => (
-                <SharedUserListItem
-                  user={doc}
-                  changeUserPermission={changeUserPermission}
-                  removeUserOfGroup={removeUserOfGroup}
-                />
-              ))}
-            </Grid>
-          )
+          <Grid
+            item
+            container
+            md={12}
+            xs={12}
+            style={{
+              alignContent: "center",
+              justifyContent: "center",
+              paddingTop: 20
+            }}
+          >
+            <Typography
+              variant={"h6"}
+              style={{ color: "rgba(255, 255, 255, 0.5)" }}
+            >
+              {t('noUsersInvited')}
+            </Typography>
+          </Grid>
         )}
       </Grid>
 

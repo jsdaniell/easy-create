@@ -43,5 +43,10 @@
   "useCaseTitle": "Create Use Case (Soon)",
   "codeSnippetTitle": "Create Code Snippet (Soon)",
   "tooltipAddPersonOnGroup": "Invite someone to this group",
-  "editPermissionLabel": "Edit Permission"
+  "editPermissionLabel": "Edit Permission",
+  "notificationsLabel": "Notifications",
+  "peopleInThisGroup": "People in this group",
+  "userAlreadyInvited": "This user is already invited!",
+  "userNotExists": "This user is not registered!",
+  "noUsersInvited": "No users in this group!"
 }
