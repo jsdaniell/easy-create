@@ -48,5 +48,6 @@
   "peopleInThisGroup": "People in this group",
   "userAlreadyInvited": "This user is already invited!",
   "userNotExists": "This user is not registered!",
-  "noUsersInvited": "No users in this group!"
+  "noUsersInvited": "No users in this group!",
+  "generatorTitle": "Data Generator"
 }

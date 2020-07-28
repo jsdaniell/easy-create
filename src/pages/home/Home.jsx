@@ -18,12 +18,9 @@ import { signInWithGoogle } from "../../service/integratedLogin";
 import googleIcon from "../../assets/google.png";
 import { useDispatch, useSelector } from "react-redux";
 import { ExitToApp, ExpandMoreRounded } from "@material-ui/icons";
+import { useHistory } from "react-router";
 
-export default function Home({
-  children: {
-    props: { component }
-  }
-}) {
+export default function Home({ Left, Right }) {
   const { t, i18n } = useTranslation();
 
   const userLogged = useSelector(state => state.userUidReducer);
@@ -33,6 +30,8 @@ export default function Home({
   const [open, setOpen] = useState(false);
 
   const anchorRef = React.useRef(null);
+
+  const history = useHistory();
 
   function toggleMenu() {
     setOpen(!open);
@@ -61,12 +60,16 @@ export default function Home({
     }
   }, []);
 
-  const dispatch = useDispatch();
+  function getTitleByRoute() {
+    let location = window.location.hash;
 
-  function handleListKeyDown(event) {
-    if (event.key === "Tab") {
-      event.preventDefault();
-      setOpen(false);
+    switch (location) {
+      case "#/":
+        return t("testCaseTitle");
+      case "#/generator":
+        return t("generatorTitle");
+      default:
+        return t("testCaseTitle");
     }
   }
 
@@ -75,11 +78,12 @@ export default function Home({
       container
       justify={"space-between"}
       style={{
-        minHeight: "100%",
+        minHeight: "632.188px",
         border: "1px solid white",
         borderRadius: 13,
         height: "100%",
-        alignContent: "flex-start"
+        alignContent: "flex-start",
+        minWidth: "1158px"
       }}
     >
       <Grid
@@ -210,7 +214,7 @@ export default function Home({
                 variant={DevicesUtils.checkIfIsMobile() ? "h6" : "h5"}
                 style={{ color: "white" }}
               >
-                {t("testCaseTitle")}{" "}
+                {getTitleByRoute()}{" "}
                 <IconButton
                   ref={anchorRef}
                   size={"small"}
@@ -245,8 +249,21 @@ export default function Home({
                             open={Boolean(anchorMenu)}
                             onClose={() => setAnchorMenu(null)}
                           >
-                            <MenuItem onClick={handleClose}>
+                            <MenuItem
+                              onClick={e => {
+                                history.push("/");
+                                handleClose(e);
+                              }}
+                            >
                               {t("testCaseTitle")}
+                            </MenuItem>
+                            <MenuItem
+                              onClick={e => {
+                                history.push("generator");
+                                handleClose(e);
+                              }}
+                            >
+                              {t("generatorTitle")}
                             </MenuItem>
                             <MenuItem disabled>{t("useCaseTitle")}</MenuItem>
                             <MenuItem disabled>
@@ -261,7 +278,7 @@ export default function Home({
               </Typography>
             </Grid>
           </Grid>
-          {component[0]()}
+          {React.createElement(Left)}
         </Grid>
       </Grid>
       <Grid
@@ -272,12 +289,11 @@ export default function Home({
           borderRadius: 12,
           backgroundColor: "white",
           boxShadow: "0px 0px 15px 0px rgba(0,0,0,0.2)",
-
-          maxHeight: 1220,
-          maxWidth: 632
+          minHeight: "632.188px",
+          maxHeight: 1220
         }}
       >
-        {component[1]()}
+        {React.createElement(Right)}
       </Grid>
     </Grid>
   );
