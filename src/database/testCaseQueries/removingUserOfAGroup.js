@@ -14,10 +14,7 @@ export async function removingUserOfAGroup({  user, userToRemove, group }) {
             sharedWith: newArr
         })
 
-        console.log({
-            ...doc.data(),
-            sharedWith: newArr
-        })
+
     })
 
    await firestore.doc(`users/${userToRemove}/sharedTestsGroups/${group}`).delete();

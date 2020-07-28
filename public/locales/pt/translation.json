@@ -43,5 +43,10 @@
   "useCaseTitle": "Criar Caso de Uso",
   "codeSnippetTitle": "Criar Snippet de Código",
   "tooltipAddPersonOnGroup": "Convide alguém para esse grupo",
-  "editPermissionLabel": "Permissão de Edição"
+  "editPermissionLabel": "Permissão de Edição",
+  "notificationsLabel": "Notificações",
+  "peopleInThisGroup": "Pessoas neste grupo",
+  "userAlreadyInvited": "Esse usuário já foi convidado!",
+  "userNotExists": "Esse usuário não está registrado!",
+  "noUsersInvited": "Sem usuários no grupo!"
 }
