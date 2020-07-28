@@ -5,7 +5,8 @@ export async function inviteSomeoneToTestGroup({
   user,
   collectionName,
   userInvited,
-  userNotExistError
+  userNotExistError,
+  userInvitedError
 }) {
   let userToAdd;
 
@@ -43,9 +44,9 @@ export async function inviteSomeoneToTestGroup({
             status: "PENDING"
           });
 
-          setState()
+          setState();
         } else {
-          console.log("Already have a invite");
+          userInvitedError();
         }
       });
   }
