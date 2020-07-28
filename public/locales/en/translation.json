@@ -68,5 +68,6 @@
   "ip": "IP",
   "ipv6": "IPV6",
   "macAddress": "Mac Address",
-  "generateDescription": "Generate any type of data and export to JSON format or copy to your clipboard! To generate on the brazilian format change the language to portuguese!"
+  "generateDescription": "Generate any type of data and copy to your clipboard! To generate on the brazilian format change the language to portuguese!",
+  "generateAll": "Generate all again"
 }

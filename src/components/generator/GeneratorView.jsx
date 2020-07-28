@@ -1,16 +1,17 @@
 import React, { useEffect } from "react";
-import { Grid, Typography } from "@material-ui/core";
+import { Grid, Typography, Chip } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import GeneratorField from "./GeneratorField";
 import generateByLabel from "./generateByLabel";
 import { useTranslation } from "react-i18next";
+import { RotateLeftOutlined } from "@material-ui/icons";
 
 export default function GeneratorView() {
   const dataGenerator = useSelector(state => state.dataGeneratorReducer);
 
   const dispatch = useDispatch();
 
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
 
   function generateNew(l) {
     let indexToChange = dataGenerator.findIndex(item => item.label === l);
@@ -22,6 +23,23 @@ export default function GeneratorView() {
     dispatch({
       type: "SET_DATA_GENERATOR",
       payload: [...arrayChanged]
+    });
+  }
+
+  function fillAllAgain() {
+    let arrAux = [];
+
+    dataGenerator.forEach(item => {
+      let itemNew = item;
+
+      itemNew.customValue = generateByLabel(item.label, i18n.language);
+
+      arrAux.push(itemNew);
+    });
+
+    dispatch({
+      type: "SET_DATA_GENERATOR",
+      payload: [...arrAux]
     });
   }
 
@@ -40,12 +58,22 @@ export default function GeneratorView() {
         <Typography variant={"h5"}>Data Generator</Typography>
       </Grid>
 
+      <Grid item md={12} style={{ textAlign: "center" }}>
+        <Chip
+          icon={<RotateLeftOutlined />}
+          label={t("generateAll")}
+          color={"primary"}
+          style={{ opacity: 0.85 }}
+          onClick={() => fillAllAgain()}
+        />
+      </Grid>
+
       <Grid
         item
         container
         md={12}
         spacing={1}
-        style={{ maxHeight: "75vh", overflowY: "scroll" }}
+        style={{ maxHeight: "71vh", overflowY: "scroll" }}
       >
         {dataGenerator
           .filter(i => i.status)
