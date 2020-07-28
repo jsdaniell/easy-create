@@ -9,14 +9,14 @@ const initialState = [
   },
   {
     label: "cnpj",
-    status: false,
+    status: true,
     format: true,
     customValue: ""
   },
 
   {
     label: "email",
-    status: false,
+    status: true,
     format: false,
     customValue: ""
   },
