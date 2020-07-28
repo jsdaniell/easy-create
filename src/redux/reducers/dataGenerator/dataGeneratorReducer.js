@@ -13,16 +13,17 @@ const initialState = [
     format: true,
     customValue: ""
   },
-  {
-    label: "phoneNumber",
-    format: true,
-    status: false,
-    customValue: ""
-  },
+
   {
     label: "email",
     status: false,
     format: false,
+    customValue: ""
+  },
+  {
+    label: "phoneNumber",
+    format: true,
+    status: false,
     customValue: ""
   },
   {
@@ -108,7 +109,7 @@ const initialState = [
     status: false,
     format: false,
     customValue: ""
-  },
+  }
 ];
 
 export default function dataGeneratorReducer(state = initialState, action) {

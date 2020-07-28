@@ -5,6 +5,7 @@ import GeneratorField from "./GeneratorField";
 import generateByLabel from "./generateByLabel";
 import { useTranslation } from "react-i18next";
 import { RotateLeftOutlined } from "@material-ui/icons";
+import DevicesUtils from "../../utils/deviceUtils";
 
 export default function GeneratorView() {
   const dataGenerator = useSelector(state => state.dataGeneratorReducer);
@@ -47,7 +48,7 @@ export default function GeneratorView() {
     <Grid
       container
       style={{
-        padding: "25px 50px",
+        padding: DevicesUtils.checkIfIsMobile() ? "25px 25px": "25px 50px",
         alignContent: "flex-start",
         minHeight: "100%"
       }}
