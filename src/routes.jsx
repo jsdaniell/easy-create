@@ -44,9 +44,9 @@ function Routes() {
   return (
     <HashRouter>
       <Switch>
-        <Route exact path={"/"} component={RenderHomeTests} />
+        <Route exact path={"/generator"} component={RenderHomeTests} />
 
-        <Route exact path={"/generator"} component={RenderHomeGenerator} />
+        <Route exact path={"/"} component={RenderHomeGenerator} />
       </Switch>
     </HashRouter>
   );
