@@ -4,7 +4,7 @@ import "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAPBexuJktp2lD3kinXzyT-7TOxL4eaaIg",
-  authDomain: "devdatatools.tools",
+  authDomain: "devdata.tools",
   databaseURL: "https://devdatatools.firebaseio.com",
   projectId: "devdatatools",
   storageBucket: "devdatatools.appspot.com",
