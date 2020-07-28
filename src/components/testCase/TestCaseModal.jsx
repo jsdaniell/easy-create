@@ -6,7 +6,7 @@ import {
   Typography,
   Button,
   IconButton,
-    CircularProgress
+  CircularProgress
 } from "@material-ui/core";
 import { Add, RemoveCircle, FiberManualRecord } from "@material-ui/icons";
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
@@ -31,7 +31,7 @@ export default function TestCaseModal() {
   const userLogged = useSelector(state => state.userUidReducer);
   const testsGroups = useSelector(state => state.testGroupsReducer);
 
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
   function checkPermissionOfEditGroup() {
     return (
@@ -57,6 +57,8 @@ export default function TestCaseModal() {
         postcondition: ""
       }
     });
+
+    console.log("form");
   }, []);
 
   function handleExport() {
@@ -82,7 +84,7 @@ export default function TestCaseModal() {
   }
 
   function handleSaveOnFirebase() {
-    setLoading(true)
+    setLoading(true);
     savingNewTest({
       listGroups: testsGroups.list,
       group: testsGroups.selected,
@@ -106,7 +108,7 @@ export default function TestCaseModal() {
           }
         });
       }
-    }).then(()=> setLoading(false));
+    }).then(() => setLoading(false));
   }
 
   return (
@@ -341,10 +343,8 @@ export default function TestCaseModal() {
         justify={DevicesUtils.checkIfIsMobile() ? "center" : "flex-end"}
         spacing={2}
       >
-        <Grid item md style={{maxHeight:1}}>
-          <Grid item>
-            {loading && <CircularProgress color={'primary'} />}
-          </Grid>
+        <Grid item md style={{ maxHeight: 1 }}>
+          <Grid item>{loading && <CircularProgress color={"primary"} />}</Grid>
         </Grid>
         <Grid
           item
