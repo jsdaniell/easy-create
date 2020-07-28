@@ -40,6 +40,7 @@ import PopoverNotificationList from "../shared/PopoverNotificationsList";
 import { getUsersOfThisGroup } from "../../database/testCaseQueries/gettingUsersOfThisGroup";
 import SharedUserListItem from "./SharedUserListItem";
 import { changingUserPermission } from "../../database/testCaseQueries/changingUserPermission";
+import {removingUserOfAGroup} from "../../database/testCaseQueries/removingUserOfAGroup";
 
 export default function LateralMenuLogged() {
   const { t } = useTranslation();
@@ -275,6 +276,25 @@ export default function LateralMenuLogged() {
     }).then(() => setLoading(false));
   }
 
+  function removeUserOfGroup(userToRemove){
+    setLoading(true)
+    removingUserOfAGroup({
+      user: userLogged,
+      userToRemove,
+      group:testsGroups.selected,
+      setState:()=>{
+        getUsersOfThisGroup({
+          user: userLogged,
+          groups: testsGroups.list,
+          testGroupId: testsGroups.selected,
+          setState: users => {
+            setUsersFromGroup(users);
+          }
+        });
+      }
+    }).then(()=> setLoading(false))
+  }
+
   function changeUserPermission(user) {
     setLoading(true);
     changingUserPermission({
@@ -290,16 +310,20 @@ export default function LateralMenuLogged() {
           }
         });
 
-        getUsersOfThisGroup({
-          user: userLogged,
-          groups: testsGroups.list,
-          testGroupId: testsGroups.selected,
-          setState: users => {
-            setUsersFromGroup(users);
-          }
-        });
+
       }
-    }).then(() => setLoading(false));
+    }).then(() => {
+
+
+      getUsersOfThisGroup({
+        user: userLogged,
+        groups: testsGroups.list,
+        testGroupId: testsGroups.selected,
+        setState: users => {
+          setUsersFromGroup(users);
+        }
+      });
+      setLoading(false)});
   }
 
   return (
@@ -505,6 +529,7 @@ export default function LateralMenuLogged() {
                 <SharedUserListItem
                   user={doc}
                   changeUserPermission={changeUserPermission}
+                  removeUserOfGroup={removeUserOfGroup}
                 />
               ))}
             </Grid>
@@ -524,7 +549,7 @@ export default function LateralMenuLogged() {
         </Grid>
       )}
 
-      {!showInvites ? (
+      {!showInvites && !loading ? (
         <Grid item md={12}>
           <Grid container justify={"flex-end"}>
             <Grid item>
