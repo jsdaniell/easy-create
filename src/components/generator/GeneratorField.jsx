@@ -18,6 +18,7 @@ import format from "@jsdaniell/mask-fields";
 import { useTranslation } from "react-i18next";
 import Faker from "faker";
 import { useSelector } from "react-redux";
+import DevicesUtils from "../../utils/deviceUtils";
 
 export default function GeneratorField({
   label,
@@ -55,7 +56,14 @@ export default function GeneratorField({
 
   return (
     <Grid item md={12}>
-      <Grid container spacing={1} style={{ alignItems: "center" }}>
+      <Grid
+        container
+        spacing={1}
+        style={{
+          alignItems: "center",
+          justifyContent: DevicesUtils.checkIfIsMobile() ? "space-evenly" : null
+        }}
+      >
         <Grid item md>
           <Chip style={{ opacity: 0.85 }} color={"primary"} label={t(label)} />
         </Grid>
@@ -90,7 +98,7 @@ export default function GeneratorField({
           </Tooltip>
         </Grid>
 
-        <Grid item md={4}>
+        <Grid item md={4} xs={12}>
           <Tooltip title={value}>
             <TextField
               disabled
