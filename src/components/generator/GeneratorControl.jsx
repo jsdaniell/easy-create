@@ -74,10 +74,7 @@ export default function GeneratorControl() {
       </Grid>
 
       <Grid item md={12} style={{ textAlign: "center" }}>
-        <MockSvg
-          width={DevicesUtils.checkIfIsMobile() ? "200px" : "220px"}
-          height={DevicesUtils.checkIfIsMobile() ? "200px" : "220px"}
-        />
+        <MockSvg width={"200px"} height={"200px"} />
       </Grid>
 
       <Grid item md={12}>
