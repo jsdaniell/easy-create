@@ -73,5 +73,8 @@
   "generatorTitleDesc": "Todos os geradores em um só lugar!",
   "RG": "RG",
   "cep": "CEP",
-  "zipCode": "ZIP Code"
+  "zipCode": "ZIP Code",
+  "emojisLibTitle": "Biblioteca de Emojis",
+  "pickEmojiTitle": "Clique no emoji...",
+  "pickEmojiLibDesc": "Veja o unicode do emoji, copie e saiba como utilizar em diferentes linguagens."
 }
