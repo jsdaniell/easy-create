@@ -1,17 +1,19 @@
 import React from "react";
-import { Grid, Typography } from "@material-ui/core";
+import { Grid, MenuItem, TextField, Typography } from "@material-ui/core";
 import DevicesUtils from "../../utils/deviceUtils";
 import "emoji-mart/css/emoji-mart.css";
 import { Picker } from "emoji-mart";
 import { useTranslation } from "react-i18next";
 import { ReactComponent as MockSvg } from "../../assets/mock.svg";
 import { useDispatch, useSelector } from "react-redux";
+import CodeBlockVisualizer from "./CodeBlockVisualizer";
 
 export default function EmojisControl() {
   const { t } = useTranslation();
   const emojiRedux = useSelector(state => state.selectedEmojiReducer);
 
   const dispatch = useDispatch();
+
 
   function selectEmoji(emoji) {
     console.log(emoji);
@@ -63,6 +65,8 @@ export default function EmojisControl() {
           {t("pickEmojiLibDesc")}
         </Typography>
       </Grid>
+
+
     </Grid>
   );
 }

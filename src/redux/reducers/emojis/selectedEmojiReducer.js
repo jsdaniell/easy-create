@@ -8,7 +8,8 @@ const initialState = {
     unified: "1f973",
     skin: null,
     native: "🥳"
-  }
+  },
+  selectedLanguage: "javascript"
 };
 
 export default function selectedEmojiReducer(state = initialState, action) {
