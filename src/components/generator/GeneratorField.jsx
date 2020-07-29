@@ -64,9 +64,15 @@ export default function GeneratorField({
           justifyContent: DevicesUtils.checkIfIsMobile() ? "space-evenly" : null
         }}
       >
-        <Grid item md>
+        <Grid item>
           <Chip style={{ opacity: 0.85 }} color={"primary"} label={t(label)} />
         </Grid>
+
+        {!DevicesUtils.checkIfIsMobile() && (
+          <Grid item md>
+            <hr style={{ color: "#262A43" }}></hr>
+          </Grid>
+        )}
 
         {formatting && (
           <Grid item>
