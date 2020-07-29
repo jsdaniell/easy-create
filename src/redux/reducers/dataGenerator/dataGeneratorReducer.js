@@ -45,6 +45,12 @@ const initialState = [
     customValue: ""
   },
   {
+    label: "zipCode",
+    status: false,
+    format: false,
+    customValue: ""
+  },
+  {
     label: "companyName",
     status: false,
     format: false,

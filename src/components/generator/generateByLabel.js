@@ -54,7 +54,9 @@ export default function generateByLabel(label, lang) {
     case "RG":
       return generateRG();
     case "cep":
-      return generateCep();
+      return   generateCep();
+    case "zipCode":
+      return   Faker.address.zipCode();
     default:
       return;
   }

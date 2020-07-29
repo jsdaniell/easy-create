@@ -72,5 +72,6 @@
   "generateAll": "Gerar todos novamente",
   "generatorTitleDesc": "Todos os geradores em um só lugar!",
   "RG": "RG",
-  "cep": "CEP"
+  "cep": "CEP",
+  "zipCode": "ZIP Code"
 }
