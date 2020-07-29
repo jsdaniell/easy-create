@@ -56,7 +56,7 @@ function EmojisView(props) {
         <Grid
             item
             md={3}
-            xs={12}
+            xs={6}
             style={{ textAlign: "center", alignSelf: "center" }}
         >
             <Emoji tooltip={true} emoji={emojiRedux.selectedEmoji} size={100} />
@@ -70,7 +70,7 @@ function EmojisView(props) {
         <Grid
             item
             md={3}
-            xs={12}
+            xs={6}
             style={{ textAlign: "center", alignSelf: "center" }}
         >
             <Emoji
@@ -89,7 +89,7 @@ function EmojisView(props) {
         <Grid
             item
             md={3}
-            xs={12}
+            xs={6}
             style={{ textAlign: "center", alignSelf: "center" }}
         >
             <Emoji
@@ -108,7 +108,7 @@ function EmojisView(props) {
         <Grid
             item
             md={3}
-            xs={12}
+            xs={6}
             style={{ textAlign: "center", alignSelf: "center" }}
         >
             <Emoji
@@ -202,9 +202,9 @@ function EmojisView(props) {
             />
         </Grid>
 
-        <Grid item md={12} style={{textAlign:'center'}}>
+        {!DevicesUtils.checkIfIsMobile() && <Grid item md={12} style={{textAlign:'center'}}>
             <Carbon/>
-        </Grid>
+        </Grid>}
 
        
     </Grid>
