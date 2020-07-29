@@ -1,6 +1,7 @@
 import { Company, Form } from "brazil-mocker";
 import Faker from "faker";
 import generateRG from "./generateRg";
+import generateCep from "./generateCep";
 
 export default function generateByLabel(label, lang) {
   switch (label) {
@@ -52,6 +53,8 @@ export default function generateByLabel(label, lang) {
       return Faker.internet.mac();
     case "RG":
       return generateRG();
+    case "cep":
+      return generateCep();
     default:
       return;
   }

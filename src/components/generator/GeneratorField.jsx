@@ -51,6 +51,8 @@ export default function GeneratorField({
         return i18n.language === "en" ? formatUSNumber(val) : format.tel(val);
       case "RG":
         return format.rg(val);
+      case "cep":
+        return format.cep(val);
       default:
         return val;
     }
