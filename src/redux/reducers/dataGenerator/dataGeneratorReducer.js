@@ -13,13 +13,19 @@ const initialState = [
     format: true,
     customValue: ""
   },
-
+  {
+    label: "RG",
+    status: true,
+    format: true,
+    customValue: ""
+  },
   {
     label: "email",
     status: true,
     format: false,
     customValue: ""
   },
+
   {
     label: "phoneNumber",
     format: true,
