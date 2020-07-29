@@ -81,11 +81,14 @@ export default function GeneratorControl() {
       </Grid>
 
       <Grid item md={12}>
+        <Typography variant={"h5"} style={{ color: "white" }}>
+          {t("generatorTitleDesc")}
+        </Typography>
         <Typography
           variant={"body2"}
           style={{ color: "rgba(255,255,255,0.5)" }}
         >
-          {t('generateDescription')}
+          {t("generateDescription")}
         </Typography>
       </Grid>
     </Grid>
