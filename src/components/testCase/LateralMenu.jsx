@@ -12,7 +12,7 @@ export default function LateralMenu() {
       item
       container
       style={{
-        padding: "0px 20px 30px",
+        padding: "0px 20px 20px",
         height: DevicesUtils.checkIfIsMobile() ? "88%" : "90%"
       }}
       justify={"space-between"}

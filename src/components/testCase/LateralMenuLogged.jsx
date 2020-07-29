@@ -181,7 +181,8 @@ export default function LateralMenuLogged() {
   }
 
   function deleteSelectedGroup() {
-    if (!testsGroups.length) return;
+    if (!testsGroups.list.length) return;
+
     setLoading(true);
     deleteOneGroup({
       collectionName: testsGroups.selected,
@@ -555,7 +556,7 @@ export default function LateralMenuLogged() {
               variant={"h6"}
               style={{ color: "rgba(255, 255, 255, 0.5)" }}
             >
-              {t('noUsersInvited')}
+              {t("noUsersInvited")}
             </Typography>
           </Grid>
         )}
