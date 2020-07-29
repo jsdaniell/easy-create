@@ -74,7 +74,8 @@
   "RG": "RG",
   "cep": "CEP",
   "zipCode": "ZIP Code",
-  "emojisLibTitle": "Emojis Library",
+  "emojisLibTitle": "Emoji Selector",
   "pickEmojiTitle": "Pick the emoji...",
-  "pickEmojiLibDesc": "See unicode of emoji, copy and know how to use in different languages."
+  "pickEmojiLibDesc": "See unicode of emoji, copy and know how to use in different languages.",
+  "emojiInfoTitle": "Emoji Information"
 }

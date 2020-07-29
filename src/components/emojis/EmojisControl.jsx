@@ -5,9 +5,24 @@ import "emoji-mart/css/emoji-mart.css";
 import { Picker } from "emoji-mart";
 import { useTranslation } from "react-i18next";
 import { ReactComponent as MockSvg } from "../../assets/mock.svg";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function EmojisControl() {
   const { t } = useTranslation();
+  const emojiRedux = useSelector(state => state.selectedEmojiReducer);
+
+  const dispatch = useDispatch();
+
+  function selectEmoji(emoji) {
+    console.log(emoji);
+    dispatch({
+      type: "SET_SELECTED_EMOJI",
+      payload: {
+        ...emojiRedux,
+        selectedEmoji: emoji
+      }
+    });
+  }
 
   return (
     <Grid
@@ -18,7 +33,9 @@ export default function EmojisControl() {
           ? "0px 20px 20px"
           : "0px 20px 40px",
         height: DevicesUtils.checkIfIsMobile() ? "82%" : "92%",
-        alignContent: DevicesUtils.checkIfIsMobile() ? "normal" : "center"
+        alignContent: DevicesUtils.checkIfIsMobile()
+          ? "normal"
+          : "space-between"
       }}
       justify={"center"}
       spacing={1}
@@ -30,7 +47,7 @@ export default function EmojisControl() {
           theme={"light"}
           color={"#262A43"}
           exclude={["recent"]}
-          onClick={emoji => console.log(emoji)}
+          onClick={emoji => selectEmoji(emoji)}
           useButton={false}
           emojiTooltip={true}
           emojiSize={24}
@@ -43,7 +60,7 @@ export default function EmojisControl() {
           variant={"body2"}
           style={{ color: "rgba(255,255,255,0.5)" }}
         >
-          {t("generateDescription")}
+          {t("pickEmojiLibDesc")}
         </Typography>
       </Grid>
     </Grid>
