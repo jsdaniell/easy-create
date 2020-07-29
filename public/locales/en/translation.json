@@ -71,5 +71,6 @@
   "generateDescription": "Generate any type of data and copy to your clipboard! To generate on the brazilian format change the language to portuguese!",
   "generateAll": "Generate all again",
   "generatorTitleDesc": "All generators in one place!",
-  "RG": "RG"
+  "RG": "RG",
+  "cep": "CEP"
 }
