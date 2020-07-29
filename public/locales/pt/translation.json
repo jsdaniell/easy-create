@@ -70,5 +70,6 @@
   "macAddress": "Endereço MAC",
   "generateDescription": "Gere qualquer tipo de dado e copie para seu clipboard! Para gerar no formato americano mude a linguagem para inglês!",
   "generateAll": "Gerar todos novamente",
-  "generatorTitleDesc": "Todos os geradores em um só lugar!"
+  "generatorTitleDesc": "Todos os geradores em um só lugar!",
+  "RG": "RG"
 }

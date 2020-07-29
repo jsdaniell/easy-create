@@ -1,5 +1,6 @@
 import { Company, Form } from "brazil-mocker";
 import Faker from "faker";
+import generateRG from "./generateRg";
 
 export default function generateByLabel(label, lang) {
   switch (label) {
@@ -49,6 +50,8 @@ export default function generateByLabel(label, lang) {
       return Faker.internet.ipv6();
     case "macAddress":
       return Faker.internet.mac();
+    case "RG":
+      return generateRG();
     default:
       return;
   }
