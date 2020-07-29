@@ -39,6 +39,12 @@ const initialState = [
     customValue: ""
   },
   {
+    label: "cep",
+    status: false,
+    format: true,
+    customValue: ""
+  },
+  {
     label: "companyName",
     status: false,
     format: false,
