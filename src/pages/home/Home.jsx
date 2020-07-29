@@ -68,6 +68,8 @@ export default function Home({ Left, Right }) {
         return t("generatorTitle");
       case "#/create-test-case":
         return t("testCaseTitle");
+      case "#/emojis":
+        return t("emojisLibTitle");
 
       default:
         return t("testCaseTitle");
@@ -265,6 +267,14 @@ export default function Home({ Left, Right }) {
                               }}
                             >
                               {t("generatorTitle")}
+                            </MenuItem>
+                            <MenuItem
+                              onClick={e => {
+                                history.push("/emojis");
+                                handleClose(e);
+                              }}
+                            >
+                              {t("emojisLibTitle")}
                             </MenuItem>
                             <MenuItem disabled>{t("useCaseTitle")}</MenuItem>
                             <MenuItem disabled>
