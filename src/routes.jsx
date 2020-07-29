@@ -9,6 +9,8 @@ import LateralMenuLogged from "./components/testCase/LateralMenuLogged";
 import { useHistory } from "react-router";
 import GeneratorControl from "./components/generator/GeneratorControl";
 import GeneratorView from "./components/generator/GeneratorView";
+import EmojisControl from "./components/emojis/EmojisControl";
+import EmojisView from "./components/emojis/EmojisView";
 
 const RenderHomeTests = () => {
   const userLogged = useSelector(state => state.userUidReducer);
@@ -25,13 +27,17 @@ const RenderHomeGenerator = () => {
   return <Home Left={GeneratorControl} Right={GeneratorView} />;
 };
 
+const RenderHomeEmojis = () => {
+  return <Home Left={EmojisControl} Right={EmojisView} />;
+};
+
 function Routes() {
   const testsGroups = useSelector(state => state.testGroupsReducer);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (testsGroups) {
+    if (testsGroups.list.length) {
       dispatch({
         type: "SET_TEST_GROUPS_STATE",
         payload: {
@@ -44,6 +50,8 @@ function Routes() {
   return (
     <HashRouter>
       <Switch>
+        <Route exact path={"/emojis"} component={RenderHomeEmojis} />
+
         <Route exact path={"/create-test-case"} component={RenderHomeTests} />
 
         <Route exact path={"/"} component={RenderHomeGenerator} />
