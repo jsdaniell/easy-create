@@ -235,10 +235,11 @@ function EmojisView() {
           />
         </Grid>
 
-        <Grid item md={2} style={{ textAlign: "center" }}>
+        <Grid item md={2} xs={12} style={{ textAlign: "center" }}>
           <FormControl
             variant="outlined"
             className={classes.root}
+            fullWidth
             size={"small"}
           >
             <InputLabel
@@ -278,6 +279,7 @@ function EmojisView() {
         <Grid
           item
           md={10}
+          xs={12}
           style={{
             textAlign: "center",
 
