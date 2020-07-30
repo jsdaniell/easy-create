@@ -52,13 +52,11 @@ export default function Home({ Left, Right }) {
     }
 
     prevOpen.current = open;
-  }, [open]);
 
-  useEffect(() => {
     if (window.navigator.language === "pt-BR") {
       i18n.changeLanguage("pt");
     }
-  }, []);
+  }, [open]);
 
   function getTitleByRoute() {
     let location = window.location.hash;
@@ -76,6 +74,23 @@ export default function Home({ Left, Right }) {
     }
   }
 
+  const menus = [
+    {
+      title: t("testCaseTitle"),
+      route: "create-test-case"
+    },
+    {
+      title: t("generatorTitle"),
+      route: "/"
+    },
+    {
+      title: t("emojisLibTitle"),
+      route: "/emojis"
+    }
+  ];
+
+  const isMobile = DevicesUtils.checkIfIsMobile();
+
   return (
     <Grid
       container
@@ -86,8 +101,7 @@ export default function Home({ Left, Right }) {
         borderRadius: 13,
         height: "100%",
         alignContent: "flex-start",
-        minWidth: DevicesUtils.checkIfIsMobile() ? "0px" : "1158px",
-        marginBottom: DevicesUtils.checkIfIsMobile() ? 20 : 0
+        minWidth: isMobile ? "0px" : "1158px"
       }}
     >
       <Grid
@@ -125,7 +139,7 @@ export default function Home({ Left, Right }) {
                 md={3}
                 xs={6}
                 style={{
-                  textAlign: DevicesUtils.checkIfIsMobile() ? "start" : "end"
+                  textAlign: isMobile ? "start" : "end"
                 }}
               >
                 <Button
@@ -144,7 +158,7 @@ export default function Home({ Left, Right }) {
                   md={1}
                   xs={6}
                   style={{
-                    textAlign: DevicesUtils.checkIfIsMobile() ? "end" : "end",
+                    textAlign: isMobile ? "end" : "end",
                     alignSelf: "center"
                   }}
                 >
@@ -194,7 +208,7 @@ export default function Home({ Left, Right }) {
                   md={1}
                   xs={6}
                   style={{
-                    textAlign: DevicesUtils.checkIfIsMobile() ? "end" : "end",
+                    textAlign: isMobile ? "end" : "end",
                     alignSelf: "center"
                   }}
                 >
@@ -215,7 +229,7 @@ export default function Home({ Left, Right }) {
             </Grid>
             <Grid item xs={12} md={12}>
               <Typography
-                variant={DevicesUtils.checkIfIsMobile() ? "h6" : "h5"}
+                variant={isMobile ? "h6" : "h5"}
                 style={{ color: "white" }}
               >
                 {getTitleByRoute()}{" "}
@@ -244,7 +258,7 @@ export default function Home({ Left, Right }) {
                             : "center bottom"
                       }}
                     >
-                      <Paper style={{ padding: "0px 5px" }}>
+                      <Paper>
                         <ClickAwayListener onClickAway={handleClose}>
                           <MenuList
                             id="simple-menu"
@@ -253,34 +267,17 @@ export default function Home({ Left, Right }) {
                             open={Boolean(anchorMenu)}
                             onClose={() => setAnchorMenu(null)}
                           >
-                            <MenuItem
-                              onClick={e => {
-                                history.push("create-test-case");
-                                handleClose(e);
-                              }}
-                            >
-                              {t("testCaseTitle")}
-                            </MenuItem>
-                            <MenuItem
-                              onClick={e => {
-                                history.push("/");
-                                handleClose(e);
-                              }}
-                            >
-                              {t("generatorTitle")}
-                            </MenuItem>
-                            <MenuItem
-                              onClick={e => {
-                                history.push("/emojis");
-                                handleClose(e);
-                              }}
-                            >
-                              {t("emojisLibTitle")}
-                            </MenuItem>
-                            <MenuItem disabled>{t("useCaseTitle")}</MenuItem>
-                            <MenuItem disabled>
-                              {t("codeSnippetTitle")}
-                            </MenuItem>
+                            {menus.map((item, ind) => (
+                              <MenuItem
+                                style={{ padding: "8px 12px" }}
+                                onClick={e => {
+                                  history.push(item.route);
+                                  handleClose(e);
+                                }}
+                              >
+                                {item.title}
+                              </MenuItem>
+                            ))}
                           </MenuList>
                         </ClickAwayListener>
                       </Paper>
@@ -301,8 +298,8 @@ export default function Home({ Left, Right }) {
           borderRadius: 12,
           backgroundColor: "white",
           boxShadow: "0px 0px 15px 0px rgba(0,0,0,0.2)",
-          minHeight: DevicesUtils.checkIfIsMobile() ? "100%" : "632px",
-          maxHeight: DevicesUtils.checkIfIsMobile() ? "100%" : "632px"
+          minHeight: isMobile ? "100%" : "632px",
+          maxHeight: isMobile ? "100%" : "632px"
         }}
       >
         {React.createElement(Right)}

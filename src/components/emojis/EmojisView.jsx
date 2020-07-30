@@ -89,7 +89,7 @@ function EmojisView() {
         <Grid
           item
           md={3}
-          xs={12}
+          xs={6}
           style={{ textAlign: "center", alignSelf: "center" }}
         >
           <Emoji tooltip={true} emoji={emojiRedux.selectedEmoji} size={100} />
@@ -103,7 +103,7 @@ function EmojisView() {
         <Grid
           item
           md={3}
-          xs={12}
+          xs={6}
           style={{ textAlign: "center", alignSelf: "center" }}
         >
           <Emoji
@@ -122,7 +122,7 @@ function EmojisView() {
         <Grid
           item
           md={3}
-          xs={12}
+          xs={6}
           style={{ textAlign: "center", alignSelf: "center" }}
         >
           <Emoji
@@ -141,7 +141,7 @@ function EmojisView() {
         <Grid
           item
           md={3}
-          xs={12}
+          xs={6}
           style={{ textAlign: "center", alignSelf: "center" }}
         >
           <Emoji
@@ -282,9 +282,9 @@ function EmojisView() {
           xs={12}
           style={{
             textAlign: "center",
-
             backgroundColor: "#292A36",
-            borderRadius: 8
+            borderRadius: 8,
+            margin: 4
           }}
         >
           <CodeBlockVisualizer
