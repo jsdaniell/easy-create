@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Grid, Typography, Button } from "@material-ui/core";
 import { ReactComponent as MainSvg } from "../../assets/tests.svg";
 import { useTranslation } from "react-i18next";
@@ -6,6 +6,10 @@ import DevicesUtils from "../../utils/deviceUtils";
 
 export default function LateralMenu() {
   const { t } = useTranslation();
+
+  useEffect(() => {
+    document.title = t("testCaseTitle");
+  }, []);
 
   return (
     <Grid

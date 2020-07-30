@@ -110,6 +110,8 @@ export default function LateralMenuLogged() {
   }
 
   useEffect(() => {
+    document.title = t("testCaseTitle");
+
     setLoading(true);
 
     getTestsGroups({
@@ -540,25 +542,28 @@ export default function LateralMenuLogged() {
               />
             ))}
           </Grid>
-        ) : !loading && (
-          <Grid
-            item
-            container
-            md={12}
-            xs={12}
-            style={{
-              alignContent: "center",
-              justifyContent: "center",
-              paddingTop: 20
-            }}
-          >
-            <Typography
-              variant={"h6"}
-              style={{ color: "rgba(255, 255, 255, 0.5)" }}
+        ) : (
+          !loading &&
+          !showInvites && (
+            <Grid
+              item
+              container
+              md={12}
+              xs={12}
+              style={{
+                alignContent: "center",
+                justifyContent: "center",
+                paddingTop: 20
+              }}
             >
-              {t("noUsersInvited")}
-            </Typography>
-          </Grid>
+              <Typography
+                variant={"h6"}
+                style={{ color: "rgba(255, 255, 255, 0.5)" }}
+              >
+                {t("noUsersInvited")}
+              </Typography>
+            </Grid>
+          )
         )}
       </Grid>
 

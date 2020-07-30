@@ -34,7 +34,7 @@ const theme = createMuiTheme({
     MuiInputBase: {
       input: {
         color: "#262A43",
-        textAlign: "center"
+        textAlign: "left"
       }
     },
     MuiListItem: {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Grid, MenuItem, TextField, Typography } from "@material-ui/core";
 import DevicesUtils from "../../utils/deviceUtils";
 import "emoji-mart/css/emoji-mart.css";
@@ -14,9 +14,7 @@ export default function EmojisControl() {
 
   const dispatch = useDispatch();
 
-
   function selectEmoji(emoji) {
-    console.log(emoji);
     dispatch({
       type: "SET_SELECTED_EMOJI",
       payload: {
@@ -25,6 +23,10 @@ export default function EmojisControl() {
       }
     });
   }
+
+  useEffect(() => {
+    document.title = t("emojisLibTitle");
+  }, []);
 
   return (
     <Grid
@@ -65,8 +67,6 @@ export default function EmojisControl() {
           {t("pickEmojiLibDesc")}
         </Typography>
       </Grid>
-
-
     </Grid>
   );
 }

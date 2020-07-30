@@ -29,6 +29,8 @@ export default function GeneratorControl() {
   }
 
   useEffect(() => {
+    document.title = t("generatorTitle");
+
     let filled = [];
 
     dataGenerator.forEach(item => {
