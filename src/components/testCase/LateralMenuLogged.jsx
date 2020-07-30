@@ -110,6 +110,8 @@ export default function LateralMenuLogged() {
   }
 
   useEffect(() => {
+    document.title = t("testCaseTitle");
+
     setLoading(true);
 
     getTestsGroups({
