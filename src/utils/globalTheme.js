@@ -76,7 +76,8 @@ const theme = createMuiTheme({
       shrink: {
         color: "#EDEDED"
       }
-    }
+    },
+
   },
   palette: {
     primary: {
