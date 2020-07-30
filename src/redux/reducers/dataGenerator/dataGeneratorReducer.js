@@ -5,129 +5,129 @@ const initialState = [
     label: "cpf",
     status: true,
     format: true,
-    customValue: ""
+    customValue: "",
   },
   {
     label: "cnpj",
     status: true,
     format: true,
-    customValue: ""
+    customValue: "",
   },
   {
     label: "RG",
     status: true,
     format: true,
-    customValue: ""
+    customValue: "",
   },
   {
     label: "email",
     status: true,
     format: false,
-    customValue: ""
+    customValue: "",
   },
 
   {
     label: "phoneNumber",
     format: true,
     status: false,
-    customValue: ""
+    customValue: "",
   },
   {
     label: "uuid",
     status: false,
     format: false,
-    customValue: ""
+    customValue: "",
   },
   {
     label: "cep",
     status: false,
     format: true,
-    customValue: ""
+    customValue: "",
   },
   {
     label: "zipCode",
     status: false,
     format: false,
-    customValue: ""
+    customValue: "",
   },
   {
     label: "companyName",
     status: false,
     format: false,
-    customValue: ""
+    customValue: "",
   },
   {
     label: "firstName",
     status: false,
     format: false,
-    customValue: ""
+    customValue: "",
   },
   {
     label: "lastName",
     status: false,
     format: false,
-    customValue: ""
+    customValue: "",
   },
   {
     label: "fullName",
     status: false,
     format: false,
-    customValue: ""
+    customValue: "",
   },
   {
     label: "base64Image",
     status: false,
     format: false,
-    customValue: ""
+    customValue: "",
   },
   {
     label: "color",
     status: false,
     format: false,
-    customValue: ""
+    customValue: "",
   },
   {
     label: "logo",
     status: false,
     format: false,
-    customValue: ""
+    customValue: "",
   },
   {
     label: "country",
     status: false,
     format: false,
-    customValue: ""
+    customValue: "",
   },
   {
     label: "state",
     status: false,
     format: false,
-    customValue: ""
+    customValue: "",
   },
   {
     label: "city",
     status: false,
     format: false,
-    customValue: ""
+    customValue: "",
   },
   {
     label: "ip",
     status: false,
     format: false,
-    customValue: ""
+    customValue: "",
   },
   {
     label: "ipv6",
     status: false,
     format: false,
-    customValue: ""
+    customValue: "",
   },
   {
     label: "macAddress",
     status: false,
     format: false,
-    customValue: ""
-  }
+    customValue: "",
+  },
 ];
 
 export default function dataGeneratorReducer(state = initialState, action) {
