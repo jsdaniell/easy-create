@@ -33,15 +33,15 @@ export default function TestListItem({ test, setLoading }) {
 
   function checkPermissionOfEditGroup() {
     return (
-        testsGroups &&
-        testsGroups.list.length &&
+      testsGroups &&
+      testsGroups.list.length &&
       testsGroups.list.find(item => item.itemId === testsGroups.selected)
         .permission === "edit"
     );
   }
 
   function deleting() {
-    setLoading(true)
+    setLoading(true);
     deletingOneTest({
       group: testsGroups.selected,
       listGroups: testsGroups.list,
@@ -58,7 +58,7 @@ export default function TestListItem({ test, setLoading }) {
               payload: data
             });
           }
-        }).then(()=>setLoading(false));
+        }).then(() => setLoading(false));
       }
     });
   }

@@ -1,6 +1,5 @@
 import React from "react";
 import Highlight from "react-highlight";
-import { useSelector } from "react-redux";
 
 export default function CodeBlockVisualizer({ selectedLanguage, unicode }) {
   function getCodeSnippet(lang) {

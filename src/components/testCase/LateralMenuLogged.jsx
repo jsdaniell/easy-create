@@ -336,16 +336,16 @@ export default function LateralMenuLogged() {
     });
   }
 
+  const isMobile = DevicesUtils.checkIfIsMobile();
+
   return (
     <Grid
       item
       container
       style={{
         padding: "0px 20px 20px",
-        height: DevicesUtils.checkIfIsMobile() ? "82%" : "92%",
-        alignContent: DevicesUtils.checkIfIsMobile()
-          ? "normal"
-          : "space-between"
+        height: isMobile ? "82%" : "92%",
+        alignContent: isMobile ? "normal" : "space-between"
       }}
       justify={"space-between"}
       spacing={2}
@@ -580,7 +580,7 @@ export default function LateralMenuLogged() {
       )}
 
       {!showInvites && !loading ? (
-        <Grid item md={12}>
+        <Grid item md={12} xs={12}>
           <Grid container justify={"flex-end"}>
             <Grid item>
               <IconButton size={"small"} onClick={() => navigate("before")}>

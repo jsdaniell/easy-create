@@ -111,11 +111,13 @@ export default function TestCaseModal() {
     }).then(() => setLoading(false));
   }
 
+  const isMobile = DevicesUtils.checkIfIsMobile();
+
   return (
     <Grid
       container
       style={{
-        padding:DevicesUtils.checkIfIsMobile() ? "25px 25px": "25px 50px",
+        padding: isMobile ? "25px 25px" : "25px 50px",
         alignContent: "space-between",
         minHeight: "100%"
       }}
@@ -170,7 +172,7 @@ export default function TestCaseModal() {
           xs={12}
           md
           style={{
-            textAlign: DevicesUtils.checkIfIsMobile() ? "center" : "end"
+            textAlign: isMobile ? "center" : "end"
           }}
         >
           <ToggleButtonGroup
@@ -340,7 +342,7 @@ export default function TestCaseModal() {
       <Grid
         item
         container
-        justify={DevicesUtils.checkIfIsMobile() ? "center" : "flex-end"}
+        justify={isMobile ? "center" : "flex-end"}
         spacing={2}
       >
         <Grid item md style={{ maxHeight: 1 }}>
@@ -349,7 +351,7 @@ export default function TestCaseModal() {
         <Grid
           item
           md={2}
-          xs={4}
+          xs
           onClick={() => {
             dispatch({
               type: "SET_TEST_CASE_MODAL_REDUCER",
@@ -369,14 +371,14 @@ export default function TestCaseModal() {
         >
           <Button color={"primary"}>{t("resetLabel")}</Button>
         </Grid>
-        <Grid item xs={4} md={2}>
+        <Grid item xs md={2}>
           <Button color={"primary"} onClick={() => handleExport()}>
             {t("exportLabel").toUpperCase()}
           </Button>
         </Grid>
 
         {userLogged && checkPermissionOfEditGroup() && (
-          <Grid item xs={4} md={2}>
+          <Grid item xs md={2}>
             <Button color={"primary"} onClick={() => handleSaveOnFirebase()}>
               {t("saveLabel").toUpperCase()}
             </Button>
