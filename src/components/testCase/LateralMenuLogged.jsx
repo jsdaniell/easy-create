@@ -540,7 +540,7 @@ export default function LateralMenuLogged() {
               />
             ))}
           </Grid>
-        ) : (
+        ) : !loading && (
           <Grid
             item
             container
