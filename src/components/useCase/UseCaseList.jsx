@@ -5,17 +5,29 @@ import {
   getQuestionListStyle,
   Reorder
 } from "./utilsDragAndDrop";
-import { DragIndicator } from "@material-ui/icons";
+import {
+  DragIndicator,
+  PlaylistAdd,
+  AccountTreeRounded,
+    HighlightOffRounded
+} from "@material-ui/icons";
 import Answers from "./Sublist";
-import { Grid, InputAdornment, TextField } from "@material-ui/core";
-import { useSelector } from "react-redux";
+import {
+  Grid,
+  IconButton,
+  InputAdornment,
+  TextField
+} from "@material-ui/core";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function UseCaseList() {
-  const { listProcedures } = useSelector(state => state.useCaseReducer);
+  const useCaseRedux = useSelector(state => state.useCaseReducer);
 
-  const [list, setList] = useState([]);
+  const dispatch = useDispatch();
 
   function onDragEnd(result) {
+    console.log(result);
+
     // dropped outside the list
     if (!result.destination) {
       //console.log("no-change");
@@ -25,25 +37,103 @@ export default function UseCaseList() {
     if (result.type === "QUESTIONS") {
       console.log(result);
       const newList = Reorder(
-        list,
+        useCaseRedux.listProcedures,
         result.source.index,
         result.destination.index
       );
 
-      setList(newList);
+      dispatch({
+        type: "SET_USE_CASE_MODAL_REDUCER",
+        payload: {
+          ...useCaseRedux,
+          listProcedures: newList
+        }
+      });
     } else {
       const answers = Reorder(
-        list[parseInt(result.type, 10)].sublist,
+        useCaseRedux.listProcedures[parseInt(result.type, 10)].sublist,
         result.source.index,
         result.destination.index
       );
 
-      const newList = JSON.parse(JSON.stringify(list));
+      console.log(answers);
 
-      newList[result.type].answers = answers;
+      const newList = JSON.parse(JSON.stringify(useCaseRedux.listProcedures));
 
-      setList(newList);
+      newList[result.type].sublist = answers;
+
+      console.log("NEW", newList);
+
+      dispatch({
+        type: "SET_USE_CASE_MODAL_REDUCER",
+        payload: {
+          ...useCaseRedux,
+          listProcedures: newList
+        }
+      });
     }
+  }
+
+  function dispatchList(newList) {
+    dispatch({
+      type: "SET_USE_CASE_MODAL_REDUCER",
+      payload: {
+        ...useCaseRedux,
+        listProcedures: newList
+      }
+    });
+  }
+
+  function addItem() {
+    let list = useCaseRedux.listProcedures;
+
+    list.push({
+      id: `list-${list.length + 1}`,
+      content: ``,
+      sublist: []
+    });
+
+    dispatchList(list);
+  }
+
+  function addSubItem(indexItem) {
+    let list = useCaseRedux.listProcedures;
+
+    list[indexItem].sublist.push("");
+
+    dispatchList(list);
+  }
+
+  function changeValueItem(indexItem, value) {
+    let list = useCaseRedux.listProcedures;
+
+    list[indexItem].content = value;
+
+    dispatchList(list);
+  }
+
+  function changeValueSubItem(indexItem, indexSubItem, value) {
+    let list = useCaseRedux.listProcedures;
+
+    list[indexItem].sublist[indexSubItem] = value;
+
+    dispatchList(list);
+  }
+
+  function removeItem(indexItem) {
+    let list = useCaseRedux.listProcedures;
+
+    list.splice(indexItem, 1);
+
+    dispatchList(list);
+  }
+
+  function removeSubItem(indexItem, indexSubItem) {
+    let list = useCaseRedux.listProcedures;
+
+    list[indexItem].sublist.splice(indexSubItem, 1);
+
+    dispatchList(list);
   }
 
   return (
@@ -54,7 +144,7 @@ export default function UseCaseList() {
             ref={provided.innerRef}
             style={getQuestionListStyle(snapshot.isDraggingOver)}
           >
-            {listProcedures.map((item, index) => (
+            {useCaseRedux.listProcedures.map((item, index) => (
               <Draggable key={item.id} draggableId={item.id} index={index}>
                 {(provided, snapshot) => (
                   <div
@@ -77,8 +167,11 @@ export default function UseCaseList() {
                         <TextField
                           variant={"outlined"}
                           defaultValue={item.content}
-                          style={{ width: 300 }}
+                          style={{ width: 300, paddingRight: 5 }}
                           color={"primary"}
+                          onChange={e => {
+                            changeValueItem(index, e.target.value);
+                          }}
                           size={"small"}
                           InputProps={{
                             startAdornment: (
@@ -88,9 +181,41 @@ export default function UseCaseList() {
                           }}
                         />
                       </Grid>
+                      <Grid item style={{ alignSelf: "center" }}>
+                        <IconButton
+                          edge="end"
+                          aria-label="comments"
+                          onClick={() => addItem()}
+                        >
+                          <PlaylistAdd />
+                        </IconButton>
+                      </Grid>
+                      <Grid item style={{ alignSelf: "center" }}>
+                        <IconButton
+                          edge="end"
+                          aria-label="comments"
+                          onClick={() => addSubItem(index)}
+                        >
+                          <AccountTreeRounded />
+                        </IconButton>
+                      </Grid>
+                      <Grid item style={{ alignSelf: "center" }}>
+                        <IconButton
+                            edge="end"
+                            aria-label="comments"
+                            onClick={() => removeItem(index)}
+                        >
+                          <HighlightOffRounded />
+                        </IconButton>
+                      </Grid>
                     </Grid>
 
-                    <Answers num={index} item={item} />
+                    <Answers
+                      num={index}
+                      item={item}
+                      changeValueSubItem={changeValueSubItem}
+                      removeSubItem={removeSubItem}
+                    />
                   </div>
                 )}
               </Draggable>

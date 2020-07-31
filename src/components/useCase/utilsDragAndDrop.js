@@ -12,8 +12,7 @@ export const getItemStyle = (isDragging, draggableStyle) => {
   return {
     // some basic styles to make the items look a bit nicer
     userSelect: "none",
-    padding: "6px 10px 0px 20px",
-
+    paddingTop: 3,
     textAlign: "start",
 
     // change background colour if dragging
@@ -26,11 +25,12 @@ export const getItemStyle = (isDragging, draggableStyle) => {
 
 export const getQuestionListStyle = isDraggingOver => ({
   // background: isDraggingOver ? "white" : "white",
-  padding: 0,
-  width: "100%"
+  width: "100%",
+  paddingBottom: 3
 });
 
 export const getAnswerListStyle = isDraggingOver => ({
   // background: isDraggingOver ? "white" : "white",
-  padding: 2
+  paddingTop: 3,
+  paddingLeft: 25
 });

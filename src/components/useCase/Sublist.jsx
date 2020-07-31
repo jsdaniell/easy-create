@@ -1,11 +1,11 @@
 import React from "react";
 import { Droppable, Draggable } from "react-beautiful-dnd";
 import { getItemStyle, getAnswerListStyle } from "./utilsDragAndDrop";
-import { DragIndicator } from "@material-ui/icons";
-import { Grid, InputAdornment, TextField } from "@material-ui/core";
+import { DragIndicator, HighlightOffRounded } from "@material-ui/icons";
+import { Grid, IconButton, InputAdornment, TextField } from "@material-ui/core";
 
 const Answers = props => {
-  const { item, num } = props;
+  const { item, num, changeValueSubItem, removeSubItem } = props;
   return (
     <Droppable droppableId={`droppable${item.id}`} type={`${num}`}>
       {(provided, snapshot) => (
@@ -13,7 +13,7 @@ const Answers = props => {
           ref={provided.innerRef}
           style={getAnswerListStyle(snapshot.isDraggingOver)}
         >
-          {item.sublist.map((subitem, index) => {
+          {item.sublist.map((subItem, index) => {
             return (
               <Draggable
                 key={`${num}${index}`}
@@ -41,8 +41,11 @@ const Answers = props => {
                         <TextField
                           variant={"outlined"}
                           style={{ width: 300 }}
-                          defaultValue={subitem}
+                          value={subItem}
                           color={"primary"}
+                          onChange={e => {
+                            changeValueSubItem(num, index, e.target.value);
+                          }}
                           size={"small"}
                           InputProps={{
                             startAdornment: (
@@ -51,6 +54,15 @@ const Answers = props => {
                             )
                           }}
                         />
+                      </Grid>
+                      <Grid item style={{ alignSelf: "center" }}>
+                        <IconButton
+                          edge="end"
+                          aria-label="comments"
+                          onClick={() => removeSubItem(num, index)}
+                        >
+                          <HighlightOffRounded />
+                        </IconButton>
                       </Grid>
                     </Grid>
                   </div>
