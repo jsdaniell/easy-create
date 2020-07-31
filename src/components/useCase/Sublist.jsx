@@ -3,9 +3,33 @@ import { Droppable, Draggable } from "react-beautiful-dnd";
 import { getItemStyle, getAnswerListStyle } from "./utilsDragAndDrop";
 import { DragIndicator, HighlightOffRounded } from "@material-ui/icons";
 import { Grid, IconButton, InputAdornment, TextField } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+
+const useStyles = makeStyles({
+  select: {
+    color: "#262A43",
+    "&:before": {
+      // normal
+      color: "#262A43"
+    },
+    "&:after": {
+      // focused
+      color: "#262A43"
+    }
+  },
+  inputLabel: {
+    color: "lightgray",
+    "&.focused": {
+      color: "lightgray"
+    }
+  }
+});
 
 const Answers = props => {
   const { item, num, changeValueSubItem, removeSubItem } = props;
+
+  const classes = useStyles();
+
   return (
     <Droppable droppableId={`droppable${item.id}`} type={`${num}`}>
       {(provided, snapshot) => (
@@ -29,7 +53,7 @@ const Answers = props => {
                       provided.draggableProps.style
                     )}
                   >
-                    <Grid container justify={"flex-start"}>
+                    <Grid container justify={"center"}>
                       <Grid item style={{ alignSelf: "center" }}>
                         <span {...provided.dragHandleProps}>
                           <DragIndicator
@@ -37,11 +61,12 @@ const Answers = props => {
                           />
                         </span>
                       </Grid>
-                      <Grid item style={{ alignSelf: "center" }}>
+                      <Grid item md style={{ alignSelf: "center" }}>
                         <TextField
                           variant={"outlined"}
-                          style={{ width: 300 }}
+                          fullWidth
                           value={subItem}
+                          label={!index ? "Alternative Flow" : null}
                           color={"primary"}
                           onChange={e => {
                             changeValueSubItem(num, index, e.target.value);
@@ -53,9 +78,15 @@ const Answers = props => {
                                 1}.${index + 1}`}</InputAdornment>
                             )
                           }}
+                          InputLabelProps={{
+                            classes: {
+                              root: classes.inputLabel,
+                              focused: "focused"
+                            }
+                          }}
                         />
                       </Grid>
-                      <Grid item style={{ alignSelf: "center" }}>
+                      <Grid item md={1} style={{ alignSelf: "center" }}>
                         <IconButton
                           edge="end"
                           aria-label="comments"
