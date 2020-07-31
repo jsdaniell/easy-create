@@ -9,18 +9,42 @@ import {
   DragIndicator,
   PlaylistAdd,
   AccountTreeRounded,
-    HighlightOffRounded
+  HighlightOffRounded
 } from "@material-ui/icons";
 import Answers from "./Sublist";
 import {
+  FormControl,
   Grid,
   IconButton,
   InputAdornment,
   TextField
 } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
+import { makeStyles } from "@material-ui/core/styles";
+
+const useStyles = makeStyles({
+  select: {
+    color: "#262A43",
+    "&:before": {
+      // normal
+      color: "#262A43"
+    },
+    "&:after": {
+      // focused
+      color: "#262A43"
+    }
+  },
+  inputLabel: {
+    color: "262A43",
+    "&.focused": {
+      color: "262A43"
+    }
+  }
+});
 
 export default function UseCaseList() {
+  const classes = useStyles();
+
   const useCaseRedux = useSelector(state => state.useCaseReducer);
 
   const dispatch = useDispatch();
@@ -155,19 +179,27 @@ export default function UseCaseList() {
                       provided.draggableProps.style
                     )}
                   >
-                    <Grid container justify={"flex-start"}>
-                      <Grid item style={{ alignSelf: "center" }}>
+                    <Grid
+                      container
+                      justify={"center"}
+                      style={{ padding: "0px 8px" }}
+                    >
+                      <Grid
+                        item
+                        style={{ alignSelf: "center", paddingRight: 2 }}
+                      >
                         <span {...provided.dragHandleProps}>
                           <DragIndicator
                             style={{ color: "rgba(000,000,000, 0.5)" }}
                           />
                         </span>
                       </Grid>
-                      <Grid item style={{ alignSelf: "center" }}>
+                      <Grid item md style={{ alignSelf: "center" }}>
                         <TextField
                           variant={"outlined"}
                           defaultValue={item.content}
-                          style={{ width: 300, paddingRight: 5 }}
+                          style={{ paddingRight: 5 }}
+                          fullWidth
                           color={"primary"}
                           onChange={e => {
                             changeValueItem(index, e.target.value);
@@ -178,6 +210,12 @@ export default function UseCaseList() {
                               <InputAdornment position="start">{`${index +
                                 1}`}</InputAdornment>
                             )
+                          }}
+                          InputLabelProps={{
+                            classes: {
+                              root: classes.inputLabel,
+                              focused: "focused"
+                            }
                           }}
                         />
                       </Grid>
@@ -201,9 +239,9 @@ export default function UseCaseList() {
                       </Grid>
                       <Grid item style={{ alignSelf: "center" }}>
                         <IconButton
-                            edge="end"
-                            aria-label="comments"
-                            onClick={() => removeItem(index)}
+                          edge="end"
+                          aria-label="comments"
+                          onClick={() => removeItem(index)}
                         >
                           <HighlightOffRounded />
                         </IconButton>
