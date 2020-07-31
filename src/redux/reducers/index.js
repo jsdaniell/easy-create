@@ -8,6 +8,7 @@ import testListDocsReducer from "./testCaseReducers/testListDocsReducer";
 import testGroupsReducer from "./testCaseReducers/testGroupsReducer";
 import dataGeneratorReducer from "./dataGenerator/dataGeneratorReducer";
 import selectedEmojiReducer from "./emojis/selectedEmojiReducer";
+import useCaseReducer from "./useCaseReducers/useCaseReducer";
 
 const rootPersistConfig = {
   key: "root",
@@ -20,7 +21,8 @@ const rootReducer = combineReducers({
   testListDocsReducer,
   testGroupsReducer,
   dataGeneratorReducer,
-  selectedEmojiReducer
+  selectedEmojiReducer,
+  useCaseReducer
 });
 
 export default persistReducer(rootPersistConfig, rootReducer);
