@@ -57,7 +57,11 @@ export default function ListPrePostCondition({ keyList }) {
         overflowY: "scroll"
       }}
     >
-      <SortableList items={testCaseData[keyList]} onSortEnd={onSortEnd} />
+      <SortableList
+        items={testCaseData[keyList]}
+        onSortEnd={onSortEnd}
+        distance={1}
+      />
     </List>
   );
 }
