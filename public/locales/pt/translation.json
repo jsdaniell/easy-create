@@ -79,5 +79,7 @@
   "pickEmojiLibDesc": "Veja o unicode do emoji, copie e saiba como utilizar em diferentes linguagens.",
   "emojiInfoTitle": "Vizualizar Emoji",
   "scenarioLabel": "Cenário",
-  "stepsLabel": "Steps"
+  "stepsLabel": "Steps",
+  "useCaseDescription": "Crie facilmente descrições de caso de uso e exporte para PDF, sincronize sua conta para guardar os casos de uso e compartilhar entre usuários."
+
 }

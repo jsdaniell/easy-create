@@ -14,6 +14,10 @@ import { useDispatch, useSelector } from "react-redux";
 import ListPreConditions from "./ListPrecondition";
 import { Add } from "@material-ui/icons";
 import { useSnackbar } from "notistack";
+import { savingNewTest } from "../../database/testCaseQueries/savingNew";
+import { getDocumentsFromTestsGroup } from "../../database/testCaseQueries/getDocumentsFromTestsGroup";
+import { savingNewUseCase } from "../../database/useCaseQueries/savingNewUseCase";
+import { getDocumentsFromUseCasesGroup } from "../../database/useCaseQueries/getDocumentsFromUseCasesGroups";
 
 export default function UseCaseView() {
   const isMobile = DevicesUtils.checkIfIsMobile();
@@ -22,11 +26,52 @@ export default function UseCaseView() {
 
   const useCaseRedux = useSelector(state => state.useCaseReducer);
 
+  const userLogged = useSelector(state => state.userUidReducer);
+
+  const useCaseGroups = useSelector(state => state.useCaseGroupsReducer);
+
   const dispatch = useDispatch();
 
   const { enqueueSnackbar } = useSnackbar();
 
   const [loading, setLoading] = useState(false);
+
+  function checkPermissionOfEditGroup() {
+    return (
+      useCaseGroups &&
+      useCaseGroups.list.length &&
+      useCaseGroups.list.find(item => item.itemId === useCaseGroups.selected)
+        .permission === "edit"
+    );
+  }
+
+  function handleSaveOnFirebase() {
+    setLoading(true);
+    savingNewUseCase({
+      listGroups: useCaseGroups.list,
+      group: useCaseGroups.selected,
+      useCase: useCaseRedux,
+      user: userLogged,
+      errorAlreadyExists: () => {
+        return enqueueSnackbar(t("alreadyExists"), {
+          variant: "warning"
+        });
+      },
+      success: () => {
+        getDocumentsFromUseCasesGroup({
+          user: userLogged,
+          groups: useCaseGroups.list,
+          useCasesGroupId: useCaseGroups.selected,
+          setState: data => {
+            dispatch({
+              type: "SET_USE_CASE_LIST_DOCS",
+              payload: data
+            });
+          }
+        });
+      }
+    }).then(() => setLoading(false));
+  }
 
   return (
     <Grid
@@ -253,13 +298,13 @@ export default function UseCaseView() {
           </Button>
         </Grid>
 
-        {/*{userLogged && checkPermissionOfEditGroup() && (*/}
-        {/*    <Grid item xs md={2}>*/}
-        {/*        <Button color={"primary"} onClick={() => handleSaveOnFirebase()}>*/}
-        {/*            {t("saveLabel").toUpperCase()}*/}
-        {/*        </Button>*/}
-        {/*    </Grid>*/}
-        {/*)}*/}
+        {userLogged && checkPermissionOfEditGroup() && (
+          <Grid item xs md={2}>
+            <Button color={"primary"} onClick={() => handleSaveOnFirebase()}>
+              {t("saveLabel").toUpperCase()}
+            </Button>
+          </Grid>
+        )}
       </Grid>
     </Grid>
   );
