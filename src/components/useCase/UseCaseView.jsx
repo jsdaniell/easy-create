@@ -73,7 +73,7 @@ export default function UseCaseView() {
           variant={"outlined"}
           fullWidth
           value={useCaseRedux.scenario}
-          label={"Scenario"}
+          label={t("scenarioLabel")}
           size={"small"}
           onChange={({ target: { value } }) => {
             dispatch({
@@ -88,7 +88,7 @@ export default function UseCaseView() {
           variant={"outlined"}
           fullWidth
           value={useCaseRedux.actor}
-          label={"Actor"}
+          label={t("actorLabel")}
           size={"small"}
           onChange={({ target: { value } }) => {
             dispatch({
@@ -153,7 +153,40 @@ export default function UseCaseView() {
         xs={12}
       >
         <Grid item>
-          <Typography color={"primary"}>{t("preConditionsLabel")}</Typography>
+          <Typography color={"primary"}>{t("stepsLabel")}</Typography>
+        </Grid>
+
+        <Grid item>
+          <IconButton
+            size={"small"}
+            style={{ backgroundColor: "#262A43" }}
+            color={"secondary"}
+            onClick={() => {
+              let newArray = useCaseRedux.listProcedures;
+
+              if (newArray.length && !newArray[newArray.length - 1].content) {
+                return enqueueSnackbar(t("fillLastOptionErrorMessage"), {
+                  variant: "warning"
+                });
+              }
+
+              newArray.push({
+                id: `list-${newArray.length + 1}`,
+                content: ``,
+                sublist: []
+              });
+
+              dispatch({
+                type: "SET_USE_CASE_MODAL_REDUCER",
+                payload: {
+                  ...useCaseRedux,
+                  listProcedures: newArray
+                }
+              });
+            }}
+          >
+            <Add fontSize={"small"} />
+          </IconButton>
         </Grid>
       </Grid>
 

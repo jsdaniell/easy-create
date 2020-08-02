@@ -57,7 +57,11 @@ export default function ListPreConditions({ keyList }) {
         overflowY: "scroll"
       }}
     >
-      <SortableList items={useCaseData.preconditions} onSortEnd={onSortEnd} />
+      <SortableList
+        items={useCaseData.preconditions}
+        onSortEnd={onSortEnd}
+        distance={1}
+      />
     </List>
   );
 }

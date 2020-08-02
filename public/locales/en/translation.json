@@ -77,5 +77,7 @@
   "emojisLibTitle": "Emoji Selector",
   "pickEmojiTitle": "Pick the emoji...",
   "pickEmojiLibDesc": "See unicode of emoji, copy and know how to use in different languages.",
-  "emojiInfoTitle": "Emoji View"
+  "emojiInfoTitle": "Emoji View",
+  "scenarioLabel": "Scenario",
+  "stepsLabel": "Steps"
 }
