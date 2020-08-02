@@ -57,7 +57,6 @@ export default function LateralMenuLogged() {
   const [newGroupName, setNewGroupName] = useState("");
 
   const [invitePersonEmail, setInvitePersonEmail] = useState("");
-
   const [personEditPermission, setPersonEditPermission] = useState(false);
   const [anchorPersonInvite, setAnchorPersonInvite] = useState(null);
 
