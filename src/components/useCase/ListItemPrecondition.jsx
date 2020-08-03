@@ -9,12 +9,8 @@ import {
 import { RemoveCircle, DragIndicator } from "@material-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
 
-export default function ListItemListCondition({
-  precondition,
-  index,
-  keyList
-}) {
-  const testCaseData = useSelector(state => state.testCaseModalReducer);
+export default function ListItemPrecondition({ precondition, index, keyList }) {
+  const useCaseData = useSelector(state => state.useCaseReducer);
 
   const [text, setText] = useState(precondition);
 
@@ -34,28 +30,28 @@ export default function ListItemListCondition({
         }}
         onBlur={() => {
           if (!text) {
-            let auxArray = testCaseData[keyList];
+            let auxArray = useCaseData.preconditions;
 
             auxArray.splice(index, 1);
 
             return dispatch({
-              type: "SET_TEST_CASE_MODAL_REDUCER",
+              type: "SET_USE_CASE_MODAL_REDUCER",
               payload: {
-                ...testCaseData,
-                [keyList]: auxArray
+                ...useCaseData,
+                preconditions: auxArray
               }
             });
           }
 
-          let auxArray = testCaseData[keyList];
+          let auxArray = useCaseData.preconditions;
 
           auxArray[index] = text;
 
           dispatch({
-            type: "SET_TEST_CASE_MODAL_REDUCER",
+            type: "SET_USE_CASE_MODAL_REDUCER",
             payload: {
-              ...testCaseData,
-              [keyList]: auxArray
+              ...useCaseData,
+              preconditions: auxArray
             }
           });
         }}
@@ -63,7 +59,7 @@ export default function ListItemListCondition({
         size={"small"}
         InputProps={{
           startAdornment: (
-            <InputAdornment position="start">{`${index +1}`}</InputAdornment>
+            <InputAdornment position="start">{`${index + 1}`}</InputAdornment>
           )
         }}
       />
@@ -73,15 +69,15 @@ export default function ListItemListCondition({
           edge="end"
           aria-label="comments"
           onClick={() => {
-            let auxArray = testCaseData[keyList];
+            let auxArray = useCaseData.preconditions;
 
             auxArray.splice(index, 1);
 
             dispatch({
-              type: "SET_TEST_CASE_MODAL_REDUCER",
+              type: "SET_USE_CASE_MODAL_REDUCER",
               payload: {
-                ...testCaseData,
-                [keyList]: auxArray
+                ...useCaseData,
+                preconditions: auxArray
               }
             });
           }}
