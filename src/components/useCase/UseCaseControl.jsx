@@ -45,6 +45,7 @@ import { getTestsGroups } from "../../database/testCaseQueries/getTestsGroups";
 import { verifyInvitesOfTestsGroupsToMe } from "../../database/testCaseQueries/verifyInvitesOfTestsGroupsToMe";
 import { verifyInvitesOfUseCaseGroupsToMe } from "../../database/useCaseQueries/verifyInvitesOfUseCaseGroupsToMe";
 import PopoverNotificationListUseCase from "./PopoverNotificationsListUseCase";
+import SharedUserListItemUseCase from "./SharedUserListItemUseCase";
 
 export default function UseCaseControl() {
   const isMobile = DevicesUtils.checkIfIsMobile();
@@ -542,7 +543,7 @@ export default function UseCaseControl() {
               <InviteItemList item={item} cancelInvite={cancelInvite} />
             ))}
             {usersFromGroup.map((doc, index) => (
-              <SharedUserListItem
+              <SharedUserListItemUseCase
                 user={doc}
                 changeUserPermission={changeUserPermission}
                 removeUserOfGroup={removeUserOfGroup}

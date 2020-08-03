@@ -16,7 +16,7 @@ export async function acceptingAnInviteUseCase({ setState, user, invite }) {
         let meRef = await firestore.collection(`users/`).doc(user);
 
         let docSharedRef = meRef
-          .collection("sharedTestsGroups")
+          .collection("sharedUseCaseGroups")
           .doc(invite.useCaseGroupId);
 
         docSharedRef.set({
