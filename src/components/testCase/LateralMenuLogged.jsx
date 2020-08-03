@@ -116,11 +116,13 @@ export default function LateralMenuLogged() {
     getTestsGroups({
       user: userLogged,
       setState: data => {
-        getDocInvitesAndUsersOfAGroup(data[data.length - 1].itemId, data).then(
-          () => setLoading(false)
-        );
+        if (data.length) {
+          getDocInvitesAndUsersOfAGroup(data[data.length - 1].itemId, data);
+        } else {
+          addNewGroupOnList("Default");
+        }
       }
-    });
+    }).then(() => setLoading(false));
 
     verifyInvitesOfTestsGroupsToMe({
       user: userLogged,
@@ -147,12 +149,12 @@ export default function LateralMenuLogged() {
     }
   }
 
-  function addNewGroupOnList() {
-    if (newGroupName) {
+  function addNewGroupOnList(optionalGroupName) {
+    if (newGroupName || optionalGroupName) {
       setLoading(true);
       addNewTestGroup({
         user: userLogged,
-        newCollectionName: newGroupName,
+        newCollectionName: newGroupName || optionalGroupName,
         errorAlreadyExists: () => {
           return enqueueSnackbar(t("alreadyExistsGroup"), {
             variant: "warning"
@@ -390,20 +392,18 @@ export default function LateralMenuLogged() {
             ))}
           </TextField>
         </Grid>
-        {checkPermissionOfEditGroup() && (
-          <Grid
-            item
-            md={1}
-            xs={3}
-            style={{ alignSelf: "center", textAlign: "center" }}
-          >
-            <WhiteIconButtonWithTooltip
-              onClick={event => setAnchorAddGroup(event.currentTarget)}
-              icon={<AddCircleOutline color={"secondary"} />}
-              titleTooltip={t("toolTipAddGroup")}
-            />
-          </Grid>
-        )}
+        <Grid
+          item
+          md={1}
+          xs={3}
+          style={{ alignSelf: "center", textAlign: "center" }}
+        >
+          <WhiteIconButtonWithTooltip
+            onClick={event => setAnchorAddGroup(event.currentTarget)}
+            icon={<AddCircleOutline color={"secondary"} />}
+            titleTooltip={t("toolTipAddGroup")}
+          />
+        </Grid>
         <Grid
           item
           md={1}

@@ -131,10 +131,17 @@ export default function UseCaseControl() {
     getUseCaseGroups({
       user: userLogged,
       setState: data => {
-        getDocInvitesAndUsersOfAGroup(data[data.length - 1].itemId, data).then(
-          () => setLoading(false)
-        );
+        if (data.length) {
+          getDocInvitesAndUsersOfAGroup(data[data.length - 1].itemId, data);
+        } else {
+          addNewGroupOnList("Default");
+        }
       }
+    }).then(() => setLoading(false));
+
+    verifyInvitesOfUseCaseGroupsToMe({
+      user: userLogged,
+      setState: data => setInvitesToMeList(data)
     });
   }, []);
 
@@ -146,12 +153,12 @@ export default function UseCaseControl() {
     });
   }
 
-  function addNewGroupOnList() {
-    if (newGroupName) {
+  function addNewGroupOnList(optionalGroupName) {
+    if (newGroupName || optionalGroupName) {
       setLoading(true);
       addNewUseCaseGroup({
         user: userLogged,
-        newCollectionName: newGroupName,
+        newCollectionName: newGroupName || optionalGroupName,
         errorAlreadyExists: () => {
           return enqueueSnackbar(t("alreadyExistsGroup"), {
             variant: "warning"
@@ -390,20 +397,18 @@ export default function UseCaseControl() {
             ))}
           </TextField>
         </Grid>
-        {checkPermissionOfEditGroup() && (
-          <Grid
-            item
-            md={1}
-            xs={3}
-            style={{ alignSelf: "center", textAlign: "center" }}
-          >
-            <WhiteIconButtonWithTooltip
-              onClick={event => setAnchorAddGroup(event.currentTarget)}
-              icon={<AddCircleOutline color={"secondary"} />}
-              titleTooltip={t("toolTipAddGroup")}
-            />
-          </Grid>
-        )}
+        <Grid
+          item
+          md={1}
+          xs={3}
+          style={{ alignSelf: "center", textAlign: "center" }}
+        >
+          <WhiteIconButtonWithTooltip
+            onClick={event => setAnchorAddGroup(event.currentTarget)}
+            icon={<AddCircleOutline color={"secondary"} />}
+            titleTooltip={t("toolTipAddGroup")}
+          />
+        </Grid>
         <Grid
           item
           md={1}

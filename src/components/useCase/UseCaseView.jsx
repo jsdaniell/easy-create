@@ -277,13 +277,7 @@ export default function UseCaseView() {
                 id: "",
                 scenario: "",
 
-                listProcedures: [
-                  {
-                    id: "list-0",
-                    content: ``,
-                    sublist: []
-                  }
-                ],
+                listProcedures: [],
                 preconditions: [],
                 postcondition: ""
               }
