@@ -78,6 +78,10 @@ export default function Home({ Left, Right }) {
 
   const menus = [
     {
+      title: t("useCaseTitle"),
+      route: "/create-use-case"
+    },
+    {
       title: t("testCaseTitle"),
       route: "create-test-case"
     },
@@ -88,10 +92,6 @@ export default function Home({ Left, Right }) {
     {
       title: t("emojisLibTitle"),
       route: "/emojis"
-    },
-    {
-      title: t("useCaseTitle"),
-      route: "/create-use-case"
     }
   ];
 

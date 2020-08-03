@@ -80,5 +80,6 @@
   "emojiInfoTitle": "Emoji View",
   "scenarioLabel": "Scenario",
   "stepsLabel": "Steps",
-  "useCaseDescription": "Create easily use case description and export to PDF, sync your account to save and share between other users."
+  "useCaseDescription": "Create easily use case description and export to PDF, sync your account to save and share between other users.",
+  "notDeleteUniqueGroupErrorMessage": "You must have more than one group to delete."
 }

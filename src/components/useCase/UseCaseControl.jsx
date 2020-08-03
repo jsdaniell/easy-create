@@ -190,7 +190,11 @@ export default function UseCaseControl() {
   }
 
   function deleteSelectedGroup() {
-    if (!useCaseGroups.list.length) return;
+    if (useCaseGroups.list.length === 1) {
+      return enqueueSnackbar(t("notDeleteUniqueGroupErrorMessage"), {
+        variant: "warning"
+      });
+    }
 
     setLoading(true);
     deleteOneUseCaseGroup({
