@@ -58,7 +58,6 @@ export default function TestCaseModal() {
       }
     });
 
-    console.log("form");
   }, []);
 
   function handleExport() {

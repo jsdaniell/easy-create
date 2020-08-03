@@ -18,6 +18,8 @@ import { savingNewTest } from "../../database/testCaseQueries/savingNew";
 import { getDocumentsFromTestsGroup } from "../../database/testCaseQueries/getDocumentsFromTestsGroup";
 import { savingNewUseCase } from "../../database/useCaseQueries/savingNewUseCase";
 import { getDocumentsFromUseCasesGroup } from "../../database/useCaseQueries/getDocumentsFromUseCasesGroups";
+import exportOnPdf from "../../utils/exportOnPdf";
+import exportOnPdfUseCase from "../../utils/exportOnPdfUseCase";
 
 export default function UseCaseView() {
   const isMobile = DevicesUtils.checkIfIsMobile();
@@ -71,6 +73,28 @@ export default function UseCaseView() {
         });
       }
     }).then(() => setLoading(false));
+  }
+
+  function handleExport() {
+    if (!useCaseRedux.title) {
+      return enqueueSnackbar(t("mandatoryTitleErrorMessage"), {
+        variant: "warning"
+      });
+    }
+
+    if (!useCaseRedux.preconditions.length) {
+      return enqueueSnackbar(t("addPreconditionsErrorMessage"), {
+        variant: "warning"
+      });
+    }
+
+    if (!useCaseRedux.listProcedures.length) {
+      return enqueueSnackbar(t("addSomeProceduresErrorMessage"), {
+        variant: "warning"
+      });
+    }
+
+    exportOnPdfUseCase(useCaseRedux);
   }
 
   return (
@@ -287,7 +311,7 @@ export default function UseCaseView() {
           <Button color={"primary"}>{t("resetLabel")}</Button>
         </Grid>
         <Grid item xs md={2}>
-          <Button color={"primary"} onClick={() => {}}>
+          <Button color={"primary"} onClick={() => handleExport()}>
             {t("exportLabel").toUpperCase()}
           </Button>
         </Grid>
