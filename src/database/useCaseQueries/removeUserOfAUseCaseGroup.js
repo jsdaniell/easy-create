@@ -16,6 +16,7 @@ export async function removingUserOfAUseCaseGroup({
       ...doc.data(),
       sharedWith: newArr
     });
+
   });
 
   await firestore
