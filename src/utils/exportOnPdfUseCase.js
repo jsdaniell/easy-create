@@ -22,15 +22,6 @@ export default function exportOnPdf(caseData) {
     caseData.environment
   ];
 
-  let priorityRow = [
-    {
-      rowSpan: 1,
-      content: "Priority",
-      styles: { valign: "middle", halign: "center" }
-    },
-    caseData.priority
-  ];
-
   let nameRow = [
     {
       rowSpan: 1,
@@ -68,27 +59,37 @@ export default function exportOnPdf(caseData) {
           content: "Preconditions",
           styles: { valign: "middle", halign: "center" }
         },
-        `${index + 1}. ${item}`
+        item
       ]);
     } else {
-      preconditionRows.push([`${index + 1}. ${item}`]);
+      preconditionRows.push([item]);
     }
   });
 
   let proceduresRows = [];
 
-  caseData.procedures.forEach((item, index) => {
+  let lengthProcedures = caseData.listProcedures.length;
+
+  caseData.listProcedures.forEach(
+    item => (lengthProcedures += item.sublist.length)
+  );
+
+  caseData.listProcedures.forEach((item, index) => {
     if (!index) {
       proceduresRows.push([
         {
-          rowSpan: caseData.procedures.length,
+          rowSpan: lengthProcedures,
           content: "Procedures",
           styles: { valign: "middle", halign: "center" }
         },
-        `${index + 1}. ${item}`
+        `${index + 1}. ${item.content}`
       ]);
     } else {
-      proceduresRows.push([`${index + 1}. ${item}`]);
+      proceduresRows.push([`${index + 1}. ${item.content}`]);
+
+      item.sublist.forEach((i, ind) =>
+        proceduresRows.push([`      ${index + 1}.${ind + 1} ${i}`])
+      );
     }
   });
 
@@ -100,10 +101,6 @@ export default function exportOnPdf(caseData) {
 
   if (caseData.environment) {
     body.push(environmentRow);
-  }
-
-  if (caseData.priority) {
-    body.push(priorityRow);
   }
 
   if (caseData.name) {
@@ -118,7 +115,7 @@ export default function exportOnPdf(caseData) {
     body.push(...preconditionRows);
   }
 
-  if (caseData.procedures.length) {
+  if (caseData.listProcedures.length) {
     body.push(...proceduresRows);
   }
   if (caseData.postcondition.length) {

@@ -3,13 +3,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { List } from "@material-ui/core";
 import { SortableContainer, SortableElement } from "react-sortable-hoc";
 
-import ListItemListCondition from "./ListItemListCondition";
 import arrayMove from "array-move";
+import ListItemPrecondition from "./ListItemPrecondition";
 
-export default function ListPrePostCondition({ keyList }) {
+export default function ListPreConditions({ keyList }) {
   const SortableItem = SortableElement(({ value, num }) => {
     return (
-      <ListItemListCondition
+      <ListItemPrecondition
         key={num}
         precondition={value}
         index={num}
@@ -35,14 +35,14 @@ export default function ListPrePostCondition({ keyList }) {
 
   const dispatch = useDispatch();
 
-  const testCaseData = useSelector(state => state.testCaseModalReducer);
+  const useCaseData = useSelector(state => state.useCaseReducer);
 
   function onSortEnd({ oldIndex, newIndex }) {
     dispatch({
-      type: "SET_TEST_CASE_MODAL_REDUCER",
+      type: "SET_USE_CASE_MODAL_REDUCER",
       payload: {
-        ...testCaseData,
-        [keyList]: arrayMove(testCaseData[keyList], oldIndex, newIndex)
+        ...useCaseData,
+        preconditions: arrayMove(useCaseData.preconditions, oldIndex, newIndex)
       }
     });
   }
@@ -58,7 +58,7 @@ export default function ListPrePostCondition({ keyList }) {
       }}
     >
       <SortableList
-        items={testCaseData[keyList]}
+        items={useCaseData.preconditions}
         onSortEnd={onSortEnd}
         distance={1}
       />
