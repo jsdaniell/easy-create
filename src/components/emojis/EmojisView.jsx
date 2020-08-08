@@ -61,11 +61,13 @@ function EmojisView() {
 
   const langs = ["javascript", "html", "css", "java", "dart"];
 
+  const isMobile = DevicesUtils.checkIfIsMobile();
+
   return (
     <Grid
       container
       style={{
-        padding: DevicesUtils.checkIfIsMobile() ? "25px 25px" : "25px 50px",
+        padding: isMobile ? "25px 25px" : "25px 50px",
         alignContent: "flex-start",
         minHeight: "100%"
       }}
@@ -82,7 +84,7 @@ function EmojisView() {
         justify={"center"}
         style={{
           alignContent: "space-evenly",
-          minHeight: DevicesUtils.checkIfIsMobile() ? "0px" : 550
+          minHeight: isMobile ? "0px" : 550
         }}
         spacing={1}
       >

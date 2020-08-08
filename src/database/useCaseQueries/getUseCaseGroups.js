@@ -1,10 +1,10 @@
 import { firestore } from "../../firebase";
 
-export async function getTestsGroups({ setState, user }) {
-  const groupsRef = firestore.collection(`users/${user}/testsGroups`);
+export async function getUseCaseGroups({ setState, user }) {
+  const groupsRef = firestore.collection(`users/${user}/useCaseGroups`);
 
   const sharedGroupsRef = firestore.collection(
-    `users/${user}/sharedTestsGroups`
+    `users/${user}/sharedUseCaseGroups`
   );
 
   let arrayOfGroups = [];
@@ -15,7 +15,9 @@ export async function getTestsGroups({ setState, user }) {
         itemId: item.id,
         itemLabel: item.data().title,
         permission: "edit",
-        shared: Boolean(item.data().sharedWith.length),
+        shared: Boolean(
+          item.data().sharedWith && item.data().sharedWith.length
+        ),
         owner: true
       })
     );

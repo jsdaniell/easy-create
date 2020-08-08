@@ -40,7 +40,7 @@
   "alreadyExistsGroup": "Already have a group with this name",
   "successRemovedGroup": "Success on remove group!",
   "tooltipDeleteAGroup": "Delete Group",
-  "useCaseTitle": "Create Use Case (Soon)",
+  "useCaseTitle": "Create Use Case",
   "codeSnippetTitle": "Create Code Snippet (Soon)",
   "tooltipAddPersonOnGroup": "Invite someone to this group",
   "editPermissionLabel": "Edit Permission",
@@ -77,5 +77,9 @@
   "emojisLibTitle": "Emoji Selector",
   "pickEmojiTitle": "Pick the emoji...",
   "pickEmojiLibDesc": "See unicode of emoji, copy and know how to use in different languages.",
-  "emojiInfoTitle": "Emoji View"
+  "emojiInfoTitle": "Emoji View",
+  "scenarioLabel": "Scenario",
+  "stepsLabel": "Steps",
+  "useCaseDescription": "Create easily use case description and export to PDF, sync your account to save and share between other users.",
+  "notDeleteUniqueGroupErrorMessage": "You must have more than one group to delete."
 }

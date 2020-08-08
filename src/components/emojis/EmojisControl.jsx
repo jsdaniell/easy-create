@@ -14,6 +14,8 @@ export default function EmojisControl() {
 
   const dispatch = useDispatch();
 
+  const isMobile = DevicesUtils.checkIfIsMobile();
+
   function selectEmoji(emoji) {
     dispatch({
       type: "SET_SELECTED_EMOJI",
@@ -33,13 +35,9 @@ export default function EmojisControl() {
       item
       container
       style={{
-        padding: DevicesUtils.checkIfIsMobile()
-          ? "0px 20px 20px"
-          : "0px 20px 40px",
-        height: DevicesUtils.checkIfIsMobile() ? "82%" : "92%",
-        alignContent: DevicesUtils.checkIfIsMobile()
-          ? "normal"
-          : "space-between"
+        padding: isMobile ? "0px 20px 20px" : "0px 20px 40px",
+        height: isMobile ? "82%" : "92%",
+        alignContent: isMobile ? "normal" : "space-between"
       }}
       justify={"center"}
       spacing={1}
@@ -55,7 +53,7 @@ export default function EmojisControl() {
           useButton={false}
           emojiTooltip={true}
           emojiSize={24}
-          perLine={DevicesUtils.checkIfIsMobile() ? 7 : 12}
+          perLine={isMobile ? 7 : 12}
         />
       </Grid>
 

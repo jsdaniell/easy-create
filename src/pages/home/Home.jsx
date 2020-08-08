@@ -66,6 +66,8 @@ export default function Home({ Left, Right }) {
         return t("generatorTitle");
       case "#/create-test-case":
         return t("testCaseTitle");
+      case "#/create-use-case":
+        return t("useCaseTitle");
       case "#/emojis":
         return t("emojisLibTitle");
 
@@ -75,6 +77,10 @@ export default function Home({ Left, Right }) {
   }
 
   const menus = [
+    {
+      title: t("useCaseTitle"),
+      route: "/create-use-case"
+    },
     {
       title: t("testCaseTitle"),
       route: "create-test-case"
