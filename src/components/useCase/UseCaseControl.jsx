@@ -1,107 +1,123 @@
 import React, { useEffect, useState } from "react";
 import {
+  Badge,
+  CircularProgress,
   Grid,
-  TextField,
   IconButton,
   MenuItem,
-  Typography,
-  Tooltip,
-  CircularProgress,
-  Badge
+  TextField,
+  Typography
 } from "@material-ui/core";
-import { Autocomplete } from "@material-ui/lab";
-import { useTranslation } from "react-i18next";
 import DevicesUtils from "../../utils/deviceUtils";
-import { getTestsGroups } from "../../database/testCaseQueries/getTestsGroups";
+import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import { getDocumentsFromTestsGroup } from "../../database/testCaseQueries/getDocumentsFromTestsGroup";
-import TestListItem from "./TestListItem";
-import {
-  NavigateNext,
-  NavigateBefore,
-  AddCircleOutline,
-  PictureAsPdfRounded,
-  Delete,
-  PersonAdd,
-  SupervisedUserCircle,
-  Notifications
-} from "@material-ui/icons";
-import { addNewTestGroup } from "../../database/testCaseQueries/addNewTestGroup";
 import { useSnackbar } from "notistack";
-import { deleteOneGroup } from "../../database/testCaseQueries/deleteOneGroup";
+import { getUseCaseGroups } from "../../database/useCaseQueries/getUseCaseGroups";
 import PopoverAddSome from "../shared/PopoverAddSome";
 import WhiteIconButtonWithTooltip from "../shared/WhiteIconButtonWithTooltip";
-import { inviteSomeoneToTestGroup } from "../../database/testCaseQueries/inviteSomeoneToTestGroup";
-import { getInvitesTestsGroupsFromMe } from "../../database/testCaseQueries/getInvitesTestGroupsFromMe";
-import InviteItemList from "./InviteItemList";
-import { deletingAnInvite } from "../../database/testCaseQueries/deletingAnInvite";
-import { verifyInvitesOfTestsGroupsToMe } from "../../database/testCaseQueries/verifyInvitesOfTestsGroupsToMe";
-import PopoverNotificationList from "../shared/PopoverNotificationsList";
-import { getUsersOfThisGroup } from "../../database/testCaseQueries/gettingUsersOfThisGroup";
-import SharedUserListItem from "./SharedUserListItem";
-import { changingUserPermission } from "../../database/testCaseQueries/changingUserPermission";
-import { removingUserOfAGroup } from "../../database/testCaseQueries/removingUserOfAGroup";
+import {
+  AddCircleOutline,
+  Delete,
+  NavigateBefore,
+  NavigateNext,
+  Notifications,
+  PersonAdd,
+  PictureAsPdfRounded,
+  SupervisedUserCircle
+} from "@material-ui/icons";
 
-export default function LateralMenuLogged() {
+import { getDocumentsFromUseCasesGroup } from "../../database/useCaseQueries/getDocumentsFromUseCasesGroups";
+import { getInvitesUseCasesGroupsFromMe } from "../../database/useCaseQueries/getInvitesUseCasesGroupsFromMe";
+import { getUsersOfThisUseCaseGroup } from "../../database/useCaseQueries/getUsersOfThisUseCaseGroup";
+import { addNewUseCaseGroup } from "../../database/useCaseQueries/addNewUseCaseGroup";
+import { deleteOneUseCaseGroup } from "../../database/useCaseQueries/deleteOneUseCaseGroup";
+import { inviteSomeoneToUseCaseGroup } from "../../database/useCaseQueries/inviteSomeoneToUseCaseGroup";
+import InviteItemList from "../testCase/InviteItemList";
+import SharedUserListItem from "../testCase/SharedUserListItem";
+import UseCaseListItem from "./UseCaseListItem";
+
+import { changingUserPermissionUseCase } from "../../database/useCaseQueries/changingUserPermissionUseCase";
+import { deletingAnInviteUseCase } from "../../database/useCaseQueries/deletingAnInviteUseCase";
+import { removingUserOfAUseCaseGroup } from "../../database/useCaseQueries/removeUserOfAUseCaseGroup";
+import { getDocumentsFromTestsGroup } from "../../database/testCaseQueries/getDocumentsFromTestsGroup";
+import PopoverNotificationList from "../shared/PopoverNotificationsList";
+import { getTestsGroups } from "../../database/testCaseQueries/getTestsGroups";
+import { verifyInvitesOfTestsGroupsToMe } from "../../database/testCaseQueries/verifyInvitesOfTestsGroupsToMe";
+import { verifyInvitesOfUseCaseGroupsToMe } from "../../database/useCaseQueries/verifyInvitesOfUseCaseGroupsToMe";
+import PopoverNotificationListUseCase from "./PopoverNotificationsListUseCase";
+import SharedUserListItemUseCase from "./SharedUserListItemUseCase";
+
+export default function UseCaseControl() {
+  const isMobile = DevicesUtils.checkIfIsMobile();
+
+  const [loading, setLoading] = useState(false);
+
   const { t } = useTranslation();
 
   const dispatch = useDispatch();
 
   const userLogged = useSelector(state => state.userUidReducer);
 
-  const testList = useSelector(state => state.testListDocsReducer);
-  const testsGroups = useSelector(state => state.testGroupsReducer);
-  const { enqueueSnackbar } = useSnackbar();
+  const useCaseGroups = useSelector(state => state.useCaseGroupsReducer);
 
+  const { enqueueSnackbar } = useSnackbar();
+  const useCaseList = useSelector(state => state.useCaseListDocsReducer);
   const [anchorAddGroup, setAnchorAddGroup] = useState(null);
   const [newGroupName, setNewGroupName] = useState("");
+  const [usersFromGroup, setUsersFromGroup] = useState([]);
+
+  const [invitesList, setInvitesList] = useState([]);
+  const [showInvites, setShowInvites] = useState(false);
 
   const [invitePersonEmail, setInvitePersonEmail] = useState("");
   const [personEditPermission, setPersonEditPermission] = useState(false);
   const [anchorPersonInvite, setAnchorPersonInvite] = useState(null);
 
-  const [showInvites, setShowInvites] = useState(false);
-  const [invitesList, setInvitesList] = useState([]);
-
   const [invitesToMeList, setInvitesToMeList] = useState([]);
   const [anchorNotifications, setAnchorNotifications] = useState(false);
 
-  const [usersFromGroup, setUsersFromGroup] = useState([]);
+  function checkPermissionOfEditGroup() {
+    return (
+      useCaseGroups &&
+      useCaseGroups.list.length &&
+      useCaseGroups.list.find(item => item.itemId === useCaseGroups.selected)
+        .permission === "edit"
+    );
+  }
 
-  const [loading, setLoading] = useState(false);
-
-  async function getDocInvitesAndUsersOfAGroup(testGroupId, groupsList) {
+  async function getDocInvitesAndUsersOfAGroup(useCaseGroupId, groupsList) {
     dispatch({
-      type: "SET_TEST_GROUPS_STATE",
+      type: "SET_USE_GROUPS_STATE",
       payload: {
         list: groupsList,
-        selected: testGroupId
+        selected: useCaseGroupId
       }
     });
 
-    getDocumentsFromTestsGroup({
+    getDocumentsFromUseCasesGroup({
       groups: groupsList,
       user: userLogged,
-      testGroupId: testGroupId,
+      useCasesGroupId: useCaseGroupId,
+
       setState: data => {
         dispatch({
-          type: "SET_LIST_DOCS",
+          type: "SET_USE_CASE_LIST_DOCS",
           payload: data
         });
       }
     });
-    getInvitesTestsGroupsFromMe({
+    getInvitesUseCasesGroupsFromMe({
       user: userLogged,
-      collectionName: testGroupId,
+      collectionName: useCaseGroupId,
       setState: inv => {
         setInvitesList(inv);
       }
     });
 
-    getUsersOfThisGroup({
+    getUsersOfThisUseCaseGroup({
       user: userLogged,
       groups: groupsList,
-      testGroupId: testGroupId,
+      useCaseGroupId: useCaseGroupId,
       setState: users => {
         setUsersFromGroup(users);
       }
@@ -109,11 +125,11 @@ export default function LateralMenuLogged() {
   }
 
   useEffect(() => {
-    document.title = t("testCaseTitle");
+    document.title = t("useCaseTitle");
 
     setLoading(true);
 
-    getTestsGroups({
+    getUseCaseGroups({
       user: userLogged,
       setState: data => {
         if (data.length) {
@@ -124,35 +140,24 @@ export default function LateralMenuLogged() {
       }
     }).then(() => setLoading(false));
 
-    verifyInvitesOfTestsGroupsToMe({
+    verifyInvitesOfUseCaseGroupsToMe({
       user: userLogged,
       setState: data => setInvitesToMeList(data)
     });
   }, []);
 
-  function navigate(nextOrBefore) {
-    if (testList.length === 7) {
-      setLoading(true);
-      getDocumentsFromTestsGroup({
-        groups: testsGroups.list,
-        user: userLogged,
-        testGroupId: testsGroups.selected,
-        setState: data => {
-          dispatch({
-            type: "SET_LIST_DOCS",
-            payload: data
-          });
-        },
-        paginate: nextOrBefore,
-        lastItem: testList[testList.length - 1].title
-      }).then(() => setLoading(false));
-    }
+  async function switchUseCaseGroup(id) {
+    setLoading(true);
+    await getDocInvitesAndUsersOfAGroup(id, useCaseGroups.list).then(() => {
+      setLoading(false);
+      setShowInvites(false);
+    });
   }
 
   function addNewGroupOnList(optionalGroupName) {
     if (newGroupName || optionalGroupName) {
       setLoading(true);
-      addNewTestGroup({
+      addNewUseCaseGroup({
         user: userLogged,
         newCollectionName: newGroupName || optionalGroupName,
         errorAlreadyExists: () => {
@@ -161,7 +166,7 @@ export default function LateralMenuLogged() {
           });
         },
         setState: () => {
-          getTestsGroups({
+          getUseCaseGroups({
             user: userLogged,
             setState: data => {
               getDocInvitesAndUsersOfAGroup(data[0].itemId, data);
@@ -175,23 +180,28 @@ export default function LateralMenuLogged() {
     }
   }
 
-  async function switchTestGroup(id) {
-    setLoading(true);
-    await getDocInvitesAndUsersOfAGroup(id, testsGroups.list).then(() => {
-      setLoading(false);
-      setShowInvites(false);
-    });
+  function checkIfIsOwner() {
+    return (
+      useCaseGroups &&
+      useCaseGroups.list.length &&
+      useCaseGroups.list.find(item => item.itemId === useCaseGroups.selected)
+        .owner
+    );
   }
 
   function deleteSelectedGroup() {
-    if (!testsGroups.list.length) return;
+    if (useCaseGroups.list.length === 1) {
+      return enqueueSnackbar(t("notDeleteUniqueGroupErrorMessage"), {
+        variant: "warning"
+      });
+    }
 
     setLoading(true);
-    deleteOneGroup({
-      collectionName: testsGroups.selected,
+    deleteOneUseCaseGroup({
+      collectionName: useCaseGroups.selected,
       user: userLogged,
       setState: () => {
-        getTestsGroups({
+        getUseCaseGroups({
           user: userLogged,
           setState: data => {
             getDocInvitesAndUsersOfAGroup(data[0].itemId, data);
@@ -205,46 +215,29 @@ export default function LateralMenuLogged() {
     }).then(() => setLoading(false));
   }
 
-  function checkPermissionOfEditGroup() {
-    return (
-      testsGroups &&
-      testsGroups.list.length &&
-      testsGroups.list.find(item => item.itemId === testsGroups.selected)
-        .permission === "edit"
-    );
-  }
-
-  function checkIfIsOwner() {
-    return (
-      testsGroups &&
-      testsGroups.list.length &&
-      testsGroups.list.find(item => item.itemId === testsGroups.selected).owner
-    );
-  }
-
   function inviteSomeoneToGroup() {
     if (invitePersonEmail) {
       setLoading(true);
-      inviteSomeoneToTestGroup({
+      inviteSomeoneToUseCaseGroup({
         user: userLogged,
-        collectionName: testsGroups.selected,
+        collectionName: useCaseGroups.selected,
         userInvited: {
           email: invitePersonEmail,
           permission: personEditPermission
         },
         setState: () => {
-          getInvitesTestsGroupsFromMe({
+          getInvitesUseCasesGroupsFromMe({
             user: userLogged,
-            collectionName: testsGroups.selected,
+            collectionName: useCaseGroups.selected,
             setState: inv => {
               setInvitesList(inv);
             }
           });
 
-          getUsersOfThisGroup({
+          getUsersOfThisUseCaseGroup({
             user: userLogged,
-            groups: testsGroups.list,
-            testGroupId: testsGroups.selected,
+            groups: useCaseGroups.list,
+            useCaseGroupId: useCaseGroups.selected,
             setState: users => {
               setUsersFromGroup(users);
             }
@@ -267,40 +260,21 @@ export default function LateralMenuLogged() {
 
   function cancelInvite(invite) {
     setLoading(true);
-    deletingAnInvite({
+    deletingAnInviteUseCase({
       invite,
       setState: () => {
-        getInvitesTestsGroupsFromMe({
+        getInvitesUseCasesGroupsFromMe({
           user: userLogged,
-          collectionName: testsGroups.selected,
+          collectionName: useCaseGroups.selected,
           setState: inv => {
             setInvitesList(inv);
           }
         });
 
-        getUsersOfThisGroup({
+        getUsersOfThisUseCaseGroup({
           user: userLogged,
-          groups: testsGroups.list,
-          testGroupId: testsGroups.selected,
-          setState: users => {
-            setUsersFromGroup(users);
-          }
-        });
-      }
-    }).then(() => setLoading(false));
-  }
-
-  function removeUserOfGroup(userToRemove) {
-    setLoading(true);
-    removingUserOfAGroup({
-      user: userLogged,
-      userToRemove,
-      group: testsGroups.selected,
-      setState: () => {
-        getUsersOfThisGroup({
-          user: userLogged,
-          groups: testsGroups.list,
-          testGroupId: testsGroups.selected,
+          groups: useCaseGroups.list,
+          useCaseGroupId: useCaseGroups.selected,
           setState: users => {
             setUsersFromGroup(users);
           }
@@ -311,24 +285,24 @@ export default function LateralMenuLogged() {
 
   function changeUserPermission(user) {
     setLoading(true);
-    changingUserPermission({
+    changingUserPermissionUseCase({
       user: userLogged,
       userToChangePermission: user,
-      testGroupId: testsGroups.selected,
+      useCaseGroupId: useCaseGroups.selected,
       setState: () => {
-        getInvitesTestsGroupsFromMe({
+        getInvitesUseCasesGroupsFromMe({
           user: userLogged,
-          collectionName: testsGroups.selected,
+          collectionName: useCaseGroups.selected,
           setState: inv => {
             setInvitesList(inv);
           }
         });
       }
     }).then(() => {
-      getUsersOfThisGroup({
+      getUsersOfThisUseCaseGroup({
         user: userLogged,
-        groups: testsGroups.list,
-        testGroupId: testsGroups.selected,
+        groups: useCaseGroups.list,
+        useCaseGroupId: useCaseGroups.selected,
         setState: users => {
           setUsersFromGroup(users);
         }
@@ -337,7 +311,43 @@ export default function LateralMenuLogged() {
     });
   }
 
-  const isMobile = DevicesUtils.checkIfIsMobile();
+  function removeUserOfGroup(userToRemove) {
+    setLoading(true);
+    removingUserOfAUseCaseGroup({
+      user: userLogged,
+      userToRemove,
+      group: useCaseGroups.selected,
+      setState: () => {
+        getUsersOfThisUseCaseGroup({
+          user: userLogged,
+          groups: useCaseGroups.list,
+          useCaseGroupId: useCaseGroups.selected,
+          setState: users => {
+            setUsersFromGroup(users);
+          }
+        });
+      }
+    }).then(() => setLoading(false));
+  }
+
+  function navigate(nextOrBefore) {
+    if (useCaseGroups.length === 7) {
+      setLoading(true);
+      getDocumentsFromUseCasesGroup({
+        groups: useCaseGroups.list,
+        user: userLogged,
+        useCasesGroupId: useCaseGroups.selected,
+        setState: data => {
+          dispatch({
+            type: "SET_USE_CASE_LIST_DOCS",
+            payload: data
+          });
+        },
+        paginate: nextOrBefore,
+        lastItem: useCaseList[useCaseList.length - 1].title
+      }).then(() => setLoading(false));
+    }
+  }
 
   return (
     <Grid
@@ -378,14 +388,14 @@ export default function LateralMenuLogged() {
             id="standard-select-currency"
             select
             variant={"outlined"}
-            value={testsGroups.selected}
+            value={useCaseGroups.selected}
             fullWidth
             color={"secondary"}
-            onChange={event => switchTestGroup(event.target.value)}
+            onChange={event => switchUseCaseGroup(event.target.value)}
             size={"small"}
             label={t("groupsLabel")}
           >
-            {testsGroups.list.map(option => (
+            {useCaseGroups.list.map(option => (
               <MenuItem key={option.itemId} value={option.itemId}>
                 {option.itemLabel}
               </MenuItem>
@@ -436,6 +446,7 @@ export default function LateralMenuLogged() {
             />
           </Grid>
         )}
+
         <Grid
           item
           md={1}
@@ -462,6 +473,7 @@ export default function LateralMenuLogged() {
             }}
           />
         </Grid>
+
         <Grid
           item
           md={1}
@@ -483,30 +495,30 @@ export default function LateralMenuLogged() {
               }
             }}
           />
-          <PopoverNotificationList
+          <PopoverNotificationListUseCase
             anchor={anchorNotifications}
             setAnchor={setAnchorNotifications}
             invites={invitesToMeList}
             userLogged={userLogged}
             setState={() => {
-              getTestsGroups({
+              getUseCaseGroups({
                 user: userLogged,
                 setState: data => {
                   dispatch({
-                    type: "SET_TEST_GROUPS_STATE",
+                    type: "SET_USE_GROUPS_STATE",
                     payload: {
                       list: data,
                       selected: data[0].itemId
                     }
                   });
 
-                  getDocumentsFromTestsGroup({
-                    groups: testsGroups.list,
+                  getDocumentsFromUseCasesGroup({
+                    groups: useCaseGroups.list,
                     user: userLogged,
-                    testGroupId: data[0].itemId,
+                    useCasesGroupId: data[0].itemId,
                     setState: data => {
                       dispatch({
-                        type: "SET_LIST_DOCS",
+                        type: "SET_USE_CASE_LIST_DOCS",
                         payload: data
                       });
                     }
@@ -514,7 +526,7 @@ export default function LateralMenuLogged() {
                 }
               });
 
-              verifyInvitesOfTestsGroupsToMe({
+              verifyInvitesOfUseCaseGroupsToMe({
                 user: userLogged,
                 setState: data => setInvitesToMeList(data)
               });
@@ -522,10 +534,11 @@ export default function LateralMenuLogged() {
             }}
           />
         </Grid>
+
         {!showInvites && !loading ? (
           <Grid item container md={12} xs={12}>
-            {testList.map((doc, index) => (
-              <TestListItem setLoading={setLoading} test={doc} />
+            {useCaseList.map((doc, index) => (
+              <UseCaseListItem setLoading={setLoading} useCase={doc} />
             ))}
           </Grid>
         ) : !loading && (invitesList.length || usersFromGroup.length) ? (
@@ -534,7 +547,7 @@ export default function LateralMenuLogged() {
               <InviteItemList item={item} cancelInvite={cancelInvite} />
             ))}
             {usersFromGroup.map((doc, index) => (
-              <SharedUserListItem
+              <SharedUserListItemUseCase
                 user={doc}
                 changeUserPermission={changeUserPermission}
                 removeUserOfGroup={removeUserOfGroup}
