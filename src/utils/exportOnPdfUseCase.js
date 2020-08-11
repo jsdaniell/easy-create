@@ -84,6 +84,10 @@ export default function exportOnPdf(caseData) {
         },
         `${index + 1}. ${item.content}`
       ]);
+
+      item.sublist.forEach((i, ind) =>
+        proceduresRows.push([`      ${index + 1}.${ind + 1} ${i}`])
+      );
     } else {
       proceduresRows.push([`${index + 1}. ${item.content}`]);
 
@@ -92,6 +96,8 @@ export default function exportOnPdf(caseData) {
       );
     }
   });
+
+  console.log(proceduresRows);
 
   let body = [];
 
