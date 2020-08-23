@@ -33,15 +33,6 @@ export default function TestCaseModal() {
 
   const [loading, setLoading] = useState(false);
 
-  function checkPermissionOfEditGroup() {
-    return (
-      testsGroups &&
-      testsGroups.list.length &&
-      testsGroups.list.find(item => item.itemId === testsGroups.selected)
-        .permission === "edit"
-    );
-  }
-
   useEffect(() => {
     dispatch({
       type: "SET_TEST_CASE_MODAL_REDUCER",
@@ -376,13 +367,11 @@ export default function TestCaseModal() {
           </Button>
         </Grid>
 
-        {userLogged && checkPermissionOfEditGroup() && (
-          <Grid item xs md={2}>
-            <Button color={"primary"} onClick={() => handleSaveOnFirebase()}>
-              {t("saveLabel").toUpperCase()}
-            </Button>
-          </Grid>
-        )}
+        <Grid item xs md={2}>
+          <Button color={"primary"} onClick={() => handleSaveOnFirebase()}>
+            {t("saveLabel").toUpperCase()}
+          </Button>
+        </Grid>
       </Grid>
     </Grid>
   );

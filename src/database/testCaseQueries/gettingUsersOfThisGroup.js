@@ -25,6 +25,8 @@ export async function getUsersOfThisGroup({
   let users = [];
 
   await groupRef.get().then(doc => {
+    if(!doc.data().sharedWith) return
+
     doc.data().sharedWith.forEach(async (sh, ind) => {
       let us = await firestore.doc(`users/${sh.user}`);
 

@@ -25,6 +25,7 @@ export async function signInWithGoogle({ success }) {
         }
       )
       .then(data => {
+
         store.dispatch({
           type: "SET_USER_UID",
           payload: data.data
