@@ -1,6 +1,6 @@
 import axios from "axios";
-// const URL_API = "https://dev-data-tools-api-golang.herokuapp.com";
-const URL_API = "http://localhost:9000";
+const URL_API = "https://dev-data-tools-api-golang.herokuapp.com";
+// const URL_API = "http://localhost:9000";
 
 export const api = axios.create({
   baseURL: URL_API
