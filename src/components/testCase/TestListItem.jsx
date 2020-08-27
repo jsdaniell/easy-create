@@ -30,7 +30,6 @@ export default function TestListItem({ test, setLoading }) {
 
   const dispatch = useDispatch();
 
-  const userLogged = useSelector(state => state.userUidReducer);
   const testsGroups = useSelector(state => state.testGroupsReducer);
 
   const { enqueueSnackbar } = useSnackbar();

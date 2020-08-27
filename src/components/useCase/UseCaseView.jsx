@@ -17,6 +17,7 @@ import { useSnackbar } from "notistack";
 import { savingNewUseCase } from "../../database/useCaseQueries/savingNewUseCase";
 import { getDocumentsFromUseCasesGroup } from "../../database/useCaseQueries/getDocumentsFromUseCasesGroups";
 import exportOnPdfUseCase from "../../utils/exportOnPdfUseCase";
+import {addingDocumentOnGroup} from "../../service/groupsServices";
 
 export default function UseCaseView() {
   const isMobile = DevicesUtils.checkIfIsMobile();
@@ -25,7 +26,6 @@ export default function UseCaseView() {
 
   const useCaseRedux = useSelector(state => state.useCaseReducer);
 
-  const userLogged = useSelector(state => state.userUidReducer);
 
   const useCaseGroups = useSelector(state => state.useCaseGroupsReducer);
 
@@ -35,42 +35,33 @@ export default function UseCaseView() {
 
   const [loading, setLoading] = useState(false);
 
-  function checkPermissionOfEditGroup() {
-    return (
-      useCaseGroups &&
-      useCaseGroups.list.length &&
-      useCaseGroups.list.find(item => item.itemId === useCaseGroups.selected)
-        .permission === "edit"
-    );
+  async function save() {
+    setLoading(true);
+
+    const {
+      selected: { docId }
+    } = useCaseGroups;
+
+    await addingDocumentOnGroup({
+      type: "useCasesGroups",
+      idGroup: docId,
+      data: useCaseRedux,
+      success: data => {
+        dispatch({
+          type: "SET_USE_CASE_LIST_DOCS",
+          payload: data
+        });
+        setLoading(false);
+      },
+      catchError: err => {
+        enqueueSnackbar(err, {
+          variant: "error"
+        });
+        setLoading(false);
+      }
+    });
   }
 
-  function handleSaveOnFirebase() {
-    setLoading(true);
-    savingNewUseCase({
-      listGroups: useCaseGroups.list,
-      group: useCaseGroups.selected,
-      useCase: useCaseRedux,
-      user: userLogged,
-      errorAlreadyExists: () => {
-        return enqueueSnackbar(t("alreadyExists"), {
-          variant: "warning"
-        });
-      },
-      success: () => {
-        getDocumentsFromUseCasesGroup({
-          user: userLogged,
-          groups: useCaseGroups.list,
-          useCasesGroupId: useCaseGroups.selected,
-          setState: data => {
-            dispatch({
-              type: "SET_USE_CASE_LIST_DOCS",
-              payload: data
-            });
-          }
-        });
-      }
-    }).then(() => setLoading(false));
-  }
 
   function handleExport() {
     if (!useCaseRedux.title) {
@@ -313,13 +304,11 @@ export default function UseCaseView() {
           </Button>
         </Grid>
 
-        {userLogged && checkPermissionOfEditGroup() && (
-          <Grid item xs md={2}>
-            <Button color={"primary"} onClick={() => handleSaveOnFirebase()}>
-              {t("saveLabel").toUpperCase()}
-            </Button>
-          </Grid>
-        )}
+        <Grid item xs md={2}>
+          <Button color={"primary"} onClick={() => save()}>
+            {t("saveLabel").toUpperCase()}
+          </Button>
+        </Grid>
       </Grid>
     </Grid>
   );

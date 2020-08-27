@@ -31,17 +31,13 @@ import { getInvitesUseCasesGroupsFromMe } from "../../database/useCaseQueries/ge
 import { getUsersOfThisUseCaseGroup } from "../../database/useCaseQueries/getUsersOfThisUseCaseGroup";
 import { addNewUseCaseGroup } from "../../database/useCaseQueries/addNewUseCaseGroup";
 import { deleteOneUseCaseGroup } from "../../database/useCaseQueries/deleteOneUseCaseGroup";
-import { inviteSomeoneToUseCaseGroup } from "../../database/useCaseQueries/inviteSomeoneToUseCaseGroup";
-import InviteItemList from "../testCase/InviteItemList";
-import SharedUserListItem from "../testCase/SharedUserListItem";
 import UseCaseListItem from "./UseCaseListItem";
-
-import { changingUserPermissionUseCase } from "../../database/useCaseQueries/changingUserPermissionUseCase";
-import { deletingAnInviteUseCase } from "../../database/useCaseQueries/deletingAnInviteUseCase";
-import { removingUserOfAUseCaseGroup } from "../../database/useCaseQueries/removeUserOfAUseCaseGroup";
-import { verifyInvitesOfUseCaseGroupsToMe } from "../../database/useCaseQueries/verifyInvitesOfUseCaseGroupsToMe";
-import PopoverNotificationListUseCase from "./PopoverNotificationsListUseCase";
-import SharedUserListItemUseCase from "./SharedUserListItemUseCase";
+import {
+  addNewGroup,
+  deleteGroup,
+  getDocumentsFromGroup,
+  getGroups
+} from "../../service/groupsServices";
 
 export default function UseCaseControl() {
   const isMobile = DevicesUtils.checkIfIsMobile();
@@ -52,297 +48,194 @@ export default function UseCaseControl() {
 
   const dispatch = useDispatch();
 
-  const userLogged = useSelector(state => state.userUidReducer);
 
   const useCaseGroups = useSelector(state => state.useCaseGroupsReducer);
+  const useCaseList = useSelector(state => state.useCaseListDocsReducer);
 
   const { enqueueSnackbar } = useSnackbar();
-  const useCaseList = useSelector(state => state.useCaseListDocsReducer);
+
   const [anchorAddGroup, setAnchorAddGroup] = useState(null);
   const [newGroupName, setNewGroupName] = useState("");
-  const [usersFromGroup, setUsersFromGroup] = useState([]);
 
-  const [invitesList, setInvitesList] = useState([]);
-  const [showInvites, setShowInvites] = useState(false);
-
-  const [invitePersonEmail, setInvitePersonEmail] = useState("");
-  const [personEditPermission, setPersonEditPermission] = useState(false);
-  const [anchorPersonInvite, setAnchorPersonInvite] = useState(null);
-
-  const [invitesToMeList, setInvitesToMeList] = useState([]);
-  const [anchorNotifications, setAnchorNotifications] = useState(false);
-
-  function checkPermissionOfEditGroup() {
-    return (
-      useCaseGroups &&
-      useCaseGroups.list.length &&
-      useCaseGroups.list.find(item => item.itemId === useCaseGroups.selected)
-        .permission === "edit"
-    );
-  }
-
-  async function getDocInvitesAndUsersOfAGroup(useCaseGroupId, groupsList) {
-    dispatch({
-      type: "SET_USE_GROUPS_STATE",
-      payload: {
-        list: groupsList,
-        selected: useCaseGroupId
-      }
-    });
-
-    getDocumentsFromUseCasesGroup({
-      groups: groupsList,
-      user: userLogged,
-      useCasesGroupId: useCaseGroupId,
-
-      setState: data => {
-        dispatch({
-          type: "SET_USE_CASE_LIST_DOCS",
-          payload: data
-        });
-      }
-    });
-    getInvitesUseCasesGroupsFromMe({
-      user: userLogged,
-      collectionName: useCaseGroupId,
-      setState: inv => {
-        setInvitesList(inv);
-      }
-    });
-
-    getUsersOfThisUseCaseGroup({
-      user: userLogged,
-      groups: groupsList,
-      useCaseGroupId: useCaseGroupId,
-      setState: users => {
-        setUsersFromGroup(users);
-      }
-    });
-  }
+  const USE_CASE_TYPE = "useCasesGroups";
 
   useEffect(() => {
     document.title = t("useCaseTitle");
 
     setLoading(true);
 
-    getUseCaseGroups({
-      user: userLogged,
-      setState: data => {
-        if (data.length) {
-          getDocInvitesAndUsersOfAGroup(data[data.length - 1].itemId, data);
-        } else {
-          addNewGroupOnList("Default");
-        }
-      }
-    }).then(() => setLoading(false));
+    getGroups({
+      type: USE_CASE_TYPE,
+      success: async data => {
+        dispatch({
+          type: "SET_USE_GROUPS_STATE",
+          payload: {
+            list: data,
+            selected: data[0]
+          }
+        });
 
-    verifyInvitesOfUseCaseGroupsToMe({
-      user: userLogged,
-      setState: data => setInvitesToMeList(data)
+        await getDocumentsFromGroup({
+          type: USE_CASE_TYPE,
+          id: data[0].docId,
+          success: data => {
+            dispatch({
+              type: "SET_USE_CASE_LIST_DOCS",
+              payload: data
+            });
+          },
+          catchError: err =>
+            enqueueSnackbar(err, {
+              variant: "error"
+            })
+        });
+        setLoading(false);
+      },
+      catchError: err =>
+        enqueueSnackbar(err, {
+          variant: "error"
+        })
     });
   }, []);
 
   async function switchUseCaseGroup(id) {
     setLoading(true);
-    await getDocInvitesAndUsersOfAGroup(id, useCaseGroups.list).then(() => {
-      setLoading(false);
-      setShowInvites(false);
+
+    dispatch({
+      type: "SET_USE_GROUPS_STATE",
+      payload: {
+        ...useCaseGroups,
+        selected: useCaseGroups.list.find(item => item.docId === id)
+      }
     });
-  }
-
-  function addNewGroupOnList(optionalGroupName) {
-    if (newGroupName || optionalGroupName) {
-      setLoading(true);
-      addNewUseCaseGroup({
-        user: userLogged,
-        newCollectionName: newGroupName || optionalGroupName,
-        errorAlreadyExists: () => {
-          return enqueueSnackbar(t("alreadyExistsGroup"), {
-            variant: "warning"
-          });
-        },
-        setState: () => {
-          getUseCaseGroups({
-            user: userLogged,
-            setState: data => {
-              getDocInvitesAndUsersOfAGroup(data[0].itemId, data);
-            }
-          });
-
-          setAnchorAddGroup(null);
-          setNewGroupName("");
-        }
-      }).then(() => setLoading(false));
-    }
-  }
-
-  function checkIfIsOwner() {
-    return (
-      useCaseGroups &&
-      useCaseGroups.list.length &&
-      useCaseGroups.list.find(item => item.itemId === useCaseGroups.selected)
-        .owner
-    );
-  }
-
-  function deleteSelectedGroup() {
-    if (useCaseGroups.list.length === 1) {
-      return enqueueSnackbar(t("notDeleteUniqueGroupErrorMessage"), {
-        variant: "warning"
-      });
-    }
-
-    setLoading(true);
-    deleteOneUseCaseGroup({
-      collectionName: useCaseGroups.selected,
-      user: userLogged,
-      setState: () => {
-        getUseCaseGroups({
-          user: userLogged,
-          setState: data => {
-            getDocInvitesAndUsersOfAGroup(data[0].itemId, data);
-          }
+    await getDocumentsFromGroup({
+      type: USE_CASE_TYPE,
+      id: id,
+      success: data => {
+        dispatch({
+          type: "SET_USE_CASE_LIST_DOCS",
+          payload: data
         });
-
-        enqueueSnackbar(t("successRemovedGroup"), {
-          variant: "success"
-        });
-      }
-    }).then(() => setLoading(false));
-  }
-
-  function inviteSomeoneToGroup() {
-    if (invitePersonEmail) {
-      setLoading(true);
-      inviteSomeoneToUseCaseGroup({
-        user: userLogged,
-        collectionName: useCaseGroups.selected,
-        userInvited: {
-          email: invitePersonEmail,
-          permission: personEditPermission
-        },
-        setState: () => {
-          getInvitesUseCasesGroupsFromMe({
-            user: userLogged,
-            collectionName: useCaseGroups.selected,
-            setState: inv => {
-              setInvitesList(inv);
-            }
-          });
-
-          getUsersOfThisUseCaseGroup({
-            user: userLogged,
-            groups: useCaseGroups.list,
-            useCaseGroupId: useCaseGroups.selected,
-            setState: users => {
-              setUsersFromGroup(users);
-            }
-          });
-          setAnchorPersonInvite(null);
-        },
-        userInvitedError: () => {
-          enqueueSnackbar(t("userAlreadyInvited"), {
-            variant: "warning"
-          });
-        },
-        userNotExistError: () => {
-          enqueueSnackbar(t("userNotExists"), {
-            variant: "warning"
-          });
-        }
-      }).then(() => setLoading(false));
-    }
-  }
-
-  function cancelInvite(invite) {
-    setLoading(true);
-    deletingAnInviteUseCase({
-      invite,
-      setState: () => {
-        getInvitesUseCasesGroupsFromMe({
-          user: userLogged,
-          collectionName: useCaseGroups.selected,
-          setState: inv => {
-            setInvitesList(inv);
-          }
-        });
-
-        getUsersOfThisUseCaseGroup({
-          user: userLogged,
-          groups: useCaseGroups.list,
-          useCaseGroupId: useCaseGroups.selected,
-          setState: users => {
-            setUsersFromGroup(users);
-          }
-        });
-      }
-    }).then(() => setLoading(false));
-  }
-
-  function changeUserPermission(user) {
-    setLoading(true);
-    changingUserPermissionUseCase({
-      user: userLogged,
-      userToChangePermission: user,
-      useCaseGroupId: useCaseGroups.selected,
-      setState: () => {
-        getInvitesUseCasesGroupsFromMe({
-          user: userLogged,
-          collectionName: useCaseGroups.selected,
-          setState: inv => {
-            setInvitesList(inv);
-          }
-        });
-      }
-    }).then(() => {
-      getUsersOfThisUseCaseGroup({
-        user: userLogged,
-        groups: useCaseGroups.list,
-        useCaseGroupId: useCaseGroups.selected,
-        setState: users => {
-          setUsersFromGroup(users);
-        }
-      });
-      setLoading(false);
+      },
+      catchError: err =>
+        enqueueSnackbar(err, {
+          variant: "error"
+        })
     });
+
+    setLoading(false);
   }
 
-  function removeUserOfGroup(userToRemove) {
-    setLoading(true);
-    removingUserOfAUseCaseGroup({
-      user: userLogged,
-      userToRemove,
-      group: useCaseGroups.selected,
-      setState: () => {
-        getUsersOfThisUseCaseGroup({
-          user: userLogged,
-          groups: useCaseGroups.list,
-          useCaseGroupId: useCaseGroups.selected,
-          setState: users => {
-            setUsersFromGroup(users);
-          }
-        });
-      }
-    }).then(() => setLoading(false));
-  }
-
-  function navigate(nextOrBefore) {
-    if (useCaseGroups.length === 7) {
+  async function addNewGroupOnList() {
+    if (newGroupName) {
       setLoading(true);
-      getDocumentsFromUseCasesGroup({
-        groups: useCaseGroups.list,
-        user: userLogged,
-        useCasesGroupId: useCaseGroups.selected,
-        setState: data => {
+      await addNewGroup({
+        type: USE_CASE_TYPE,
+        name: newGroupName,
+        success: async data => {
           dispatch({
-            type: "SET_USE_CASE_LIST_DOCS",
-            payload: data
+            type: "SET_USE_GROUPS_STATE",
+            payload: {
+              list: data,
+              selected: data[0]
+            }
           });
+
+          await getDocumentsFromGroup({
+            type: USE_CASE_TYPE,
+            id: data[0].docId,
+            success: data => {
+              dispatch({
+                type: "SET_USE_CASE_LIST_DOCS",
+                payload: data
+              });
+            },
+            catchError: err =>
+              enqueueSnackbar(err, {
+                variant: "error"
+              })
+          });
+
+          setLoading(false);
+          setAnchorAddGroup(false);
         },
-        paginate: nextOrBefore,
-        lastItem: useCaseList[useCaseList.length - 1].title
-      }).then(() => setLoading(false));
+        catchError: err =>
+          enqueueSnackbar(err, {
+            variant: "error"
+          })
+      });
     }
+  }
+
+  async function deleteSelectedGroup() {
+    if (!useCaseGroups.list.length) return;
+
+    const {
+      selected: { docId }
+    } = useCaseGroups;
+
+    setLoading(true);
+
+    await deleteGroup({
+      type: USE_CASE_TYPE,
+      id: docId,
+      success: async data => {
+        dispatch({
+          type: "SET_USE_GROUPS_STATE",
+          payload: {
+            list: data,
+            selected: data[0]
+          }
+        });
+
+        await getDocumentsFromGroup({
+          type: USE_CASE_TYPE,
+          id: data[0].docId,
+          success: data => {
+            dispatch({
+              type: "SET_USE_CASE_LIST_DOCS",
+              payload: data
+            });
+          },
+          catchError: err =>
+            enqueueSnackbar(err, {
+              variant: "error"
+            })
+        });
+
+        setLoading(false);
+      },
+      catchError: err =>
+        enqueueSnackbar(err, {
+          variant: "error"
+        })
+    });
+  }
+
+  async function navigate(nextOrBefore) {
+    setLoading(true);
+
+    const {
+      selected: { docId }
+    } = useCaseGroups;
+
+    await getDocumentsFromGroup({
+      type: USE_CASE_TYPE,
+      id: docId,
+      success: data => {
+        dispatch({
+          type: "SET_USE_CASE_LIST_DOCS",
+          payload: data
+        });
+        setLoading(false);
+      },
+      catchError: err =>
+        enqueueSnackbar(err, {
+          variant: "error"
+        }),
+      paginate: nextOrBefore,
+      lastDoc: useCaseList[useCaseList.length - 1].docId
+    });
   }
 
   return (
@@ -365,26 +258,13 @@ export default function UseCaseControl() {
         setValue={setNewGroupName}
       />
 
-      <PopoverAddSome
-        anchor={anchorPersonInvite}
-        value={invitePersonEmail}
-        addFunction={inviteSomeoneToGroup}
-        setAnchor={setAnchorPersonInvite}
-        setValue={setInvitePersonEmail}
-        label={"Email"}
-        permission={personEditPermission}
-        permissionLabel={t("editPermissionLabel")}
-        setPermission={() => setPersonEditPermission(!personEditPermission)}
-        permissible={true}
-      />
-
       <Grid container spacing={1} style={{ padding: 8 }} md={12} xs={12}>
         <Grid item md={4} xs={12}>
           <TextField
             id="standard-select-currency"
             select
             variant={"outlined"}
-            value={useCaseGroups.selected}
+            value={useCaseGroups.selected?.docId}
             fullWidth
             color={"secondary"}
             onChange={event => switchUseCaseGroup(event.target.value)}
@@ -392,8 +272,8 @@ export default function UseCaseControl() {
             label={t("groupsLabel")}
           >
             {useCaseGroups.list.map(option => (
-              <MenuItem key={option.itemId} value={option.itemId}>
-                {option.itemLabel}
+              <MenuItem key={option.docId} value={option.docId}>
+                {option.title}
               </MenuItem>
             ))}
           </TextField>
@@ -428,21 +308,6 @@ export default function UseCaseControl() {
           />
         </Grid>
 
-        {checkPermissionOfEditGroup() && checkIfIsOwner() && (
-          <Grid
-            item
-            md={1}
-            xs={3}
-            style={{ alignSelf: "center", textAlign: "center" }}
-          >
-            <WhiteIconButtonWithTooltip
-              titleTooltip={t("tooltipDeleteAGroup")}
-              icon={<Delete color={"secondary"} />}
-              onClick={deleteSelectedGroup}
-            />
-          </Grid>
-        )}
-
         <Grid
           item
           md={1}
@@ -450,128 +315,18 @@ export default function UseCaseControl() {
           style={{ alignSelf: "center", textAlign: "center" }}
         >
           <WhiteIconButtonWithTooltip
-            titleTooltip={t("tooltipAddPersonOnGroup")}
-            icon={<PersonAdd color={"secondary"} />}
-            onClick={event => setAnchorPersonInvite(event.currentTarget)}
-          />
-        </Grid>
-        <Grid
-          item
-          md={1}
-          xs={3}
-          style={{ alignSelf: "center", textAlign: "center" }}
-        >
-          <WhiteIconButtonWithTooltip
-            titleTooltip={t("peopleInThisGroup")}
-            icon={<SupervisedUserCircle color={"secondary"} />}
-            onClick={event => {
-              setShowInvites(!showInvites);
-            }}
+            titleTooltip={t("tooltipDeleteAGroup")}
+            icon={<Delete color={"secondary"} />}
+            onClick={deleteSelectedGroup}
           />
         </Grid>
 
-        <Grid
-          item
-          md={1}
-          xs={3}
-          style={{ alignSelf: "center", textAlign: "center" }}
-        >
-          <WhiteIconButtonWithTooltip
-            titleTooltip={t("notificationsLabel")}
-            icon={
-              <Badge badgeContent={invitesToMeList.length} color={"primary"}>
-                <Notifications color={"secondary"} />
-              </Badge>
-            }
-            onClick={event => {
-              if (invitesToMeList.length) {
-                setAnchorNotifications(event.currentTarget);
-              } else {
-                console.log('You don"t have invites');
-              }
-            }}
-          />
-          <PopoverNotificationListUseCase
-            anchor={anchorNotifications}
-            setAnchor={setAnchorNotifications}
-            invites={invitesToMeList}
-            userLogged={userLogged}
-            setState={() => {
-              getUseCaseGroups({
-                user: userLogged,
-                setState: data => {
-                  dispatch({
-                    type: "SET_USE_GROUPS_STATE",
-                    payload: {
-                      list: data,
-                      selected: data[0].itemId
-                    }
-                  });
-
-                  getDocumentsFromUseCasesGroup({
-                    groups: useCaseGroups.list,
-                    user: userLogged,
-                    useCasesGroupId: data[0].itemId,
-                    setState: data => {
-                      dispatch({
-                        type: "SET_USE_CASE_LIST_DOCS",
-                        payload: data
-                      });
-                    }
-                  });
-                }
-              });
-
-              verifyInvitesOfUseCaseGroupsToMe({
-                user: userLogged,
-                setState: data => setInvitesToMeList(data)
-              });
-              setAnchorNotifications(null);
-            }}
-          />
-        </Grid>
-
-        {!showInvites && !loading ? (
+        {!loading && (
           <Grid item container md={12} xs={12}>
-            {useCaseList.map((doc, index) => (
+            {useCaseList && useCaseList.map((doc, index) => (
               <UseCaseListItem setLoading={setLoading} useCase={doc} />
             ))}
           </Grid>
-        ) : !loading && (invitesList.length || usersFromGroup.length) ? (
-          <Grid item container md={12} xs={12} style={{ paddingTop: 20 }}>
-            {invitesList.map((item, inde) => (
-              <InviteItemList item={item} cancelInvite={cancelInvite} />
-            ))}
-            {usersFromGroup.map((doc, index) => (
-              <SharedUserListItemUseCase
-                user={doc}
-                changeUserPermission={changeUserPermission}
-                removeUserOfGroup={removeUserOfGroup}
-              />
-            ))}
-          </Grid>
-        ) : (
-          !loading &&
-          !showInvites && (
-            <Grid
-              item
-              container
-              md={12}
-              xs={12}
-              style={{
-                alignContent: "center",
-                justifyContent: "center",
-                paddingTop: 20
-              }}
-            >
-              <Typography
-                variant={"h6"}
-                style={{ color: "rgba(255, 255, 255, 0.5)" }}
-              >
-                {t("noUsersInvited")}
-              </Typography>
-            </Grid>
-          )
         )}
       </Grid>
 
@@ -587,7 +342,7 @@ export default function UseCaseControl() {
         </Grid>
       )}
 
-      {!showInvites && !loading ? (
+      {!loading ? (
         <Grid item md={12} xs={12}>
           <Grid container justify={"flex-end"}>
             <Grid item>
