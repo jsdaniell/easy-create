@@ -7,12 +7,10 @@ import {
   HighlightOffRounded
 } from "@material-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
-import exportOnPdf from "../../utils/exportOnPdf";
-import { deletingOneTest } from "../../database/testCaseQueries/deletingOne";
-import { getDocumentsFromTestsGroup } from "../../database/testCaseQueries/getDocumentsFromTestsGroup";
 import DevicesUtils from "../../utils/deviceUtils";
-import { deletingOneUseCase } from "../../database/useCaseQueries/deletingOneUseCase";
-import { getDocumentsFromUseCasesGroup } from "../../database/useCaseQueries/getDocumentsFromUseCasesGroups";
+
+import { deleteDocument } from "../../service/groupsServices";
+import { useSnackbar } from "notistack";
 
 export default function UseCaseListItem({ useCase, setLoading }) {
   function getColor(priority) {
@@ -30,37 +28,33 @@ export default function UseCaseListItem({ useCase, setLoading }) {
 
   const dispatch = useDispatch();
 
-  const userLogged = useSelector(state => state.userUidReducer);
   const useCaseGroups = useSelector(state => state.useCaseGroupsReducer);
 
-  function checkPermissionOfEditGroup() {
-    return (
-      useCaseGroups &&
-      useCaseGroups.list.length &&
-      useCaseGroups.list.find(item => item.itemId === useCaseGroups.selected)
-        .permission === "edit"
-    );
-  }
+  const { enqueueSnackbar } = useSnackbar();
 
-  function deleting() {
+  async function deleting() {
     setLoading(true);
-    deletingOneUseCase({
-      group: useCaseGroups.selected,
-      listGroups: useCaseGroups.list,
-      user: userLogged,
-      useCase,
-      success: () => {
-        getDocumentsFromUseCasesGroup({
-          user: userLogged,
-          groups: useCaseGroups.list,
-          useCasesGroupId: useCaseGroups.selected,
-          setState: data => {
-            dispatch({
-              type: "SET_USE_CASE_LIST_DOCS",
-              payload: data
-            });
-          }
-        }).then(() => setLoading(false));
+
+    const {
+      selected: { docId }
+    } = useCaseGroups;
+
+    await deleteDocument({
+      type: "useCasesGroups",
+      idGroup: docId,
+      idDocument: useCase.docId,
+      success: async data => {
+        dispatch({
+          type: "SET_USE_CASE_LIST_DOCS",
+          payload: data
+        });
+        setLoading(false);
+      },
+      catchError: err => {
+        enqueueSnackbar(err, {
+          variant: "error"
+        });
+        setLoading(false);
       }
     });
   }
@@ -123,21 +117,19 @@ export default function UseCaseListItem({ useCase, setLoading }) {
             <Visibility style={{ verticalAlign: "middle" }} color={"primary"} />
           </IconButton>
         </Grid>
-        {checkPermissionOfEditGroup() && (
-          <Grid item md={1} xs={1}>
-            <IconButton
-              size={"small"}
-              onClick={() => {
-                deleting();
-              }}
-            >
-              <HighlightOffRounded
-                style={{ verticalAlign: "middle" }}
-                color={"primary"}
-              />
-            </IconButton>
-          </Grid>
-        )}
+        <Grid item md={1} xs={1}>
+          <IconButton
+            size={"small"}
+            onClick={() => {
+              deleting();
+            }}
+          >
+            <HighlightOffRounded
+              style={{ verticalAlign: "middle" }}
+              color={"primary"}
+            />
+          </IconButton>
+        </Grid>
       </Grid>
       <Grid
         item
@@ -147,7 +139,7 @@ export default function UseCaseListItem({ useCase, setLoading }) {
           height: 5,
           borderRadius: "0px 0px 5px 5px"
         }}
-      ></Grid>
+      />
     </Grid>
   );
 }

@@ -2,8 +2,7 @@ import React from "react";
 import { Grid, Popover } from "@material-ui/core";
 import { DoneOutlineRounded, Cancel } from "@material-ui/icons";
 import WhiteIconButtonWithTooltip from "./WhiteIconButtonWithTooltip";
-import refuseAnInvite from "../../database/testCaseQueries/refuseAnInvite";
-import { acceptingAnInvite } from "../../database/testCaseQueries/acceptingAnInvite";
+
 
 export default function PopoverNotificationList({
   anchor,
@@ -13,13 +12,11 @@ export default function PopoverNotificationList({
   setState
 }) {
   function refusing(invite) {
-    refuseAnInvite({ user: userLogged, invite, setState });
+    // refuseAnInvite({ user: userLogged, invite, setState });
   }
 
   function accepting(invite) {
-    console.log("invite: ", invite);
-
-    acceptingAnInvite({ invite, user: userLogged, setState });
+    // acceptingAnInvite({ invite, user: userLogged, setState });
   }
 
   return (

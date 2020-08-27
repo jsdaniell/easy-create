@@ -8,9 +8,11 @@ import {
 } from "@material-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
 import exportOnPdf from "../../utils/exportOnPdf";
-import { deletingOneTest } from "../../database/testCaseQueries/deletingOne";
-import { getDocumentsFromTestsGroup } from "../../database/testCaseQueries/getDocumentsFromTestsGroup";
 import DevicesUtils from "../../utils/deviceUtils";
+import {
+  deleteDocument,
+} from "../../service/groupsServices";
+import { useSnackbar } from "notistack";
 
 export default function TestListItem({ test, setLoading }) {
   function getColor(priority) {
@@ -28,37 +30,33 @@ export default function TestListItem({ test, setLoading }) {
 
   const dispatch = useDispatch();
 
-  const userLogged = useSelector(state => state.userUidReducer);
   const testsGroups = useSelector(state => state.testGroupsReducer);
 
-  function checkPermissionOfEditGroup() {
-    return (
-      testsGroups &&
-      testsGroups.list.length &&
-      testsGroups.list.find(item => item.itemId === testsGroups.selected)
-        .permission === "edit"
-    );
-  }
+  const { enqueueSnackbar } = useSnackbar();
 
   function deleting() {
     setLoading(true);
-    deletingOneTest({
-      group: testsGroups.selected,
-      listGroups: testsGroups.list,
-      user: userLogged,
-      test,
-      success: () => {
-        getDocumentsFromTestsGroup({
-          user: userLogged,
-          groups: testsGroups.list,
-          testGroupId: testsGroups.selected,
-          setState: data => {
-            dispatch({
-              type: "SET_LIST_DOCS",
-              payload: data
-            });
-          }
-        }).then(() => setLoading(false));
+
+    const {
+      selected: { docId }
+    } = testsGroups;
+
+    deleteDocument({
+      type: "testsGroups",
+      idGroup: docId,
+      idDocument: test.docId,
+      success: async data => {
+        dispatch({
+          type: "SET_LIST_DOCS",
+          payload: data
+        });
+        setLoading(false);
+      },
+      catchError: err => {
+        enqueueSnackbar(err, {
+          variant: "error"
+        });
+        setLoading(false);
       }
     });
   }
@@ -121,21 +119,19 @@ export default function TestListItem({ test, setLoading }) {
             <Visibility style={{ verticalAlign: "middle" }} color={"primary"} />
           </IconButton>
         </Grid>
-        {checkPermissionOfEditGroup() && (
-          <Grid item md={1} xs={1}>
-            <IconButton
-              size={"small"}
-              onClick={() => {
-                deleting();
-              }}
-            >
-              <HighlightOffRounded
-                style={{ verticalAlign: "middle" }}
-                color={"primary"}
-              />
-            </IconButton>
-          </Grid>
-        )}
+        <Grid item md={1} xs={1}>
+          <IconButton
+            size={"small"}
+            onClick={() => {
+              deleting();
+            }}
+          >
+            <HighlightOffRounded
+              style={{ verticalAlign: "middle" }}
+              color={"primary"}
+            />
+          </IconButton>
+        </Grid>
       </Grid>
       <Grid
         item
@@ -145,7 +141,7 @@ export default function TestListItem({ test, setLoading }) {
           height: 5,
           borderRadius: "0px 0px 5px 5px"
         }}
-      ></Grid>
+      />
     </Grid>
   );
 }
