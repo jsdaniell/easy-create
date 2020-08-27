@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import {
-  Badge,
   CircularProgress,
   Grid,
   IconButton,
@@ -12,7 +11,6 @@ import DevicesUtils from "../../utils/deviceUtils";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useSnackbar } from "notistack";
-import { getUseCaseGroups } from "../../database/useCaseQueries/getUseCaseGroups";
 import PopoverAddSome from "../shared/PopoverAddSome";
 import WhiteIconButtonWithTooltip from "../shared/WhiteIconButtonWithTooltip";
 import {
@@ -20,17 +18,9 @@ import {
   Delete,
   NavigateBefore,
   NavigateNext,
-  Notifications,
-  PersonAdd,
   PictureAsPdfRounded,
-  SupervisedUserCircle
 } from "@material-ui/icons";
 
-import { getDocumentsFromUseCasesGroup } from "../../database/useCaseQueries/getDocumentsFromUseCasesGroups";
-import { getInvitesUseCasesGroupsFromMe } from "../../database/useCaseQueries/getInvitesUseCasesGroupsFromMe";
-import { getUsersOfThisUseCaseGroup } from "../../database/useCaseQueries/getUsersOfThisUseCaseGroup";
-import { addNewUseCaseGroup } from "../../database/useCaseQueries/addNewUseCaseGroup";
-import { deleteOneUseCaseGroup } from "../../database/useCaseQueries/deleteOneUseCaseGroup";
 import UseCaseListItem from "./UseCaseListItem";
 import {
   addNewGroup,

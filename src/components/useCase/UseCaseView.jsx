@@ -14,8 +14,6 @@ import { useDispatch, useSelector } from "react-redux";
 import ListPreConditions from "./ListPrecondition";
 import { Add } from "@material-ui/icons";
 import { useSnackbar } from "notistack";
-import { savingNewUseCase } from "../../database/useCaseQueries/savingNewUseCase";
-import { getDocumentsFromUseCasesGroup } from "../../database/useCaseQueries/getDocumentsFromUseCasesGroups";
 import exportOnPdfUseCase from "../../utils/exportOnPdfUseCase";
 import {addingDocumentOnGroup} from "../../service/groupsServices";
 

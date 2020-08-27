@@ -8,8 +8,7 @@ import {
 } from "@material-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
 import DevicesUtils from "../../utils/deviceUtils";
-import { deletingOneUseCase } from "../../database/useCaseQueries/deletingOneUseCase";
-import { getDocumentsFromUseCasesGroup } from "../../database/useCaseQueries/getDocumentsFromUseCasesGroups";
+
 import { deleteDocument } from "../../service/groupsServices";
 import { useSnackbar } from "notistack";
 
@@ -33,14 +32,14 @@ export default function UseCaseListItem({ useCase, setLoading }) {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  function deleting() {
+  async function deleting() {
     setLoading(true);
 
     const {
       selected: { docId }
     } = useCaseGroups;
 
-    deleteDocument({
+    await deleteDocument({
       type: "useCasesGroups",
       idGroup: docId,
       idDocument: useCase.docId,
