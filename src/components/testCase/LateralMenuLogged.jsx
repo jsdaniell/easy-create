@@ -5,37 +5,33 @@ import {
   IconButton,
   MenuItem,
   Typography,
-  Tooltip,
-  CircularProgress,
-  Badge
+  CircularProgress
 } from "@material-ui/core";
-import { Autocomplete } from "@material-ui/lab";
 import { useTranslation } from "react-i18next";
 import DevicesUtils from "../../utils/deviceUtils";
-import { getTestsGroups } from "../../database/testCaseQueries/getTestsGroups";
 import { useDispatch, useSelector } from "react-redux";
-import { getDocumentsFromTestsGroup } from "../../database/testCaseQueries/getDocumentsFromTestsGroup";
 import TestListItem from "./TestListItem";
 import {
   NavigateNext,
   NavigateBefore,
   AddCircleOutline,
   PictureAsPdfRounded,
-  Delete,
+  Delete
 } from "@material-ui/icons";
-import { addNewTestGroup } from "../../database/testCaseQueries/addNewTestGroup";
 import { useSnackbar } from "notistack";
-import { deleteOneGroup } from "../../database/testCaseQueries/deleteOneGroup";
 import PopoverAddSome from "../shared/PopoverAddSome";
 import WhiteIconButtonWithTooltip from "../shared/WhiteIconButtonWithTooltip";
-import { api } from "../../service/api";
+import {
+  addNewGroup,
+  deleteGroup,
+  getDocumentsFromGroup,
+  getGroups
+} from "../../service/groupsServices";
 
 export default function LateralMenuLogged() {
   const { t } = useTranslation();
 
   const dispatch = useDispatch();
-
-  const userLogged = useSelector(state => state.userUidReducer);
 
   const testList = useSelector(state => state.testListDocsReducer);
   const testsGroups = useSelector(state => state.testGroupsReducer);
@@ -44,180 +40,184 @@ export default function LateralMenuLogged() {
   const [anchorAddGroup, setAnchorAddGroup] = useState(null);
   const [newGroupName, setNewGroupName] = useState("");
 
-  const [showInvites, setShowInvites] = useState(false);
-  const [invitesList, setInvitesList] = useState([]);
-
-  const [invitesToMeList, setInvitesToMeList] = useState([]);
-  const [anchorNotifications, setAnchorNotifications] = useState(false);
-
-  const [usersFromGroup, setUsersFromGroup] = useState([]);
-
   const [loading, setLoading] = useState(false);
-
-  async function getDocInvitesAndUsersOfAGroup(testGroupId, groupsList) {
-    dispatch({
-      type: "SET_TEST_GROUPS_STATE",
-      payload: {
-        list: groupsList,
-        selected: testGroupId
-      }
-    });
-
-    getDocumentsFromTestsGroup({
-      groups: groupsList,
-      user: userLogged,
-      testGroupId: testGroupId,
-      setState: data => {
-        dispatch({
-          type: "SET_LIST_DOCS",
-          payload: data
-        });
-      }
-    });
-
-  }
 
   useEffect(() => {
     document.title = t("testCaseTitle");
 
     setLoading(true);
 
+    getGroups({
+      type: "testsGroups",
+      success: async data => {
+        dispatch({
+          type: "SET_TEST_GROUPS_STATE",
+          payload: {
+            list: data,
+            selected: data[0]
+          }
+        });
 
-    getGroups()
-
-
-    getTestsGroups({
-      user: userLogged,
-      setState: data => {
-
-        // dispatch({
-        //   type: "SET_TEST_GROUPS_STATE",
-        //   payload: {
-        //     list: data,
-        //     selected: data[0]
-        //   }
-        // });
-
-        // if (data.length) {
-        //   getDocInvitesAndUsersOfAGroup(data[data.length - 1].itemId, data);
-        // } else {
-        //   addNewGroupOnList("Default");
-        // }
-      }
-    }).then(() => setLoading(false));
-
+        await getDocumentsFromGroup({
+          type: "testsGroups",
+          id: data[0].docId,
+          success: data => {
+            dispatch({
+              type: "SET_LIST_DOCS",
+              payload: data
+            });
+          },
+          catchError: err =>
+              enqueueSnackbar(err, {
+                variant: "error"
+              })
+        });
+        setLoading(false);
+      },
+      catchError: err =>
+        enqueueSnackbar(err, {
+          variant: "error"
+        })
+    });
   }, []);
 
-  function getGroups(){
+  async function navigate(nextOrBefore) {
+    setLoading(true);
 
+    const {selected: {docId}} = testsGroups
 
-
-    dispatch({
-      type: "SET_TEST_GROUPS_STATE",
-      payload: {
-        list: [
-          {
-            "title": "Somapay",
-            "docId": "Somapay",
-            "sharedWith": [
-              {
-                "user": "LKh7OLyN5bcEe2NJs3y1NVaLW9A3",
-                "permission": "edit"
-              }
-            ]
-          },
-          {
-            "title": "Look One",
-            "docId": "look-one",
-            "sharedWith": []
-          }
-        ],
-        selected: {
-          "title": "Somapay",
-          "docId": "Somapay",
-          "sharedWith": [
-            {
-              "user": "LKh7OLyN5bcEe2NJs3y1NVaLW9A3",
-              "permission": "edit"
-            }
-          ]
-        },
-      }
-    });
+    await getDocumentsFromGroup({
+      type: "testsGroups",
+      id: docId,
+      success: data => {
+        dispatch({
+          type: "SET_LIST_DOCS",
+          payload: data
+        });
+        setLoading(false)
+      },
+      catchError: err =>
+          enqueueSnackbar(err, {
+            variant: "error"
+          }),
+      paginate: nextOrBefore,
+      lastDoc: testList[testList.length - 1].docId
+    })
   }
 
-  function navigate(nextOrBefore) {
-    if (testList.length === 7) {
+  async function addNewGroupOnList() {
+    if (newGroupName) {
       setLoading(true);
-      getDocumentsFromTestsGroup({
-        groups: testsGroups.list,
-        user: userLogged,
-        testGroupId: testsGroups.selected,
-        setState: data => {
+
+      await addNewGroup({
+        type: "testsGroups",
+        name: newGroupName,
+        success: async data => {
           dispatch({
-            type: "SET_LIST_DOCS",
-            payload: data
-          });
-        },
-        paginate: nextOrBefore,
-        lastItem: testList[testList.length - 1].title
-      }).then(() => setLoading(false));
-    }
-  }
-
-  function addNewGroupOnList(optionalGroupName) {
-    if (newGroupName || optionalGroupName) {
-      setLoading(true);
-      addNewTestGroup({
-        user: userLogged,
-        newCollectionName: newGroupName || optionalGroupName,
-        errorAlreadyExists: () => {
-          return enqueueSnackbar(t("alreadyExistsGroup"), {
-            variant: "warning"
-          });
-        },
-        setState: () => {
-          getTestsGroups({
-            user: userLogged,
-            setState: data => {
-              getDocInvitesAndUsersOfAGroup(data[0].itemId, data);
+            type: "SET_TEST_GROUPS_STATE",
+            payload: {
+              list: data,
+              selected: data[0]
             }
           });
 
-          setAnchorAddGroup(null);
-          setNewGroupName("");
-        }
-      }).then(() => setLoading(false));
+          await getDocumentsFromGroup({
+            type: "testsGroups",
+            id: data[0].docId,
+            success: data => {
+              dispatch({
+                type: "SET_LIST_DOCS",
+                payload: data
+              });
+            },
+            catchError: err =>
+              enqueueSnackbar(err, {
+                variant: "error"
+              })
+          });
+
+          setLoading(false);
+          setAnchorAddGroup(false);
+        },
+        catchError: err =>
+          enqueueSnackbar(err, {
+            variant: "error"
+          })
+      });
     }
   }
 
   async function switchTestGroup(id) {
     setLoading(true);
-    await getDocInvitesAndUsersOfAGroup(id, testsGroups.list).then(() => {
-      setLoading(false);
+
+    dispatch({
+      type: "SET_TEST_GROUPS_STATE",
+      payload: {
+        ...testsGroups,
+        selected: testsGroups.list.find(item => item.docId === id)
+      }
     });
+    await getDocumentsFromGroup({
+      type: "testsGroups",
+      id: id,
+      success: data => {
+        dispatch({
+          type: "SET_LIST_DOCS",
+          payload: data
+        });
+      },
+      catchError: err =>
+        enqueueSnackbar(err, {
+          variant: "error"
+        })
+    });
+
+    setLoading(false);
   }
 
-  function deleteSelectedGroup() {
+  async function deleteSelectedGroup() {
     if (!testsGroups.list.length) return;
 
+    const {
+      selected: { docId }
+    } = testsGroups;
+
     setLoading(true);
-    deleteOneGroup({
-      collectionName: testsGroups.selected,
-      user: userLogged,
-      setState: () => {
-        getTestsGroups({
-          user: userLogged,
-          setState: data => {
-            getDocInvitesAndUsersOfAGroup(data[0].itemId, data);
+
+    await deleteGroup({
+      type: "testsGroups",
+      id: docId,
+      success: async data => {
+        dispatch({
+          type: "SET_TEST_GROUPS_STATE",
+          payload: {
+            list: data,
+            selected: data[0]
           }
         });
 
-        enqueueSnackbar(t("successRemovedGroup"), {
-          variant: "success"
+        await getDocumentsFromGroup({
+          type: "testsGroups",
+          id: data[0].docId,
+          success: data => {
+            dispatch({
+              type: "SET_LIST_DOCS",
+              payload: data
+            });
+          },
+          catchError: err =>
+            enqueueSnackbar(err, {
+              variant: "error"
+            })
         });
-      }
-    }).then(() => setLoading(false));
+
+        setLoading(false);
+      },
+      catchError: err =>
+        enqueueSnackbar(err, {
+          variant: "error"
+        })
+    });
   }
 
   const isMobile = DevicesUtils.checkIfIsMobile();
@@ -248,7 +248,7 @@ export default function LateralMenuLogged() {
             id="standard-select-currency"
             select
             variant={"outlined"}
-            value={testsGroups.selected.docId}
+            value={testsGroups.selected?.docId}
             fullWidth
             color={"secondary"}
             onChange={event => switchTestGroup(event.target.value)}
@@ -293,21 +293,23 @@ export default function LateralMenuLogged() {
         </Grid>
 
         <Grid
-            item
-            md={1}
-            xs={3}
-            style={{ alignSelf: "center", textAlign: "center" }}
+          item
+          md={1}
+          xs={3}
+          style={{ alignSelf: "center", textAlign: "center" }}
         >
           <WhiteIconButtonWithTooltip
-              titleTooltip={t("tooltipDeleteAGroup")}
-              icon={<Delete color={"secondary"} />}
-              onClick={deleteSelectedGroup}
+            titleTooltip={t("tooltipDeleteAGroup")}
+            icon={<Delete color={"secondary"} />}
+            onClick={deleteSelectedGroup}
           />
         </Grid>
-
-
-
-
+        <Grid item container md={12} xs={12}>
+          {testList &&
+            testList.map((doc, index) => (
+              <TestListItem setLoading={setLoading} test={doc} />
+            ))}
+        </Grid>
       </Grid>
 
       {loading && (
@@ -326,7 +328,7 @@ export default function LateralMenuLogged() {
         <Grid item md={12} xs={12}>
           <Grid container justify={"flex-end"}>
             <Grid item>
-              <IconButton size={"small"} onClick={() => navigate("before")}>
+              <IconButton size={"small"} onClick={() => navigate("previous")}>
                 <NavigateBefore color={"secondary"} />
               </IconButton>
             </Grid>

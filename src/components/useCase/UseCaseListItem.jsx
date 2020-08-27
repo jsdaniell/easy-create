@@ -7,9 +7,6 @@ import {
   HighlightOffRounded
 } from "@material-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
-import exportOnPdf from "../../utils/exportOnPdf";
-import { deletingOneTest } from "../../database/testCaseQueries/deletingOne";
-import { getDocumentsFromTestsGroup } from "../../database/testCaseQueries/getDocumentsFromTestsGroup";
 import DevicesUtils from "../../utils/deviceUtils";
 import { deletingOneUseCase } from "../../database/useCaseQueries/deletingOneUseCase";
 import { getDocumentsFromUseCasesGroup } from "../../database/useCaseQueries/getDocumentsFromUseCasesGroups";

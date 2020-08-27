@@ -7,21 +7,24 @@ export const api = axios.create({
 });
 
 
-// api.interceptors.request.use(
-//     request => {
-//
-//       let ls = JSON.parse(localStorage.getItem('persist:root'))
-//
-//       if (ls && ls.userUidReducer) {
-//         request.headers['Authorization'] = ls.userUidReducer;
-//         return request;
-//       }
-//
-//     },
-//     error => {
-//
-//       return Promise.reject(error);
-//     }
-// );
+api.interceptors.request.use(
+    request => {
+
+      let ls = JSON.parse(localStorage.getItem('persist:root'))
+
+      if (ls && ls.userUidReducer) {
+
+        let user = ls.userUidReducer.split('"').join("");
+
+        request.headers['Authorization'] = user;
+        return request;
+      }
+
+    },
+    error => {
+
+      return Promise.reject(error);
+    }
+);
 
 

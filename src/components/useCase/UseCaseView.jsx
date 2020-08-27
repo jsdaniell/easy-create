@@ -14,11 +14,8 @@ import { useDispatch, useSelector } from "react-redux";
 import ListPreConditions from "./ListPrecondition";
 import { Add } from "@material-ui/icons";
 import { useSnackbar } from "notistack";
-import { savingNewTest } from "../../database/testCaseQueries/savingNew";
-import { getDocumentsFromTestsGroup } from "../../database/testCaseQueries/getDocumentsFromTestsGroup";
 import { savingNewUseCase } from "../../database/useCaseQueries/savingNewUseCase";
 import { getDocumentsFromUseCasesGroup } from "../../database/useCaseQueries/getDocumentsFromUseCasesGroups";
-import exportOnPdf from "../../utils/exportOnPdf";
 import exportOnPdfUseCase from "../../utils/exportOnPdfUseCase";
 
 export default function UseCaseView() {

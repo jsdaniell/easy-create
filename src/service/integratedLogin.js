@@ -24,9 +24,9 @@ export async function signInWithGoogle({ success }) {
           headers: { "Content-Type": "application/json" }
         }
       )
-      .then(data => {
+      .then(async data => {
 
-        store.dispatch({
+        await store.dispatch({
           type: "SET_USER_UID",
           payload: data.data
         });

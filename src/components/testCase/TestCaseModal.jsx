@@ -8,16 +8,14 @@ import {
   IconButton,
   CircularProgress
 } from "@material-ui/core";
-import { Add, RemoveCircle, FiberManualRecord } from "@material-ui/icons";
+import { Add, FiberManualRecord } from "@material-ui/icons";
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 import ListPrePostCondition from "./ListPrePostConditions";
 import { useSnackbar } from "notistack";
 import exportOnPdf from "../../utils/exportOnPdf";
 import DevicesUtils from "../../utils/deviceUtils";
 import { useTranslation } from "react-i18next";
-import { savingNewTest } from "../../database/testCaseQueries/savingNew";
-import { getDocumentsFromTestsGroup } from "../../database/testCaseQueries/getDocumentsFromTestsGroup";
-import { deletingOneTest } from "../../database/testCaseQueries/deletingOne";
+import { addingDocumentOnGroup } from "../../service/groupsServices";
 
 export default function TestCaseModal() {
   const testCaseData = useSelector(state => state.testCaseModalReducer);
@@ -48,7 +46,6 @@ export default function TestCaseModal() {
         postcondition: ""
       }
     });
-
   }, []);
 
   function handleExport() {
@@ -73,32 +70,31 @@ export default function TestCaseModal() {
     exportOnPdf(testCaseData);
   }
 
-  function handleSaveOnFirebase() {
+  async function save() {
     setLoading(true);
-    savingNewTest({
-      listGroups: testsGroups.list,
-      group: testsGroups.selected,
-      test: testCaseData,
-      user: userLogged,
-      errorAlreadyExists: () => {
-        return enqueueSnackbar(t("alreadyExists"), {
-          variant: "warning"
+
+    const {
+      selected: { docId }
+    } = testsGroups;
+
+    await addingDocumentOnGroup({
+      type: "testsGroups",
+      idGroup: docId,
+      data: testCaseData,
+      success: data => {
+        dispatch({
+          type: "SET_LIST_DOCS",
+          payload: data
         });
+        setLoading(false);
       },
-      success: () => {
-        getDocumentsFromTestsGroup({
-          user: userLogged,
-          groups: testsGroups.list,
-          testGroupId: testsGroups.selected,
-          setState: data => {
-            dispatch({
-              type: "SET_LIST_DOCS",
-              payload: data
-            });
-          }
+      catchError: err => {
+        enqueueSnackbar(err, {
+          variant: "error"
         });
+        setLoading(false);
       }
-    }).then(() => setLoading(false));
+    });
   }
 
   const isMobile = DevicesUtils.checkIfIsMobile();
@@ -368,7 +364,7 @@ export default function TestCaseModal() {
         </Grid>
 
         <Grid item xs md={2}>
-          <Button color={"primary"} onClick={() => handleSaveOnFirebase()}>
+          <Button color={"primary"} onClick={() => save()}>
             {t("saveLabel").toUpperCase()}
           </Button>
         </Grid>
