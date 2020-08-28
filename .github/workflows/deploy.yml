@@ -12,7 +12,8 @@ jobs:
       - uses: actions/setup-node@master
         with:
           node-version: 12
-      - run: npm run build
+      - run: npm install
+      - run: CI=false npm run build
       - run: w9jds/firebase-action@master
         with:
           args: deploy --only hosting
