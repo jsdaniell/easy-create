@@ -1,66 +1,22 @@
-## Available Scripts
+# DevData Tools
 
-In the project directory, you can run:
+Useful tools for technology cases, until now, generate use case descriptions, test case descriptions and save on your Google account, mock data and an emoji selector to get their unicode.
 
-### `yarn start`
+![Captura de Tela 2020-08-29 às 14 14 39](https://user-images.githubusercontent.com/44711197/91642483-14eafc80-ea02-11ea-8617-e8cf9024857a.png) 
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+![Captura de Tela 2020-08-29 às 14 14 50](https://user-images.githubusercontent.com/44711197/91642494-2a602680-ea02-11ea-96da-cbc7ca4fd160.png)
+## Technologies
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+List of all the technologies utilized in the project.
 
-### `yarn test`
+#### Front-End
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+**React** is the library that I utilized for develop the front-end of this project, for state management I use **Redux** with their hooks, assuming all the application was created with functional components. I decided to create a module system for scalability in accord I add the new features, so you can see the modules in `src/components` folder.
 
-### `yarn build`
+#### User Data
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+The user data is stored on Firestore database, I decided to create a back-end application written in Go Language that's can be founded [here](https://github.com/jsdaniell/devdata-tools-api-golang).
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+#### CI - CD and Hosting
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+For CI and CD you can see the config file .yml on the `.github/workflows` folder, using the **Github Actions** for the build and deployment on **Firebase Hosting**.
