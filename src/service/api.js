@@ -6,7 +6,6 @@ export const api = axios.create({
   baseURL: URL_API
 });
 
-
 api.interceptors.request.use(
     request => {
 
